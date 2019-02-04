@@ -1,0 +1,24 @@
+<?php
+
+namespace DummyNamespace;
+
+use App\Models\ModelExt;
+
+class DummyClass extends ModelExt
+{
+    protected $table = 'DummyTable';
+    protected $primaryKey = 'DummyKey';
+    const CREATED_AT = 'DummyCreatedAt';
+    const UPDATED_AT = 'DummyUpdatedAt';
+
+    protected $resourceObjectType = 'DummyResource';
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        //
+    ];
+}

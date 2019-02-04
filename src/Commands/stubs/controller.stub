@@ -1,0 +1,20 @@
+<?php
+
+namespace DummyNamespace;
+
+use Illuminate\Http\JsonResponse;
+use App\Traits\StartEndApiTrait;
+use App\Http\Requests\DummyFormRequest;
+
+class DummyClass extends ApiController
+{
+    public function store(DummyFormRequest $request): JsonResponse
+    {
+        return $this->storeObject($request);
+    }
+
+    public function update(DummyFormRequest $request, $id): JsonResponse
+    {
+        return $this->updateObject($request, $id);
+    }
+}

@@ -1,0 +1,39 @@
+{
+    "name": "girol/jsonapi",
+    "description": "RESTfull JSON:Api",
+    "type": "library",
+    "homepage": "http://github.com/VGirol/JsonApi",
+    "license": "MIT",
+    "require": {
+        "php": ">5.4.0",
+        "spatie/laravel-query-builder": "dev-master",
+        "spatie/laravel-json-api-paginate": "dev-master"
+    },
+    "authors": [
+        {
+            "name": "Vincent Girol",
+            "email": "vincent@girol.fr"
+        }
+    ],
+    "minimum-stability": "dev",
+    "autoload": {
+        "psr-4": {
+            "VGirol\\JsonApi\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "VGirol\\JsonApi\\Tests\\": "packages/vgirol/jsonapi/tests"
+        }
+    },
+    "scripts": {
+        "test": "./vendor/bin/phpunit tests"
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "VGirol\\JsonApi\\JsonApiServiceProvider"
+            ]
+        }
+    }
+}

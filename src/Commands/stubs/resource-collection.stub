@@ -1,0 +1,9 @@
+<?php
+
+namespace DummyNamespace;
+
+use VGirol\JsonApi\Resources\JsonApiResourceCollection;
+
+class DummyClass extends JsonApiResourceCollection
+{
+}

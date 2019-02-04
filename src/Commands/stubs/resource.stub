@@ -1,0 +1,13 @@
+<?php
+
+namespace DummyNamespace;
+
+use VGirol\JsonApi\Resources\JsonApiResource;
+
+class DummyClass extends JsonApiResource
+{
+    protected function getMandatoryRelationships()
+    {
+        return;
+    }
+}
