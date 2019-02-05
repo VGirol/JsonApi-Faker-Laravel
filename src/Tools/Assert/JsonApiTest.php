@@ -1,5 +1,5 @@
 <?php
-namespace VGirol\JsonApi\Tests;
+namespace VGirol\JsonApi\Tools\Assert;
 
 use VGirol\JsonApi\Tools\Assert\JsonApiAssertBase;
 use VGirol\JsonApi\Tools\Assert\JsonApiAssertObject;

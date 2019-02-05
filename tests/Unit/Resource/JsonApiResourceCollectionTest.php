@@ -3,7 +3,7 @@ namespace VGirol\JsonApi\Tests\Unit\Resource;
 
 use Illuminate\Http\Request;
 use VGirol\JsonApi\Tests\TestCase;
-use VGirol\JsonApi\Tests\JsonApiTest;
+use VGirol\JsonApi\Tools\Assert\JsonApiTest;
 use VGirol\JsonApi\Tests\JsonApiTestCommon;
 use VGirol\JsonApi\Resources\JsonApiResourceType;
 
