@@ -2,21 +2,20 @@
 namespace VGirol\JsonApi\Tests\Unit\Resource;
 
 use Illuminate\Http\Request;
-use VGirol\JsonApi\Tests\TestCase;
-use VGirol\JsonApi\Tools\Assert\JsonApiTest;
-use VGirol\JsonApi\Tests\JsonApiTestCommon;
 use VGirol\JsonApi\Resources\JsonApiResourceType;
+use VGirol\JsonApi\Tests\TestCase;
 
 class JsonApiResourceCollectionTest extends TestCase
 {
+
     public function testExportAsCollectionOfResourceIdentifierObject()
     {
         // Creates a collection of n objects with filled out fields
         $count = 3;
-        $collection = factoryJsonapi($this->model, $count)->make();
+        $collection = factoryJsonapi($this->getModelClassName(), $count)->make();
 
         // Creates a resource collection
-        $resource = call_user_func_array([$this->resourceCollectionClass, 'make'], [$collection]);
+        $resource = call_user_func_array([$this->getResourceCollectionClassName(), 'make'], [$collection]);
         $resource->setExportType(JsonApiResourceType::RESOURCE_IDENTIFIER);
 
         // Creates a request
@@ -30,19 +29,19 @@ class JsonApiResourceCollectionTest extends TestCase
 
         $model = $collection->first();
         $obj = $data[0];
-        $this->assertIsResourceIdentifierObject($obj);
+        $this->assertIsValidResourceIdentifierObject($obj);
         $this->assertNotHasMember($obj, 'meta');
-        $this->assertValidResourceIdentifierObject($obj, $model);
+        $this->assertResourceIdentifierObjectEqualsModel($model, $obj);
     }
 
     public function testExportAsCollectionOfResourceObject()
     {
         // Creates a collection of n objects with filled out fields
         $count = 3;
-        $collection = factoryJsonapi($this->model, $count)->make();
+        $collection = factoryJsonapi($this->getModelClassName(), $count)->make();
 
         // Creates a resource collection
-        $resource = call_user_func_array([$this->resourceCollectionClass, 'make'], [$collection]);
+        $resource = call_user_func_array([$this->getResourceCollectionClassName(), 'make'], [$collection]);
         $resource->setExportType(JsonApiResourceType::RESOURCE_OBJECT);
 
         // Creates a request
@@ -56,8 +55,8 @@ class JsonApiResourceCollectionTest extends TestCase
 
         $model = $collection->first();
         $obj = $data[0];
-        $this->assertIsResourceObject($obj);
+        $this->assertIsValidResourceObject($obj);
         $this->assertNotHasMember($obj, 'meta');
-        $this->assertValidResourceObject($obj, $model);
+        $this->assertResourceObjectEqualsModel($model, $obj);
     }
 }

@@ -3,6 +3,8 @@ namespace VGirol\JsonApi\Controllers;
 
 use Exception;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Contracts\Support\Arrayable;
+use VGirol\JsonApi\Exceptions\JsonApiException;
 use VGirol\JsonApi\Exceptions\JsonApiValidationException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -25,36 +27,42 @@ trait JsonApiHttpResponseTrait
 
     protected function noContent() : JsonResponse
     {
+        $this->jsonResponse = [];
+
         return $this->createResponse(JsonResponse::HTTP_NO_CONTENT);
     }
 
     protected function badRequest(string $message) : JsonResponse
     {
-        $code = JsonResponse::HTTP_BAD_REQUEST;
-        $this->addError($code, $message);
-
-        return $this->createResponse($code);
+        return $this->createErrorResponse(JsonResponse::HTTP_BAD_REQUEST, $message);
     }
 
     protected function unauthorized(string $message) : JsonResponse
     {
-        $code= JsonResponse::HTTP_UNAUTHORIZED;
-        $this->addError($code, $message);
-
-        return $this->createResponse($code);
+        return $this->createErrorResponse(JsonResponse::HTTP_UNAUTHORIZED, $message);
     }
 
     protected function notFound(string $message) : JsonResponse
     {
-        $code = JsonResponse::HTTP_NOT_FOUND;
-        $this->addError($code, $message);
+        return $this->createErrorResponse(JsonResponse::HTTP_NOT_FOUND, $message);
+    }
 
-        return $this->createResponse($code);
+    protected function notAcceptable(string $message) : JsonResponse
+    {
+        return $this->createErrorResponse(JsonResponse::HTTP_NOT_ACCEPTABLE, $message);
     }
 
     protected function internalServerError(string $message) : JsonResponse
     {
-        $code = JsonResponse::HTTP_INTERNAL_SERVER_ERROR;
+        return $this->createErrorResponse(JsonResponse::HTTP_INTERNAL_SERVER_ERROR, $message);
+    }
+
+    protected function unsupportedMediaType(string $message) : JsonResponse
+    {
+        return $this->createErrorResponse(JsonResponse::HTTP_UNSUPPORTED_MEDIA_TYPE, $message);
+    }
+
+    protected function createErrorResponse($code, string $message) : JsonResponse{
         $this->addError($code, $message);
 
         return $this->createResponse($code);
@@ -62,13 +70,39 @@ trait JsonApiHttpResponseTrait
 
     protected function createResponse(int $code) : JsonResponse
     {
-        $this->addToJsonapi('version', '1.0');
+        if ($code != JsonResponse::HTTP_NO_CONTENT) {
+            $this->addToJsonapi('version', config('jsonapi.version'));
+        }
 
-        return response()->json($this->jsonResponse, $code)
-                         ->header('Content-Type', 'application/vnd.api+json');
+        if ($this->hasMultiErrors()) {
+            foreach ($this->jsonResponse['errors'] as $error) {
+                $tmp = intval($error['status']);
+                if ($tmp >= 400 && $tmp < 500) {
+                    $code = 400;
+                } elseif ($tmp >= 500) {
+                    $code = 500;
+                }
+            }
+        }
+
+        return response()->json($this->jsonResponse, $code);
     }
 
     /* -------------------- JSON:API response setter / getter ---------------------------------- */
+
+    protected function getResponseMember(string $keyString)
+    {
+        $keys = explode('.', $keyString);
+        $ret = $this->jsonResponse;
+        foreach ($keys as $key) {
+            if (!isset($ret[$key])) {
+                throw new JsonApiException(sprintf('Member "%s" not found in %s.', $key, $keyString));
+            }
+            $ret = $ret[$key];
+        }
+
+        return $ret;
+    }
 
     private function addToMember($member, $key, $value)
     {
@@ -125,6 +159,16 @@ trait JsonApiHttpResponseTrait
         }
 
         $this->jsonResponse['included'][] = $obj;
+    }
+
+    protected function hasErrors() : bool
+    {
+        return isset($this->jsonResponse['errors']) && count($this->jsonResponse['errors']) > 0;
+    }
+
+    protected function hasMultiErrors() : bool
+    {
+        return isset($this->jsonResponse['errors']) && count($this->jsonResponse['errors']) > 1;
     }
 
     protected function addError($statusCode, $details = null, array $meta = null)

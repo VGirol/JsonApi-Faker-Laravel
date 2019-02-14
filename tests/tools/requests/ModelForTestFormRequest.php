@@ -3,15 +3,13 @@
 namespace VGirol\JsonApi\Tests\Tools\Requests;
 
 use VGirol\JsonApi\Requests\JsonApiFormRequest;
+use VGirol\JsonApi\Tests\Tools\Models\ModelForTest;
 
 class ModelForTestFormRequest extends JsonApiFormRequest
 {
-    /**
-     * For test purpose
-     */
-    protected function modelNamespace(): string
+    protected function getModelClassName(): string
     {
-        return '\\VGirol\\JsonApi\\Tests\\Tools\\Models\\';
+        return ModelForTest::class;
     }
 
     /**
@@ -32,6 +30,7 @@ class ModelForTestFormRequest extends JsonApiFormRequest
             'tst_creation_date' => 'required|date'
         ];
     }
+
     public function messages(): array
     {
         return [];

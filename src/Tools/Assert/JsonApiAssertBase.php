@@ -3,19 +3,18 @@ namespace VGirol\JsonApi\Tools\Assert;
 
 use PHPUnit\Framework\Assert as PHPUnit;
 use PHPUnit\Framework\ExpectationFailedException;
+use VGirol\JsonApi\Tools\Assert\JsonApiAssertMessages;
 
 trait JsonApiAssertBase
 {
-    public static $JSONAPI_ERROR_ONLY_ALLOWED_MEMBERS = 'Unless otherwise noted, objects defined by this specification MUST NOT contain any additional members.';
-
     public static function assertHasMember($json, $key)
     {
-        PHPUnit::assertArrayHasKey($key, $json, sprintf('Failed asserting that a JSON object HAS the member "%s".', $key));
+        PHPUnit::assertArrayHasKey($key, $json, sprintf(JsonApiAssertMessages::JSONAPI_ERROR_HAS_MEMBER, $key));
     }
 
     public static function assertNotHasMember($json, $key)
     {
-        PHPUnit::assertArrayNotHasKey($key, $json, sprintf('Failed asserting that a JSON object NOT HAS the member "%s".', $key));
+        PHPUnit::assertArrayNotHasKey($key, $json, sprintf(JsonApiAssertMessages::JSONAPI_ERROR_NOT_HAS_MEMBER, $key));
     }
 
     public static function assertHasData($json)
@@ -72,7 +71,7 @@ trait JsonApiAssertBase
 
     public static function assertContainsOnlyAllowedMembers($expected, $actual, $message = '')
     {
-        $message = static::$JSONAPI_ERROR_ONLY_ALLOWED_MEMBERS . "\n" . $message;
+        $message = JsonApiAssertMessages::JSONAPI_ERROR_ONLY_ALLOWED_MEMBERS . "\n" . $message;
         self::assertThat($actual, self::containsOnlyAllowedMembersConstraint($expected), $message);
     }
 
@@ -124,6 +123,6 @@ trait JsonApiAssertBase
             return;
         }
 
-        throw new ExpectationFailedException('Failed asserting that test has failed.');
+        throw new ExpectationFailedException(JsonApiAssertMessages::JSONAPI_ERROR_TEST_FAILED);
     }
 }

@@ -3,14 +3,12 @@
 namespace VGirol\JsonApi\Resources;
 
 use Illuminate\Support\Facades\Route;
-use VGirol\JsonApi\Tools\ClassNameTools;
 use VGirol\JsonApi\Exceptions\JsonApiException;
 use VGirol\JsonApi\Models\JsonApiModelInterface;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class JsonApiResource extends JsonResource
 {
-    use ClassNameTools;
     use JsonApiResourceTrait;
 
     private $relationships = [];

@@ -20,7 +20,7 @@ class JsonApiContainsAtLeastOneConstraint extends Constraint
     /**
      * Returns a string representation of the constraint.
      */
-    public function toString(): string
+    public function toString() : string
     {
         return \sprintf(
             'contains at least one element of "%s"',
@@ -34,14 +34,14 @@ class JsonApiContainsAtLeastOneConstraint extends Constraint
      *
      * @param mixed $other value or object to evaluate
      */
-    protected function matches($other): bool
+    protected function matches($other) : bool
     {
         if (!is_array($other)) {
             return false;
         }
 
         foreach ($this->members as $member) {
-            if (isset($other[$member])) {
+            if (array_key_exists($member, $other)) {
                 return true;
             }
         }
@@ -57,7 +57,7 @@ class JsonApiContainsAtLeastOneConstraint extends Constraint
      *
      * @param mixed $other evaluated value or object
      */
-    protected function failureDescription($other): string
+    protected function failureDescription($other) : string
     {
         return \sprintf(
             '%s contains at least one element of "%s"',
@@ -66,7 +66,7 @@ class JsonApiContainsAtLeastOneConstraint extends Constraint
         );
     }
 
-    public function check($other): bool
+    public function check($other) : bool
     {
         return $this->matches($other);
     }

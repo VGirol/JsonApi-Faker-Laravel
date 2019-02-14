@@ -8,6 +8,16 @@ use App\Http\Requests\DummyFormRequest;
 
 class DummyClass extends ApiController
 {
+    protected function getDictionary()
+    {
+        return [
+            'primary' => [
+                'model' => DummyModelClass,
+                'resource' => DummyResourceClass
+            ]
+        ];
+    }
+
     public function store(DummyFormRequest $request): JsonResponse
     {
         return $this->storeObject($request);

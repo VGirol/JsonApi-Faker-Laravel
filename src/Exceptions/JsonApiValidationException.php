@@ -5,6 +5,13 @@ use Illuminate\Validation\ValidationException;
 
 class JsonApiValidationException extends ValidationException {
 
+    public function __construct($validator, $response = null, $errorBag = 'default')
+    {
+        parent::__construct($validator, $response, $errorBag);
+
+        $this->status(403);
+    }
+
     public function getStatusCode()
     {
         return $this->status;

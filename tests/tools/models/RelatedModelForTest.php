@@ -11,7 +11,7 @@ class RelatedModelForTest extends Model implements JsonApiModelInterface
     protected $primaryKey = 'REL_ID';
     public $timestamps = false;
 
-    protected $resourceObjectType = 'RelatedModelForTest';
+    protected $resourceObjectType = 'related';
 
     /**
      * The attributes that are mass assignable.

@@ -2,62 +2,44 @@
 namespace VGirol\JsonApi\Tools\Assert;
 
 use PHPUnit\Framework\Assert as PHPUnit;
+use VGirol\JsonApi\Tools\Assert\JsonApiAssertMessages;
 
 trait JsonApiAssertObject
 {
-
-    public static $JSONAPI_ERROR_MEMBER_NAME_IS_NOT_STRING = 'Each member key MUST be a string.';
-
-    public static $JSONAPI_ERROR_MEMBER_NAME_NOT_ALLOWED = 'Any object that constitutes or is contained in an attribute MUST NOT contain a "relationships" or "links" member.';
-
-    public static $JSONAPI_ERROR_RESOURCE_ID_MEMBER_IS_ABSENT = 'A resource object MUST contain the "id" top-level members.';
-    public static $JSONAPI_ERROR_RESOURCE_ID_MEMBER_IS_EMPTY = 'The value of the "id" member CAN NOT be empty.';
-    public static $JSONAPI_ERROR_RESOURCE_ID_MEMBER_IS_NOT_STRING = 'The value of the "id" member MUST be a string.';
-
-    public static $JSONAPI_ERROR_RESOURCE_TYPE_MEMBER_IS_ABSENT = 'A resource object MUST contain the "type" top-level members.';
-    public static $JSONAPI_ERROR_RESOURCE_TYPE_MEMBER_IS_EMPTY = 'The value of the "type" member CAN NOT be empty.';
-    public static $JSONAPI_ERROR_RESOURCE_TYPE_MEMBER_IS_NOT_STRING = 'The value of the "type" member MUST be a string.';
-
-    public static $JSONAPI_ERROR_RESOURCE_IDENTIFIER_IS_NOT_ARRAY = 'A resource identifier object MUST be an array.';
-
-    public static $JSONAPI_ERROR_RESOURCE_IS_NOT_ARRAY = 'A resource object MUST be an array.';
-
-    public static $JSONAPI_ERROR_META_OBJECT_IS_NOT_ARRAY = 'A meta object MUST be an array.';
-
-    public static $JSONAPI_ERROR_ATTRIBUTES_OBJECT_IS_NOT_ARRAY = 'An attributes object MUST be an array or an arrayable object with a "toArray" method.';
-
-    public static $JSONAPI_ERROR_LINK_OBJECT_MISS_HREF_MEMBER = 'A link object MUST contain an "href" member.';
-    public static $JSONAPI_ERROR_LINKS_OBJECT_NOT_ARRAY = 'A links object MUST be an array.';
-
-    public static $JSONAPI_ERROR_ERRORS_OBJECT_NOT_ARRAY = 'Top-level "errors" member MUST be an array of error objects.';
-    public static $JSONAPI_ERROR_ERROR_OBJECT_NOT_ARRAY = 'An error object MUST be an array.';
-
-    public static $JSONAPI_ERROR_ERROR_SOURCE_OBJECT_NOT_ARRAY = 'An error source object MUST be an array.';
-    public static $JSONAPI_ERROR_ERROR_SOURCE_POINTER_IS_NOT_STRING = 'The value of the "pointer" member MUST be a string.';
-    public static $JSONAPI_ERROR_ERROR_SOURCE_POINTER_START = 'The value of the "pointer" member MUST start with a slash (/).';
-    public static $JSONAPI_ERROR_ERROR_SOURCE_PARAMETER_IS_NOT_STRING = 'The value of the "parameter" member MUST be a string.';
-    public static $JSONAPI_ERROR_ERROR_STATUS_IS_NOT_STRING = 'The value of the "status" member MUST be a string.';
-    public static $JSONAPI_ERROR_ERROR_CODE_IS_NOT_STRING = 'The value of the "code" member MUST be a string.';
-    public static $JSONAPI_ERROR_ERROR_TITLE_IS_NOT_STRING = 'The value of the "title" member MUST be a string.';
-    public static $JSONAPI_ERROR_ERROR_DETAILS_IS_NOT_STRING = 'The value of the "details" member MUST be a string.';
-
-    public static $JSONAPI_ERROR_JSONAPI_OBJECT_NOT_ARRAY = 'A resource linkage MUST be an array of resource objects or resource identifier objects.';
-
-    public static $JSONAPI_ERROR_RESOURCE_LINKAGE_NOT_ARRAY = '';
-
-    public static function checkMemberName($name)
+    public static function assertIsValidMemberName($name)
     {
         PHPUnit::assertIsString(
             $name,
-            static::$JSONAPI_ERROR_MEMBER_NAME_IS_NOT_STRING
+            JsonApiAssertMessages::JSONAPI_ERROR_MEMBER_NAME_IS_NOT_STRING
         );
 
-        // TODO : tester caractères
-        $forbidden = ['+'];
-        PHPUnit::assertNotRegExp('/[\+]/', $name);
+        PHPUnit::assertGreaterThanOrEqual(
+            1,
+            strlen($name),
+            JsonApiAssertMessages::JSONAPI_ERROR_MEMBER_NAME_IS_TOO_SHORT
+        );
+
+        // Globally allowed characters
+        $globally = '\x{0030}-\x{0039}\x{0041}-\x{005A}\x{0061}-\x{007A}';
+        $globallyNotSafe = '\x{0080}-\x{FFFF}';
+        // Allowed characters
+        $allowed = '\x{002D}\x{005F}';
+        $allowedNotSafe = '\x{0020}';
+
+        PHPUnit::assertNotRegExp(
+            "/[^{$globally}{$globallyNotSafe}{$allowed}{$allowedNotSafe}]+/u",
+            $name,
+            JsonApiAssertMessages::JSONAPI_ERROR_MEMBER_NAME_HAVE_RESERVED_CHARACTERS
+        );
+
+        PHPUnit::assertRegExp(
+            "/^[{$globally}{$globallyNotSafe}]{1}.*[{$globally}{$globallyNotSafe}]{1}$/u",
+            $name,
+            JsonApiAssertMessages::JSONAPI_ERROR_MEMBER_NAME_START_AND_END_WITH_ALLOWED_CHARACTERS
+        );
     }
 
-    public static function checkField($field)
+    public static function assertIsValidField($field)
     {
         if (!is_array($field)) {
             return;
@@ -67,19 +49,19 @@ trait JsonApiAssertObject
             // For objects, $key is a string
             // For arrays of objects, $key is an integer
             if (is_string($key)) {
-                static::checkForbiddenMemberName($key);
+                static::assertNoForbiddenMemberName($key);
             }
-            static::checkField($value);
+            static::assertIsValidField($value);
         }
     }
 
-    public static function checkForbiddenMemberName($name)
+    public static function assertNoForbiddenMemberName($name)
     {
         $forbidden = ['relationships', 'links'];
         PHPUnit::assertNotContains(
             $name,
             $forbidden,
-            static::$JSONAPI_ERROR_MEMBER_NAME_NOT_ALLOWED
+            JsonApiAssertMessages::JSONAPI_ERROR_MEMBER_NAME_NOT_ALLOWED
         );
     }
 
@@ -88,17 +70,17 @@ trait JsonApiAssertObject
         PHPUnit::assertArrayHasKey(
             'id',
             $resource,
-            static::$JSONAPI_ERROR_RESOURCE_ID_MEMBER_IS_ABSENT
+            JsonApiAssertMessages::JSONAPI_ERROR_RESOURCE_ID_MEMBER_IS_ABSENT
         );
 
         PHPUnit::assertNotEmpty(
             $resource['id'],
-            static::$JSONAPI_ERROR_RESOURCE_ID_MEMBER_IS_EMPTY
+            JsonApiAssertMessages::JSONAPI_ERROR_RESOURCE_ID_MEMBER_IS_EMPTY
         );
 
         PHPUnit::assertIsString(
             $resource['id'],
-            static::$JSONAPI_ERROR_RESOURCE_ID_MEMBER_IS_NOT_STRING
+            JsonApiAssertMessages::JSONAPI_ERROR_RESOURCE_ID_MEMBER_IS_NOT_STRING
         );
     }
 
@@ -107,27 +89,27 @@ trait JsonApiAssertObject
         PHPUnit::assertArrayHasKey(
             'type',
             $resource,
-            static::$JSONAPI_ERROR_RESOURCE_TYPE_MEMBER_IS_ABSENT
+            JsonApiAssertMessages::JSONAPI_ERROR_RESOURCE_TYPE_MEMBER_IS_ABSENT
         );
 
         PHPUnit::assertNotEmpty(
             $resource['type'],
-            static::$JSONAPI_ERROR_RESOURCE_TYPE_MEMBER_IS_EMPTY
+            JsonApiAssertMessages::JSONAPI_ERROR_RESOURCE_TYPE_MEMBER_IS_EMPTY
         );
 
         PHPUnit::assertIsString(
             $resource['type'],
-            static::$JSONAPI_ERROR_RESOURCE_TYPE_MEMBER_IS_NOT_STRING
+            JsonApiAssertMessages::JSONAPI_ERROR_RESOURCE_TYPE_MEMBER_IS_NOT_STRING
         );
 
-        static::checkMemberName($resource['type']);
+        static::assertIsValidMemberName($resource['type']);
     }
 
-    public static function assertIsResourceIdentifierObject($resource)
+    public static function assertIsValidResourceIdentifierObject($resource)
     {
         PHPUnit::assertIsArray(
             $resource,
-            static::$JSONAPI_ERROR_RESOURCE_IDENTIFIER_IS_NOT_ARRAY
+            JsonApiAssertMessages::JSONAPI_ERROR_RESOURCE_IDENTIFIER_IS_NOT_ARRAY
         );
 
         static::assertResourceHasIdMember($resource);
@@ -135,13 +117,17 @@ trait JsonApiAssertObject
 
         $allowed = ['id', 'type', 'meta'];
         static::assertContainsOnlyAllowedMembers($allowed, $resource);
+
+        if (isset($resource['meta'])) {
+            static::assertIsValidMetaObject($resource['meta']);
+        }
     }
 
-    public static function assertIsResourceObject($resource)
+    public static function assertIsValidResourceObject($resource)
     {
         PHPUnit::assertIsArray(
             $resource,
-            static::$JSONAPI_ERROR_RESOURCE_IS_NOT_ARRAY
+            JsonApiAssertMessages::JSONAPI_ERROR_RESOURCE_IS_NOT_ARRAY
         );
 
         static::assertResourceHasIdMember($resource);
@@ -151,68 +137,54 @@ trait JsonApiAssertObject
 
         $allowed = ['id', 'type', 'meta', 'attributes', 'links', 'relationships'];
         static::assertContainsOnlyAllowedMembers($allowed, $resource);
-    }
-
-    public static function checkResourceIdentifierObject($resource)
-    {
-        static::assertIsResourceIdentifierObject($resource);
-
-        if (isset($resource['meta'])) {
-            static::checkMetaObject($resource['meta']);
-        }
-    }
-
-    public static function checkResourceObject($resource)
-    {
-        static::assertIsResourceObject($resource);
 
         if (isset($resource['attributes'])) {
-            static::checkAttributes($resource['attributes']);
+            static::assertIsValidAttributesObject($resource['attributes']);
         }
 
         if (isset($resource['relationships'])) {
-            static::checkRelationshipsObject($resource['relationships']);
+            static::assertIsValidRelationshipsObject($resource['relationships']);
         }
 
         if (isset($resource['links'])) {
-            static::checkLinksObject($resource['links'], false, false);
+            static::assertIsValidLinksObject($resource['links'], false, false);
         }
 
         if (isset($resource['meta'])) {
-            static::checkMetaObject($resource['meta']);
+            static::assertIsValidMetaObject($resource['meta']);
         }
     }
 
-    public static function checkMetaObject($meta)
+    public static function assertIsValidMetaObject($meta)
     {
         static::assertIsNotArrayOfObject(
             $meta,
-            static::$JSONAPI_ERROR_META_OBJECT_IS_NOT_ARRAY
+            JsonApiAssertMessages::JSONAPI_ERROR_META_OBJECT_IS_NOT_ARRAY
         );
 
         foreach (array_keys($meta) as $key) {
-            static::checkMemberName($key);
+            static::assertIsValidMemberName($key);
         }
     }
 
-    public static function checkAttributes($attributes)
+    public static function assertIsValidAttributesObject($attributes)
     {
         static::assertIsNotArrayOfObject(
             $attributes,
-            static::$JSONAPI_ERROR_ATTRIBUTES_OBJECT_IS_NOT_ARRAY
+            JsonApiAssertMessages::JSONAPI_ERROR_ATTRIBUTES_OBJECT_IS_NOT_ARRAY
         );
 
         foreach ($attributes as $key => $value) {
-            static::checkMemberName($key);
-            static::checkField($value);
+            static::assertIsValidMemberName($key);
+            static::assertIsValidField($value);
         }
     }
 
-    public static function checkLinksObject($links, $withPagination, $forError)
+    public static function assertIsValidLinksObject($links, $withPagination, $forError)
     {
         PHPUnit::assertIsArray(
             $links,
-            static::$JSONAPI_ERROR_LINKS_OBJECT_NOT_ARRAY
+            JsonApiAssertMessages::JSONAPI_ERROR_LINKS_OBJECT_NOT_ARRAY
         );
 
         if ($forError) {
@@ -230,11 +202,11 @@ trait JsonApiAssertObject
         );
 
         foreach ($links as $key => $link) {
-            static::checkLinkObject($link);
+            static::assertIsValidLinkObject($link);
         }
     }
 
-    public static function checkLinkObject($link)
+    public static function assertIsValidLinkObject($link)
     {
         if (is_null($link)) {
             PHPUnit::assertNull($link);
@@ -251,7 +223,7 @@ trait JsonApiAssertObject
         PHPUnit::assertArrayHasKey(
             'href',
             $link,
-            static::$JSONAPI_ERROR_LINK_OBJECT_MISS_HREF_MEMBER
+            JsonApiAssertMessages::JSONAPI_ERROR_LINK_OBJECT_MISS_HREF_MEMBER
         );
 
         $allowed = ['href', 'meta'];
@@ -261,27 +233,27 @@ trait JsonApiAssertObject
         );
 
         if (isset($link['meta'])) {
-            static::checkMetaObject($link['meta']);
+            static::assertIsValidMetaObject($link['meta']);
         }
     }
 
-    public static function checkErrorsObject($errors)
+    public static function assertIsValidErrorsObject($errors)
     {
         static::assertIsArrayOfObjects(
             $errors,
-            static::$JSONAPI_ERROR_ERRORS_OBJECT_NOT_ARRAY
+            JsonApiAssertMessages::JSONAPI_ERROR_ERRORS_OBJECT_NOT_ARRAY
         );
 
         foreach ($errors as $error) {
-            static::checkErrorObject($error);
+            static::assertIsValidErrorObject($error);
         }
     }
 
-    public static function checkErrorObject($error)
+    public static function assertIsValidErrorObject($error)
     {
         PHPUnit::assertIsArray(
             $error,
-            static::$JSONAPI_ERROR_ERROR_OBJECT_NOT_ARRAY
+            JsonApiAssertMessages::JSONAPI_ERROR_ERROR_OBJECT_NOT_ARRAY
         );
 
         $allowed = ['id', 'links', 'status', 'code', 'title', 'details', 'source', 'meta'];
@@ -293,86 +265,86 @@ trait JsonApiAssertObject
         if (isset($error['status'])) {
             PHPUnit::assertIsString(
                 $error['status'],
-                static::$JSONAPI_ERROR_ERROR_STATUS_IS_NOT_STRING
+                JsonApiAssertMessages::JSONAPI_ERROR_ERROR_STATUS_IS_NOT_STRING
             );
         }
 
         if (isset($error['code'])) {
             PHPUnit::assertIsString(
                 $error['code'],
-                static::$JSONAPI_ERROR_ERROR_CODE_IS_NOT_STRING
+                JsonApiAssertMessages::JSONAPI_ERROR_ERROR_CODE_IS_NOT_STRING
             );
         }
 
         if (isset($error['title'])) {
             PHPUnit::assertIsString(
                 $error['title'],
-                static::$JSONAPI_ERROR_ERROR_TITLE_IS_NOT_STRING
+                JsonApiAssertMessages::JSONAPI_ERROR_ERROR_TITLE_IS_NOT_STRING
             );
         }
 
         if (isset($error['details'])) {
             PHPUnit::assertIsString(
                 $error['details'],
-                static::$JSONAPI_ERROR_ERROR_DETAILS_IS_NOT_STRING
+                JsonApiAssertMessages::JSONAPI_ERROR_ERROR_DETAILS_IS_NOT_STRING
             );
         }
 
         if (isset($error['source'])) {
-            static::checkErrorSourceObject($error['source']);
+            static::assertIsValidErrorSourceObject($error['source']);
         }
 
         if (isset($error['links'])) {
-            static::checkErrorLinksObject($error['links']);
+            static::assertIsValidErrorLinksObject($error['links']);
         }
 
         if (isset($error['meta'])) {
-            static::checkMetaObject($error['meta']);
+            static::assertIsValidMetaObject($error['meta']);
         }
     }
 
-    public static function checkErrorLinksObject($links)
+    public static function assertIsValidErrorLinksObject($links)
     {
-        static:: checkLinksObject($links, false, true);
+        static:: assertIsValidLinksObject($links, false, true);
     }
 
-    public static function checkErrorSourceObject($source)
+    public static function assertIsValidErrorSourceObject($source)
     {
         PHPUnit::assertIsArray(
             $source,
-            static::$JSONAPI_ERROR_ERROR_SOURCE_OBJECT_NOT_ARRAY
+            JsonApiAssertMessages::JSONAPI_ERROR_ERROR_SOURCE_OBJECT_NOT_ARRAY
         );
 
         foreach (array_keys($source) as $name) {
-            static::checkMemberName($name);
-            static::checkForbiddenMemberName($name);
+            static::assertIsValidMemberName($name);
+            static::assertNoForbiddenMemberName($name);
         }
 
         if (isset($source['pointer'])) {
             PHPUnit::assertIsString(
                 $source['pointer'],
-                static::$JSONAPI_ERROR_ERROR_SOURCE_POINTER_IS_NOT_STRING
+                JsonApiAssertMessages::JSONAPI_ERROR_ERROR_SOURCE_POINTER_IS_NOT_STRING
             );
             PHPUnit:: assertStringStartsWith(
                 '/',
                 $source['pointer'],
-                static::$JSONAPI_ERROR_ERROR_SOURCE_POINTER_START
+                JsonApiAssertMessages::JSONAPI_ERROR_ERROR_SOURCE_POINTER_START
             );
         }
 
         if (isset($source['parameter'])) {
             PHPUnit::assertIsString(
                 $source['parameter'],
-                static::$JSONAPI_ERROR_ERROR_SOURCE_PARAMETER_IS_NOT_STRING
+                JsonApiAssertMessages::JSONAPI_ERROR_ERROR_SOURCE_PARAMETER_IS_NOT_STRING
             );
         }
     }
 
-    public static function checkJsonapiObject($jsonapi)
+    public static function assertIsValidJsonapiObject($jsonapi)
     {
         static::assertIsNotArrayOfObject(
             $jsonapi,
-            static::$JSONAPI_ERROR_JSONAPI_OBJECT_NOT_ARRAY
+            JsonApiAssertMessages::JSONAPI_ERROR_JSONAPI_OBJECT_NOT_ARRAY
         );
 
         $allowed = ['version', 'meta'];
@@ -382,21 +354,21 @@ trait JsonApiAssertObject
         );
 
         if (isset($jsonapi['meta'])) {
-            static::checkMetaObject($jsonapi['meta']);
+            static::assertIsValidMetaObject($jsonapi['meta']);
         }
     }
 
-    public static function checkRelationshipsObject($relationships)
+    public static function assertIsValidRelationshipsObject($relationships)
     {
         static::assertIsNotArrayOfObject($relationships);
 
         foreach ($relationships as $key => $relationship) {
-            static::checkMemberName($key);
-            static::checkRelationshipObject($relationship);
+            static::assertIsValidMemberName($key);
+            static::assertIsValidRelationshipObject($relationship);
         }
     }
 
-    public static function checkRelationshipObject($relationship)
+    public static function assertIsValidRelationshipObject($relationship)
     {
         $expected = ['links', 'data', 'meta'];
         static::assertContainsAtLeastOneMember($expected, $relationship);
@@ -404,21 +376,21 @@ trait JsonApiAssertObject
         $withPagination = false;
         if (isset($relationship['data'])) {
             $data = $relationship['data'];
-            static::checkResourceLinkage($data);
+            static::assertIsValidResourceLinkage($data);
             $withPagination = static::isToManyResourceLinkage($data);
         }
 
         if (isset($relationship['links'])) {
             $links = $relationship['links'];
-            static::checkLinksObject($links, $withPagination, false);
+            static::assertIsValidLinksObject($links, $withPagination, false);
         }
 
         if (isset($relationship['meta'])) {
-            static::checkMetaObject($relationship['meta']);
+            static::assertIsValidMetaObject($relationship['meta']);
         }
     }
 
-    public static function checkResourceLinkage($data)
+    public static function assertIsValidResourceLinkage($data)
     {
         if (is_null($data)) {
             PHPUnit::assertNull($data);
@@ -428,7 +400,7 @@ trait JsonApiAssertObject
 
         PHPUnit::assertIsArray(
             $data,
-            static::$JSONAPI_ERROR_RESOURCE_LINKAGE_NOT_ARRAY
+            JsonApiAssertMessages::JSONAPI_ERROR_RESOURCE_LINKAGE_NOT_ARRAY
         );
 
         if (empty($data)) {
@@ -437,10 +409,10 @@ trait JsonApiAssertObject
 
         if (static::isArrayOfObjects($data)) {
             foreach ($data as $resource) {
-                static::checkResourceIdentifierObject($resource);
+                static::assertIsValidResourceIdentifierObject($resource);
             }
         } else {
-            static::checkResourceIdentifierObject($data);
+            static::assertIsValidResourceIdentifierObject($data);
         }
     }
 

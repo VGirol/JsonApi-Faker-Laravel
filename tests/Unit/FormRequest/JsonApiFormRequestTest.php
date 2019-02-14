@@ -1,12 +1,12 @@
 <?php
 namespace VGirol\JsonApi\Tests\Unit\FormRequest;
 
-use VGirol\JsonApi\Tests\TestCase;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
-use MohammedManssour\FormRequestTester\TestsFormRequests;
-use VGirol\JsonApi\Tests\Tools\Requests\ModelForTestFormRequest;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Validator;
+use MohammedManssour\FormRequestTester\TestsFormRequests;
+use VGirol\JsonApi\Tests\TestCase;
+use VGirol\JsonApi\Tests\Tools\Requests\ModelForTestFormRequest;
 
 class JsonApiFormRequestTest extends TestCase
 {
@@ -25,7 +25,7 @@ class JsonApiFormRequestTest extends TestCase
         // Creates a form
         $form = [
             'data' => [
-                'type' => $this->resourceType,
+                'type' => $this->getObjectResourceType(),
                 'id' => '',
                 'attributes' => [
                     'tst_name' => 'asd',
@@ -44,7 +44,7 @@ class JsonApiFormRequestTest extends TestCase
     public function testPostValidationError()
     {
         // Creates an object with filled out fields
-        $model = factoryJsonapi($this->model)->create();
+        $model = factoryJsonapi($this->getModelClassName())->create();
 
         $this->assertDatabaseHas($model->getTable(), [ 'TST_ID' => $model->getKey() ]);
 
@@ -79,12 +79,12 @@ class JsonApiFormRequestTest extends TestCase
     public function testPatchValidationSuccess()
     {
         // Creates an object with filled out fields
-        $model = factoryJsonapi($this->model)->create();
+        $model = factoryJsonapi($this->getModelClassName())->create();
 
         // Creates a form
         $form = [
             'data' => [
-                'type' => $this->resourceType,
+                'type' => $this->getObjectResourceType(),
                 'id' => strval($model->getKey()),
                 'attributes' => [
                     'tst_name' => 'asd'

@@ -2,20 +2,20 @@
 namespace VGirol\JsonApi\Tests\Unit\Resource;
 
 use Illuminate\Http\Request;
-use VGirol\JsonApi\Tests\TestCase;
-use VGirol\JsonApi\Tools\Assert\JsonApiTest;
-use VGirol\JsonApi\Tests\JsonApiTestCommon;
 use VGirol\JsonApi\Resources\JsonApiResourceType;
+use VGirol\JsonApi\Tests\TestCase;
 
 class JsonApiResourceTest extends TestCase
 {
+    protected $resourceClass = \VGirol\JsonApi\Resources\JsonApiResource::class;
+
     public function testExportAsResourceIdentifierObject()
     {
         // Creates an object with filled out fields
-        $model = factoryJsonapi($this->model)->make();
+        $model = factoryJsonapi($this->getModelClassName())->make();
 
         // Creates a resource
-        $resource = call_user_func_array([$this->resourceClass, 'make'], [$model]);
+        $resource = call_user_func_array([$this->getResourceClassName(), 'make'], [$model]);
         $resource->setExportType(JsonApiResourceType::RESOURCE_IDENTIFIER);
 
         // Creates a request
@@ -25,18 +25,18 @@ class JsonApiResourceTest extends TestCase
         $data = $resource->toArray($request);
 
         // Executes all the tests
-        $this->assertIsResourceIdentifierObject($data);
-        $this->assertValidResourceIdentifierObject($data, $model);
+        $this->assertIsValidResourceIdentifierObject($data);
+        $this->assertResourceIdentifierObjectEqualsModel($model, $data);
         $this->assertNotHasMember($data, 'meta');
     }
 
     public function testExportAsResourceObject()
     {
         // Creates an object with filled out fields
-        $model = factoryJsonapi($this->model)->make();
+        $model = factoryJsonapi($this->getModelClassName())->make();
 
         // Creates a resource
-        $resource = call_user_func_array([$this->resourceClass, 'make'], [$model]);
+        $resource = call_user_func_array([$this->getResourceClassName(), 'make'], [$model]);
         $resource->setExportType(JsonApiResourceType::RESOURCE_OBJECT);
 
         // Creates a request
@@ -46,8 +46,8 @@ class JsonApiResourceTest extends TestCase
         $data = $resource->toArray($request);
 
         // Executes all the tests
-        $this->assertIsResourceObject($data);
-        $this->assertValidResourceObject($data, $model);
+        $this->assertIsValidResourceObject($data);
+        $this->assertResourceObjectEqualsModel($model, $data);
         $this->assertNotHasMember($data, 'meta');
     }
 
@@ -57,21 +57,21 @@ class JsonApiResourceTest extends TestCase
         $relatedName = 'related';
 
         // Creates an object with filled out fields
-        $model = factoryJsonapi($this->model)->make();
+        $model = factoryJsonapi($this->getModelClassName())->make();
         $related = factory(
-            \VGirol\JsonApi\Tests\Tools\Models\RelatedModelForTest::class,
+            $this->getModelClassName($relatedName),
             $count
         )->make([
             'TST_ID' => $model->getKey(),
         ]);
-        // $model->relatedModelForTest()->createMany($related);
 
         // Creates a resource
-        $resource = call_user_func_array([$this->resourceClass, 'make'], [$model]);
+        $resource = call_user_func_array([$this->getResourceClassName(), 'make'], [$model]);
         $resource->setExportType(JsonApiResourceType::RESOURCE_OBJECT);
         $resource->addRelationship(function () use ($relatedName, $related) {
+            $className = $this->getResourceCollectionClassName($relatedName);
             return [
-                $relatedName => new \VGirol\JsonApi\Resources\JsonApiResourceCollection($related)
+                $relatedName => new $className($related)
             ];
         });
 
@@ -82,11 +82,11 @@ class JsonApiResourceTest extends TestCase
         $data = $resource->toArray($request);
 
         // Executes all the tests
-        $this->assertIsResourceObject($data);
-        $this->assertValidResourceObject($data, $model);
+        $this->assertIsValidResourceObject($data);
+        $this->assertResourceObjectEqualsModel($model, $data);
         $this->assertNotHasMember($data, 'meta');
         $this->assertHasRelationships($data);
-        $this->checkRelationshipsObject($data['relationships']);
+        $this->assertIsValidRelationshipsObject($data['relationships']);
         $this->assertCount(1, $data['relationships']);
         foreach ($data['relationships'] as $name => $relationship) {
             $this->assertHasData($relationship);

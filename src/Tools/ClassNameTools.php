@@ -2,82 +2,90 @@
 
 namespace VGirol\JsonApi\Tools;
 
+use VGirol\JsonApi\Resources\JsonApiResource;
+use VGirol\JsonApi\Resources\JsonApiResourceCollection;
+use VGirol\JsonApi\Exceptions\JsonApiException;
+
 trait ClassNameTools
 {
-    protected function modelNamespace(): string
+    // protected $dictionary = [
+    //     'primary' => [
+    //         'model' => null,
+    //         'resource' => null,
+    //         'resource-collection' => null,
+    //     ],
+    //     'relatonships' => []
+    // ];
+
+    protected abstract function getDictionary();
+
+    protected function getModelClassName($relationship = null) : string
     {
-        return '\\App\\Models\\';
+        $path = (is_null($relationship)) ? 'primary.model' : 'relationships.' . $relationship . '.model';
+
+        return $this->getDictionaryValue($path);
     }
 
-    protected function resourceNamespace(): string
+    protected function getResourceClassName($relationship = null) : string
     {
-        return '\\App\\Http\\Resources\\';
+        try {
+            $path = (is_null($relationship)) ? 'primary.resource' : 'relationships.' . $relationship . '.resource';
+            $name = $this->getDictionaryValue($path);
+        } catch (JsonApiException $e) {
+            $name = JsonApiResource::class;
+        }
+
+        return $name;
     }
 
-    public function getModelTable(string $className = NULL): string
+    protected function getResourceCollectionClassName($relationship = null) : string
+    {
+        try {
+            $path = (is_null($relationship)) ? 'primary.resource-collection' : 'relationships.' . $relationship . '.resource-collection';
+            $name = $this->getDictionaryValue($path);
+        } catch (JsonApiException $e) {
+            $name = JsonApiResourceCollection::class;
+        }
+
+        return $name;
+    }
+
+    protected function getModelTable(string $className = null) : string
+    {
+        return $this->getModel($className)->getTable();
+    }
+
+    protected function getModelKeyName(string $className = null) : string
+    {
+        return $this->getModel($className)->getKeyName();
+    }
+
+    protected function getObjectResourceType(string $className = null) : string
+    {
+        return $this->getModel($className)->getResourceType();
+    }
+
+    private function getModel(string $className = null)
     {
         if (is_null($className)) {
             $className = $this->getModelClassName();
         }
 
-        return (new $className())->getTable();
+        return new $className();
     }
 
-    public function getModelKeyName(string $className = NULL): string
+    private function getDictionaryValue(string $path) : string
     {
-        if (is_null($className)) {
-            $className = $this->getModelClassName();
+        $keys = explode('.', $path);
+        $ret = $this->getDictionary();
+        foreach ($keys as $key) {
+            if (isset($ret[$key])) {
+                $ret = $ret[$key];
+            } else {
+                throw new JsonApiException();
+            }
         }
 
-        return (new $className())->getKeyName();
+        return $ret;
     }
-
-    public function getObjectResourceType(string $className = NULL) : string
-    {
-        if (is_null($className)) {
-            $className = $this->getModelClassName();
-        }
-
-        return (new $className())->getResourceType();
-    }
-
-    public function getModelClassName(string $className = NULL): string
-    {
-        return $this->modelNamespace().$this->getRootName($className);
-    }
-
-    public function getResourceClassName(string $className = NULL): string
-    {
-        return $this->resourceNamespace().$this->getRootName($className).'Resource';
-    }
-
-    public function getResourceCollectionClassName($related = NULL): string
-    {
-        if (!is_null($related)) {
-            return $this->getRelationshipsResourceCollectionClassName($related);
-        }
-
-        return $this->getResourceClassName().'Collection';
-    }
-
-    public function getRelationshipsResourceCollectionClassName($related): string
-    {
-        return $this->resourceNamespace().ucfirst(substr($related, 0, -1)).'ResourceCollection';
-    }
-
-    private function getRootName($class = NULL): string
-    {
-        if (is_null($class)) {
-            $class = get_called_class();
-        }
-        $a = explode('\\', $class);
-        $rootName = array_pop($a);
-        $rootName = str_replace(
-            ['Controller', 'FormRequest', 'Resource', 'ResourceCollection'],
-            NULL,
-            $rootName);
-
-        return $rootName;
-    }
-
 }

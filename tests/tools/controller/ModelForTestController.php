@@ -3,37 +3,44 @@
 namespace VGirol\JsonApi\Tests\Tools\Controller;
 
 use Illuminate\Http\JsonResponse;
-use VGirol\JsonApi\Controllers\JsonApiRestTrait;
 use Illuminate\Routing\Controller as BaseController;
-//use Illuminate\Foundation\Validation\ValidatesRequests;
+use VGirol\JsonApi\Controllers\JsonApiRestTrait;
+use VGirol\JsonApi\Tests\Tools\Models\ModelForTest;
+use VGirol\JsonApi\Tests\Tools\Models\RelatedModelForTest;
+use VGirol\JsonApi\Tests\Tools\Requests\ModelForTestFormRequest;
+use VGirol\JsonApi\Tests\Tools\Resources\ModelForTestResource;
+use VGirol\JsonApi\Tests\Tools\Resources\ModelForTestResourceCollection;
+use VGirol\JsonApi\Tests\Tools\Resources\RelatedModelForTestResource;
+use VGirol\JsonApi\Tests\Tools\Resources\RelatedModelForTestResourceCollection;
 
 class ModelForTestController extends BaseController
 {
-//    use ValidatesRequests;
     use JsonApiRestTrait;
 
-    /**
-     * For test purpose
-     */
-    protected function modelNamespace(): string
+    protected function getDictionary()
     {
-        return '\\VGirol\\JsonApi\\Tests\\Tools\\Models\\';
+        return [
+            'primary' => [
+                'model' => ModelForTest::class,
+                'resource' => ModelForTestResource::class,
+                'resource-collection' => ModelForTestResourceCollection::class
+            ],
+            'relatonships' => [
+                'related' => [
+                    'model' => RelatedModelForTest::class,
+                    'resource' => RelatedModelForTestResource::class,
+                    'resource-collection' => RelatedModelForTestResourceCollection::class
+                ]
+            ]
+        ];
     }
 
-    /**
-     * For test purpose
-     */
-    protected function resourceNamespace(): string
-    {
-        return '\\VGirol\\JsonApi\\Tests\\Tools\\Resources\\';
-    }
-
-    public function store(VehicleFormRequest $request): JsonResponse
+    public function store(ModelForTestFormRequest $request): JsonResponse
     {
         return $this->storeObject($request);
     }
 
-    public function update(VehicleFormRequest $request, $id): JsonResponse
+    public function update(ModelForTestFormRequest $request, $id): JsonResponse
     {
         return $this->updateObject($request, $id);
     }

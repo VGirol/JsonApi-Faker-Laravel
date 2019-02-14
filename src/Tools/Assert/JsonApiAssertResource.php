@@ -2,10 +2,11 @@
 namespace VGirol\JsonApi\Tools\Assert;
 
 use PHPUnit\Framework\Assert as PHPUnit;
+use VGirol\JsonApi\Models\JsonApiModelInterface;
 
 trait JsonApiAssertResource
 {
-    public static function assertValidResourceIdentifierObject($resource, $model)
+    public static function assertResourceIdentifierObjectEqualsModel(JsonApiModelInterface $model, $resource)
     {
         PHPUnit::assertEquals(
             $model->getResourceType(),
@@ -18,9 +19,9 @@ trait JsonApiAssertResource
         );
     }
 
-    public static function assertValidResourceObject($resource, $model)
+    public static function assertResourceObjectEqualsModel(JsonApiModelInterface $model, $resource)
     {
-        static::assertValidResourceIdentifierObject($resource, $model);
+        static::assertResourceIdentifierObjectEqualsModel($model, $resource);
 
         static::assertHasAttributes($resource);
         PHPUnit::assertEquals(

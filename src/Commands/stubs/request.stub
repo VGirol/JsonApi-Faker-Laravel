@@ -6,6 +6,11 @@ use VGirol\JsonApi\Requests\JsonApiFormRequest;
 
 class DummyClass extends JsonApiFormRequest
 {
+    protected function getModelClassName(): string
+    {
+        return DummyModelClass;
+    }
+
     /**
      * Determine if the user is authorized to make this request.
      *

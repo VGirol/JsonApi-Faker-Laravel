@@ -12,7 +12,7 @@ use Illuminate\Contracts\Validation\Factory as ValidationFactory;
 
 abstract class JsonApiFormRequest extends FormRequest
 {
-    use ClassNameTools;
+    // use ClassNameTools;
 
     private $cachedRules;
 
@@ -136,4 +136,23 @@ abstract class JsonApiFormRequest extends FormRequest
 
         return array_merge($mes, $this->messages());
     }
+
+    protected function getObjectResourceType(): string
+    {
+        return $this->getModelInstance()->getResourceType();
+    }
+
+    protected function getModelKeyName(): string
+    {
+        return $this->getModelInstance()->getKeyName();
+    }
+
+    private function getModelInstance()
+    {
+        $className = $this->getModelClassName();
+
+        return new $className();
+    }
+
+    protected abstract function getModelClassName(): string;
 }

@@ -2,39 +2,34 @@
 namespace VGirol\JsonApi\Tools\Assert;
 
 use PHPUnit\Framework\Assert as PHPUnit;
+use VGirol\JsonApi\Tools\Assert\JsonApiAssertMessages;
 
 trait JsonApiAssertStructure
 {
-    public static $JSONAPI_ERROR_TOP_LEVEL_DATA_AND_ERROR = 'The members "data" and "errors" MUST NOT coexist in the same JSON document.';
-    public static $JSONAPI_ERROR_TOP_LEVEL_DATA_AND_INCLUDED = 'If a document does not contain a top-level "data" member, the "included" member MUST NOT be present either.';
-
-    public static $JSONAPI_ERROR_PRIMARY_DATA_NOT_ARRAY = 'Primary data MUST be an array or an arrayable object with a "toArray" method.';
-    public static $JSONAPI_ERROR_PRIMARY_DATA_SAME_TYPE = 'All elements of resource collection MUST be of same type (resource object or resource identifier object).';
-
-    public static function checkJsonApiStructure($json)
+    public static function assertHasValidStructure($json)
     {
-        static::checkTopLevelMembers($json);
+        static::assertHasValidTopLevelMembers($json);
 
         $isResourceCollection = false;
         if (isset($json['data'])) {
-            static::checkPrimaryData($json['data']);
+            static::assertIsValidPrimaryData($json['data']);
             $isResourceCollection = static::isArrayOfObjects($json['data']);
         }
 
         if (isset($json['errors'])) {
-            static::checkErrorsObject($json['errors']);
+            static::assertIsValidErrorsObject($json['errors']);
         }
 
         if (isset($json['meta'])) {
-            static::checkMetaObject($json['meta']);
+            static::assertIsValidMetaObject($json['meta']);
         }
 
         if (isset($json['jsonapi'])) {
-            static::checkJsonapiObject($json['jsonapi']);
+            static::assertIsValidJsonapiObject($json['jsonapi']);
         }
 
         if (isset($json['links'])) {
-            static::checkLinksObject(
+            static::assertIsValidLinksObject(
                 $json['links'],
                 $isResourceCollection,
                 false
@@ -42,22 +37,22 @@ trait JsonApiAssertStructure
         }
 
         if (isset($json['included'])) {
-            static::checkIncluded($json['included'], $json['data']);
+            static::assertIsValidIncludedCollection($json['included'], $json['data']);
         }
     }
 
-    public static function checkTopLevelMembers($json)
+    public static function assertHasValidTopLevelMembers($json)
     {
         $expected = ['data', 'errors', 'meta'];
         static::assertContainsAtLeastOneMember(
             $expected,
             $json,
-            \sprintf('A JSON document MUST contain at least one of the following top-level members: "%s".', implode('", "', $expected))
+            \sprintf(JsonApiAssertMessages::JSONAPI_ERROR_TOP_LEVEL_MEMBERS, implode('", "', $expected))
         );
 
         PHPUnit::assertFalse(
             isset($json['data']) && isset($json['errors']),
-            static::$JSONAPI_ERROR_TOP_LEVEL_DATA_AND_ERROR
+            JsonApiAssertMessages::JSONAPI_ERROR_TOP_LEVEL_DATA_AND_ERROR
         );
 
         $allowed = ['data', 'errors', 'meta', 'jsonapi', 'links', 'included'];
@@ -68,11 +63,11 @@ trait JsonApiAssertStructure
 
         PHPUnit::assertFALSE(
             !isset($json['data']) && isset($json['included']),
-            static::$JSONAPI_ERROR_TOP_LEVEL_DATA_AND_INCLUDED
+            JsonApiAssertMessages::JSONAPI_ERROR_TOP_LEVEL_DATA_AND_INCLUDED
         );
     }
 
-    public static function checkPrimaryData($data)
+    public static function assertIsValidPrimaryData($data)
     {
         if (is_null($data)) {
             PHPUnit::assertNull($data);
@@ -82,7 +77,7 @@ trait JsonApiAssertStructure
 
         PHPUnit::assertIsArray(
             $data,
-            static::$JSONAPI_ERROR_PRIMARY_DATA_NOT_ARRAY
+            JsonApiAssertMessages::JSONAPI_ERROR_PRIMARY_DATA_NOT_ARRAY
         );
 
         if (empty($data)) {
@@ -91,14 +86,14 @@ trait JsonApiAssertStructure
 
         if (static::isArrayOfObjects($data)) {
             // Resource collection (Resource Objects or Resource Identifier Objects)
-            static::checkDataForResourceCollection($data, true);
+            static::assertIsValidResourceCollection($data, true);
         } else {
             // Single Resource (Resource Object or Resource Identifier Object)
-            static::checkDataForSingleResource($data);
+            static::assertIsValidSingleResource($data);
         }
     }
 
-    public static function checkDataForResourceCollection($list, $checkType)
+    public static function assertIsValidResourceCollection($list, $checkType)
     {
         static::assertIsArrayOfObjects($list);
 
@@ -112,37 +107,30 @@ trait JsonApiAssertStructure
                     PHPUnit::assertEquals(
                         $isResourceObjectCollection,
                         static::dataIsResourceObject($resource),
-                        static::$JSONAPI_ERROR_PRIMARY_DATA_SAME_TYPE
+                        JsonApiAssertMessages::JSONAPI_ERROR_PRIMARY_DATA_SAME_TYPE
                     );
                 }
             }
 
             // Check the resource
-            static::checkDataForSingleResource($resource);
+            static::assertIsValidSingleResource($resource);
         }
     }
 
-    public static function checkDataForSingleResource($resource)
+    public static function assertIsValidSingleResource($resource)
     {
         if (static::dataIsResourceObject($resource)) {
-            static::checkResourceObject($resource);
+            static::assertIsValidResourceObject($resource);
         } else {
-            static::checkResourceIdentifierObject($resource);
+            static::assertIsValidResourceIdentifierObject($resource);
         }
     }
 
-    public static function dataIsResourceObject($resource)
-    {
-        $expected = ['attributes', 'relationships', 'links'];
-
-        return static::containsAtLeastOneMember($expected, $resource);
-    }
-
-    public static function checkIncluded($included, $data)
+    public static function assertIsValidIncludedCollection($included, $data)
     {
         static::assertIsArrayOfObjects($included);
 
-        static::checkDataForResourceCollection($included, false);
+        static::assertIsValidResourceCollection($included, false);
 
         $resIdentifiers = array_merge(
             static::getAllResourceIdentifierObjects($data),
@@ -152,6 +140,13 @@ trait JsonApiAssertStructure
         foreach ($included as $inc) {
             PHPUnit::assertTrue(self::existsInArray($inc, $resIdentifiers));
         }
+    }
+
+    private static function dataIsResourceObject($resource)
+    {
+        $expected = ['attributes', 'relationships', 'links'];
+
+        return static::containsAtLeastOneMember($expected, $resource);
     }
 
     private static function getAllResourceIdentifierObjects($data)
