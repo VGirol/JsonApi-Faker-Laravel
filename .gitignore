@@ -1,4 +1,4 @@
-*
 !.gitignore
 report/
 vendor/
+composer.lock
