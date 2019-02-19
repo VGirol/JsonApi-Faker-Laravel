@@ -6,8 +6,9 @@ abstract class JsonApiAssertMessages
 {
     const JSONAPI_ERROR_ACCEPT_HEADER_WITHOUT_PARAMETERS = 'A request that include the JSON:API media type in her Accept header MUST specify the media type %s there at least once without any media type parameters.';
     const JSONAPI_ERROR_ATTRIBUTES_OBJECT_IS_NOT_ARRAY = 'An attributes object MUST be an array or an arrayable object with a "toArray" method.';
-    const JSONAPI_ERROR_CONTENT_TYPE_HEADER_MISSING = 'Clients MUST send all JSON:API data in request documents with the headerContent-Type: %s without any media type parameters.';
-    const JSONAPI_ERROR_CONTENT_TYPE_HEADER_WITHOUT_PARAMETERS = 'A request MUST specify the header Content-Type: %s without any media type parameters.';
+    const JSONAPI_ERROR_CONTENT_TYPE_HEADER_MISSING = 'Clients MUST send all JSON:API data in request documents with the header "Content-Type: %s" without any media type parameters.';
+    const JSONAPI_ERROR_CONTENT_TYPE_HEADER_ALLREADY_SET = 'The response header "Content-Type" is allready set with bad value : a response MUST specify the header "Content-Type: %s" without any media type parameters.';
+    const JSONAPI_ERROR_CONTENT_TYPE_HEADER_WITHOUT_PARAMETERS = 'A request MUST specify the header "Content-Type: %s" without any media type parameters.';
     const JSONAPI_ERROR_ERROR_CODE_IS_NOT_STRING = 'The value of the "code" member MUST be a string.';
     const JSONAPI_ERROR_ERROR_DETAILS_IS_NOT_STRING = 'The value of the "details" member MUST be a string.';
     const JSONAPI_ERROR_ERROR_OBJECT_NOT_ARRAY = 'An error object MUST be an array.';
