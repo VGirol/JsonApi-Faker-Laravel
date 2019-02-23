@@ -1,10 +1,10 @@
 <?php
-namespace VGirol\JsonApiAssert;
+namespace VGirol\JsonApiAssert\Asserts;
 
 use PHPUnit\Framework\Assert as PHPUnit;
-use VGirol\JsonApiAssert\JsonApiAssertMessages;
+use VGirol\JsonApiAssert\Messages;
 
-trait JsonApiAssertResourceObject
+trait AssertResourceObject
 {
     public static function assertIsValidResourceObject($resource)
     {
@@ -35,19 +35,19 @@ trait JsonApiAssertResourceObject
     {
         PHPUnit::assertIsArray(
             $resource,
-            JsonApiAssertMessages::JSONAPI_ERROR_RESOURCE_IS_NOT_ARRAY
+            Messages::RESOURCE_IS_NOT_ARRAY
         );
 
         PHPUnit::assertArrayHasKey(
             'id',
             $resource,
-            JsonApiAssertMessages::JSONAPI_ERROR_RESOURCE_ID_MEMBER_IS_ABSENT
+            Messages::RESOURCE_ID_MEMBER_IS_ABSENT
         );
 
         PHPUnit::assertArrayHasKey(
             'type',
             $resource,
-            JsonApiAssertMessages::JSONAPI_ERROR_RESOURCE_TYPE_MEMBER_IS_ABSENT
+            Messages::RESOURCE_TYPE_MEMBER_IS_ABSENT
         );
 
         static::assertContainsAtLeastOneMember(['attributes', 'relationships', 'links', 'meta'], $resource);
@@ -60,12 +60,12 @@ trait JsonApiAssertResourceObject
     {
         PHPUnit::assertNotEmpty(
             $resource['id'],
-            JsonApiAssertMessages::JSONAPI_ERROR_RESOURCE_ID_MEMBER_IS_EMPTY
+            Messages::RESOURCE_ID_MEMBER_IS_EMPTY
         );
 
         PHPUnit::assertIsString(
             $resource['id'],
-            JsonApiAssertMessages::JSONAPI_ERROR_RESOURCE_ID_MEMBER_IS_NOT_STRING
+            Messages::RESOURCE_ID_MEMBER_IS_NOT_STRING
         );
     }
 
@@ -73,12 +73,12 @@ trait JsonApiAssertResourceObject
     {
         PHPUnit::assertNotEmpty(
             $resource['type'],
-            JsonApiAssertMessages::JSONAPI_ERROR_RESOURCE_TYPE_MEMBER_IS_EMPTY
+            Messages::RESOURCE_TYPE_MEMBER_IS_EMPTY
         );
 
         PHPUnit::assertIsString(
             $resource['type'],
-            JsonApiAssertMessages::JSONAPI_ERROR_RESOURCE_TYPE_MEMBER_IS_NOT_STRING
+            Messages::RESOURCE_TYPE_MEMBER_IS_NOT_STRING
         );
 
         static::assertIsValidMemberName($resource['type']);
@@ -94,20 +94,20 @@ trait JsonApiAssertResourceObject
     {
         PHPUnit::assertIsArray(
             $resource,
-            JsonApiAssertMessages::JSONAPI_ERROR_RESOURCE_IDENTIFIER_IS_NOT_ARRAY
+            Messages::RESOURCE_IDENTIFIER_IS_NOT_ARRAY
         );
 
         PHPUnit::assertArrayHasKey(
             'id',
             $resource,
-            JsonApiAssertMessages::JSONAPI_ERROR_RESOURCE_ID_MEMBER_IS_ABSENT
+            Messages::RESOURCE_ID_MEMBER_IS_ABSENT
         );
         static::assertResourceIdMember($resource);
 
         PHPUnit::assertArrayHasKey(
             'type',
             $resource,
-            JsonApiAssertMessages::JSONAPI_ERROR_RESOURCE_TYPE_MEMBER_IS_ABSENT
+            Messages::RESOURCE_TYPE_MEMBER_IS_ABSENT
         );
         static::assertResourceTypeMember($resource);
 
@@ -137,7 +137,7 @@ trait JsonApiAssertResourceObject
                     PHPUnit::assertArrayNotHasKey(
                         $name,
                         $resource['attributes'],
-                        JsonApiAssertMessages::JSONAPI_ERROR_FIELDS_HAVE_SAME_NAME
+                        Messages::FIELDS_HAVE_SAME_NAME
                     );
                 }
             }
@@ -150,7 +150,7 @@ trait JsonApiAssertResourceObject
         PHPUnit::assertNotContains(
             $name,
             $forbidden,
-            JsonApiAssertMessages::JSONAPI_ERROR_FIELDS_NAME_NOT_ALLOWED
+            Messages::FIELDS_NAME_NOT_ALLOWED
         );
     }
 }

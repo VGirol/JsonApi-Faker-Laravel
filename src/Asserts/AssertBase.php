@@ -1,20 +1,22 @@
 <?php
-namespace VGirol\JsonApiAssert;
+namespace VGirol\JsonApiAssert\Asserts;
 
 use PHPUnit\Framework\Assert as PHPUnit;
+use VGirol\JsonApiAssert\Messages;
 use PHPUnit\Framework\ExpectationFailedException;
-use VGirol\JsonApiAssert\JsonApiAssertMessages;
+use VGirol\JsonApiAssert\Constraint\ContainsAtLeastOneConstraint;
+use VGirol\JsonApiAssert\Constraint\ContainsOnlyAllowedMembersConstraint;
 
-trait JsonApiAssertBase
+trait AssertBase
 {
     public static function assertHasMember($json, $key)
     {
-        PHPUnit::assertArrayHasKey($key, $json, sprintf(JsonApiAssertMessages::JSONAPI_ERROR_HAS_MEMBER, $key));
+        PHPUnit::assertArrayHasKey($key, $json, sprintf(Messages::HAS_MEMBER, $key));
     }
 
     public static function assertNotHasMember($json, $key)
     {
-        PHPUnit::assertArrayNotHasKey($key, $json, sprintf(JsonApiAssertMessages::JSONAPI_ERROR_NOT_HAS_MEMBER, $key));
+        PHPUnit::assertArrayNotHasKey($key, $json, sprintf(Messages::NOT_HAS_MEMBER, $key));
     }
 
     public static function assertHasData($json)
@@ -54,12 +56,12 @@ trait JsonApiAssertBase
 
     public static function assertContainsAtLeastOneMember($expected, $actual, $message = '')
     {
-        self::assertThat($actual, self::containsAtLeastOneMemberConstraint($expected), $message);
+        PHPUnit::assertThat($actual, self::containsAtLeastOneMemberConstraint($expected), $message);
     }
 
     public static function containsAtLeastOneMemberConstraint($expected)
     {
-        return new JsonApiContainsAtLeastOneConstraint($expected);
+        return new ContainsAtLeastOneConstraint($expected);
     }
 
     public static function containsAtLeastOneMember($expected, $resource)
@@ -71,13 +73,13 @@ trait JsonApiAssertBase
 
     public static function assertContainsOnlyAllowedMembers($expected, $actual, $message = '')
     {
-        $message = JsonApiAssertMessages::JSONAPI_ERROR_ONLY_ALLOWED_MEMBERS . "\n" . $message;
-        self::assertThat($actual, self::containsOnlyAllowedMembersConstraint($expected), $message);
+        $message = Messages::ONLY_ALLOWED_MEMBERS . "\n" . $message;
+        PHPUnit::assertThat($actual, self::containsOnlyAllowedMembersConstraint($expected), $message);
     }
 
     public static function containsOnlyAllowedMembersConstraint($expected)
     {
-        return new JsonApiContainsOnlyAllowedMembersConstraint($expected);
+        return new ContainsOnlyAllowedMembersConstraint($expected);
     }
 
     public static function assertIsArrayOfObjects($data, $message = '')
@@ -123,6 +125,6 @@ trait JsonApiAssertBase
             return;
         }
 
-        throw new ExpectationFailedException(JsonApiAssertMessages::JSONAPI_ERROR_TEST_FAILED);
+        throw new ExpectationFailedException(Messages::TEST_FAILED);
     }
 }

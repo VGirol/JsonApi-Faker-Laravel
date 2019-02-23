@@ -1,17 +1,13 @@
 <?php
-namespace VGirol\JsonApiAssert\Tests;
+namespace VGirol\JsonApiAssert\Tests\Asserts;
 
-use VGirol\JsonApiAssert\JsonApiAssert;
-use PHPUnit\Framework\Assert as PHPUnit;
+use VGirol\JsonApiAssert\Assert as JsonApiAssert;
 use VGirol\JsonApiAssert\Tests\TestCase;
-use VGirol\JsonApiAssert\JsonApiAssertMessages;
+use VGirol\JsonApiAssert\Messages;
 
-class JsonApiMetaObjectTest extends TestCase
+class MetaObjectTest extends TestCase
 {
-    use JsonApiAssert;
-
     /**
-     * @note
      * @test
      */
     public function meta_object_is_valid()
@@ -21,21 +17,20 @@ class JsonApiMetaObjectTest extends TestCase
             'another' => 'member'
         ];
 
-        $this->assertIsValidMetaObject($data);
+        JsonApiAssert::assertIsValidMetaObject($data);
     }
 
     /**
-     * @note
      * @test
      * @dataProvider notValidMetaObjectProvider
      */
     public function meta_object_is_not_valid($data, $failureMessage)
     {
         $fn = function ($response) {
-            $this->assertIsValidMetaObject($response);
+            JsonApiAssert::assertIsValidMetaObject($response);
         };
 
-        $this->assertTestFail($fn, $failureMessage, $data);
+        JsonApiAssert::assertTestFail($fn, $failureMessage, $data);
     }
 
     public function notValidMetaObjectProvider()
@@ -43,20 +38,20 @@ class JsonApiMetaObjectTest extends TestCase
         return [
             'not an array' => [
                 'failed',
-                JsonApiAssertMessages::JSONAPI_ERROR_META_OBJECT_IS_NOT_ARRAY
+                Messages::META_OBJECT_IS_NOT_ARRAY
             ],
             'array of objects' => [
                 [
                     [ 'first' => 'element' ],
                     [ 'second' => 'element' ]
                 ],
-                JsonApiAssertMessages::JSONAPI_ERROR_META_OBJECT_IS_NOT_ARRAY
+                Messages::META_OBJECT_IS_NOT_ARRAY
             ],
             'key is not valid' => [
                 [
                     'key+' => 'value'
                 ],
-                JsonApiAssertMessages::JSONAPI_ERROR_MEMBER_NAME_HAVE_RESERVED_CHARACTERS
+                Messages::MEMBER_NAME_HAVE_RESERVED_CHARACTERS
             ]
         ];
     }

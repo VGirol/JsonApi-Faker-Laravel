@@ -1,17 +1,13 @@
 <?php
-namespace VGirol\JsonApiAssert\Tests;
+namespace VGirol\JsonApiAssert\Tests\Asserts;
 
-use VGirol\JsonApiAssert\JsonApiAssert;
-use PHPUnit\Framework\Assert as PHPUnit;
+use VGirol\JsonApiAssert\Assert as JsonApiAssert;
 use VGirol\JsonApiAssert\Tests\TestCase;
-use VGirol\JsonApiAssert\JsonApiAssertMessages;
+use VGirol\JsonApiAssert\Messages;
 
-class JsonApiTopLevelMembersTest extends TestCase
+class TopLevelMembersTest extends TestCase
 {
-    use JsonApiAssert;
-
     /**
-     * @note
      * @test
      */
     public function document_has_valid_top_level_members()
@@ -38,21 +34,20 @@ class JsonApiTopLevelMembersTest extends TestCase
             ]
         ];
 
-        $this->assertHasValidTopLevelMembers($data);
+        JsonApiAssert::assertHasValidTopLevelMembers($data);
     }
 
     /**
-     * @note
      * @test
      * @dataProvider notValidTopLevelMembersProvider
      */
     public function document_has_not_valid_top_level_members($data, $failureMessage)
     {
         $fn = function ($data) {
-            $this->assertHasValidTopLevelMembers($data);
+            JsonApiAssert::assertHasValidTopLevelMembers($data);
         };
 
-        $this->assertTestFail($fn, $failureMessage, $data);
+        JsonApiAssert::assertTestFail($fn, $failureMessage, $data);
     }
 
     public function notValidTopLevelMembersProvider()
@@ -81,7 +76,7 @@ class JsonApiTopLevelMembersTest extends TestCase
                         ]
                     ]
                 ],
-                JsonApiAssertMessages::JSONAPI_ERROR_TOP_LEVEL_DATA_AND_ERROR
+                Messages::TOP_LEVEL_DATA_AND_ERROR
             ],
             'only allowed members' => [
                 [
@@ -94,7 +89,7 @@ class JsonApiTopLevelMembersTest extends TestCase
                     ],
                     'anything' => 'not allowed'
                 ],
-                JsonApiAssertMessages::JSONAPI_ERROR_ONLY_ALLOWED_MEMBERS
+                Messages::ONLY_ALLOWED_MEMBERS
             ],
             'no data but included' => [
                 [
@@ -103,7 +98,7 @@ class JsonApiTopLevelMembersTest extends TestCase
                         'anything' => 'ok'
                     ]
                 ],
-                JsonApiAssertMessages::JSONAPI_ERROR_TOP_LEVEL_DATA_AND_INCLUDED
+                Messages::TOP_LEVEL_DATA_AND_INCLUDED
             ]
         ];
     }

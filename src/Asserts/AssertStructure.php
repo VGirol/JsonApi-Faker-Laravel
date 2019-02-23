@@ -1,20 +1,20 @@
 <?php
-namespace VGirol\JsonApiAssert;
+namespace VGirol\JsonApiAssert\Asserts;
 
 use PHPUnit\Framework\Assert as PHPUnit;
-use VGirol\JsonApiAssert\JsonApiAssertMessages;
+use VGirol\JsonApiAssert\Messages;
 use PHPUnit\Framework\ExpectationFailedException;
 
-trait JsonApiAssertStructure
+trait AssertStructure
 {
     public static function assertHasValidStructure($json)
     {
         static::assertHasValidTopLevelMembers($json);
 
-        $isResourceCollection = false;
+        // $isResourceCollection = false;
         if (isset($json['data'])) {
             static::assertIsValidPrimaryData($json['data']);
-            $isResourceCollection = static::isArrayOfObjects($json['data']);
+            // $isResourceCollection = static::isArrayOfObjects($json['data']);
         }
 
         if (isset($json['errors'])) {
@@ -44,12 +44,12 @@ trait JsonApiAssertStructure
         static::assertContainsAtLeastOneMember(
             $expected,
             $json,
-            \sprintf(JsonApiAssertMessages::JSONAPI_ERROR_TOP_LEVEL_MEMBERS, implode('", "', $expected))
+            \sprintf(Messages::TOP_LEVEL_MEMBERS, implode('", "', $expected))
         );
 
         PHPUnit::assertFalse(
             isset($json['data']) && isset($json['errors']),
-            JsonApiAssertMessages::JSONAPI_ERROR_TOP_LEVEL_DATA_AND_ERROR
+            Messages::TOP_LEVEL_DATA_AND_ERROR
         );
 
         $allowed = ['data', 'errors', 'meta', 'jsonapi', 'links', 'included'];
@@ -60,7 +60,7 @@ trait JsonApiAssertStructure
 
         PHPUnit::assertFALSE(
             !isset($json['data']) && isset($json['included']),
-            JsonApiAssertMessages::JSONAPI_ERROR_TOP_LEVEL_DATA_AND_INCLUDED
+            Messages::TOP_LEVEL_DATA_AND_INCLUDED
         );
     }
 
@@ -75,7 +75,7 @@ trait JsonApiAssertStructure
         try {
             PHPUnit::assertIsArray(
                 $data,
-                JsonApiAssertMessages::JSONAPI_ERROR_PRIMARY_DATA_NOT_ARRAY
+                Messages::PRIMARY_DATA_NOT_ARRAY
             );
             if (empty($data)) {
                 return;
@@ -108,7 +108,7 @@ trait JsonApiAssertStructure
                     PHPUnit::assertEquals(
                         $isResourceObjectCollection,
                         static::dataIsResourceObject($resource),
-                        JsonApiAssertMessages::JSONAPI_ERROR_PRIMARY_DATA_SAME_TYPE
+                        Messages::PRIMARY_DATA_SAME_TYPE
                     );
                 }
             }
@@ -150,7 +150,7 @@ trait JsonApiAssertStructure
             PHPUnit::assertNotContains(
                 $inc['id'],
                 $present[$inc['type']],
-                JsonApiAssertMessages::JSONAPI_ERROR_COMPOUND_DOCUMENT_ONLY_ONE_RESOURCE
+                Messages::COMPOUND_DOCUMENT_ONLY_ONE_RESOURCE
             );
             array_push($present[$inc['type']], $inc['id']);
         }

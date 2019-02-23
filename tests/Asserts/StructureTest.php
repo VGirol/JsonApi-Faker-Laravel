@@ -1,21 +1,18 @@
 <?php
-namespace VGirol\JsonApiAssert\Tests;
+namespace VGirol\JsonApiAssert\Tests\Asserts;
 
-use VGirol\JsonApiAssert\JsonApiAssert;
-use PHPUnit\Framework\Assert as PHPUnit;
+use VGirol\JsonApiAssert\Assert as JsonApiAssert;
 use VGirol\JsonApiAssert\Tests\TestCase;
 
-class JsonApiStructureTest extends TestCase
+class StructureTest extends TestCase
 {
-    use JsonApiAssert;
-
     /**
      * @test
      * @dataProvider validStructureProvider
      */
     public function document_has_valid_structure($data)
     {
-        $this->assertHasValidStructure($data);
+        JsonApiAssert::assertHasValidStructure($data);
     }
 
     public function validStructureProvider()
@@ -91,10 +88,10 @@ class JsonApiStructureTest extends TestCase
     public function document_has_not_valid_structure($data, $failureMessage)
     {
         $fn = function ($data) {
-            $this->assertHasValidStructure($data);
+            JsonApiAssert::assertHasValidStructure($data);
         };
 
-        $this->assertTestFail($fn, $failureMessage, $data);
+        JsonApiAssert::assertTestFail($fn, $failureMessage, $data);
     }
 
     public function notValidStructureProvider()

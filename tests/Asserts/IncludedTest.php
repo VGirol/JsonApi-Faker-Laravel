@@ -1,22 +1,18 @@
 <?php
-namespace VGirol\JsonApi\Tests\Unit\Assert;
+namespace VGirol\JsonApiAssert\Tests\Asserts;
 
-use VGirol\JsonApiAssert\JsonApiAssert;
-use PHPUnit\Framework\Assert as PHPUnit;
+use VGirol\JsonApiAssert\Assert as JsonApiAssert;
 use VGirol\JsonApiAssert\Tests\TestCase;
 
-class JsonApiIncludedTest extends TestCase
+class IncludedTest extends TestCase
 {
-    use JsonApiAssert;
-
     /**
-     * @note
      * @test
      * @dataProvider validIncludedProvider
      */
     public function compound_document_is_valid($json)
     {
-        $this->assertIsValidIncludedCollection($json['included'], $json['data']);
+        JsonApiAssert::assertIsValidIncludedCollection($json['included'], $json['data']);
     }
 
     public function validIncludedProvider()
@@ -69,17 +65,16 @@ class JsonApiIncludedTest extends TestCase
     }
 
     /**
-     * @note
      * @test
      * @dataProvider notValidIncludedProvider
      */
     public function compound_document_is_not_valid($json, $failureMessage)
     {
         $fn = function ($json) {
-            $this->assertIsValidIncludedCollection($json['included'], $json['data']);
+            JsonApiAssert::assertIsValidIncludedCollection($json['included'], $json['data']);
         };
 
-        $this->assertTestFail($fn, $failureMessage, $json);
+        JsonApiAssert::assertTestFail($fn, $failureMessage, $json);
     }
 
     public function notValidIncludedProvider()

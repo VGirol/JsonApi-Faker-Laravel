@@ -1,21 +1,19 @@
 <?php
-namespace VGirol\Assert\Tests;
+namespace VGirol\JsonApiAssert\Tests\Asserts;
 
-use VGirol\JsonApiAssert\JsonApiAssert;
-use PHPUnit\Framework\Assert as PHPUnit;
+use VGirol\JsonApiAssert\Assert as JsonApiAssert;
 use VGirol\JsonApiAssert\Tests\TestCase;
-use VGirol\JsonApiAssert\JsonApiAssertMessages;
+use VGirol\JsonApiAssert\Messages;
 
-class JsonApiErrorsObjectTest extends TestCase
+class ErrorsObjectTest extends TestCase
 {
-    use JsonApiAssert;
-
     /**
+     * @test
      * @dataProvider validErrorSourceObjectProvider
      */
     public function error_source_object_is_valid($data)
     {
-        $this->assertIsValidErrorSourceObject($data);
+        JsonApiAssert::assertIsValidErrorSourceObject($data);
     }
 
     public function validErrorSourceObjectProvider()
@@ -37,17 +35,16 @@ class JsonApiErrorsObjectTest extends TestCase
     }
 
     /**
-     * @note
      * @test
      * @dataProvider notValidErrorSourceObjectProvider
      */
     public function error_source_object_is_not_valid($data, $failureMessage)
     {
         $fn = function ($data) {
-            $this->assertIsValidErrorSourceObject($data);
+            JsonApiAssert::assertIsValidErrorSourceObject($data);
         };
 
-        $this->assertTestFail($fn, $failureMessage, $data);
+        JsonApiAssert::assertTestFail($fn, $failureMessage, $data);
     }
 
     public function notValidErrorSourceObjectProvider()
@@ -55,34 +52,33 @@ class JsonApiErrorsObjectTest extends TestCase
         return [
             'not an array' => [
                 'error',
-                JsonApiAssertMessages::JSONAPI_ERROR_ERROR_SOURCE_OBJECT_NOT_ARRAY
+                Messages::ERROR_SOURCE_OBJECT_NOT_ARRAY
             ],
             'pointer is not a string' => [
                 [
                     'valid' => 'valid',
                     'pointer' => 666
                 ],
-                JsonApiAssertMessages::JSONAPI_ERROR_ERROR_SOURCE_POINTER_IS_NOT_STRING
+                Messages::ERROR_SOURCE_POINTER_IS_NOT_STRING
             ],
             'pointer does not start with a /' => [
                 [
                     'valid' => 'valid',
                     'pointer' => 'not valid'
                 ],
-                JsonApiAssertMessages::JSONAPI_ERROR_ERROR_SOURCE_POINTER_START
+                Messages::ERROR_SOURCE_POINTER_START
             ],
             'parameter is not a string' => [
                 [
                     'valid' => 'valid',
                     'parameter' => 666
                 ],
-                JsonApiAssertMessages::JSONAPI_ERROR_ERROR_SOURCE_PARAMETER_IS_NOT_STRING
+                Messages::ERROR_SOURCE_PARAMETER_IS_NOT_STRING
             ]
         ];
     }
 
     /**
-     * @note
      * @test
      */
     public function error_object_is_valid()
@@ -105,19 +101,20 @@ class JsonApiErrorsObjectTest extends TestCase
             ]
         ];
 
-        $this->assertIsValidErrorObject($data);
+        JsonApiAssert::assertIsValidErrorObject($data);
     }
 
     /**
+     * @test
      * @dataProvider notValidErrorObjectProvider
      */
     public function error_object_is_not_valid($data, $failureMessage)
     {
         $fn = function ($data) {
-            $this->assertIsValidErrorObject($data);
+            JsonApiAssert::assertIsValidErrorObject($data);
         };
 
-        $this->assertTestFail($fn, $failureMessage, $data);
+        JsonApiAssert::assertTestFail($fn, $failureMessage, $data);
     }
 
     public function notValidErrorObjectProvider()
@@ -125,11 +122,11 @@ class JsonApiErrorsObjectTest extends TestCase
         return [
             'not an array' => [
                 'error',
-                JsonApiAssertMessages::JSONAPI_ERROR_ERROR_OBJECT_NOT_ARRAY
+                Messages::ERROR_OBJECT_NOT_ARRAY
             ],
             'empty array' => [
                 [],
-                JsonApiAssertMessages::JSONAPI_ERROR_ERROR_OBJECT_NOT_EMPTY
+                Messages::ERROR_OBJECT_NOT_EMPTY
             ],
             'not allowed member' => [
                 [
@@ -143,28 +140,28 @@ class JsonApiErrorsObjectTest extends TestCase
                     'code' => 'E13',
                     'status' => 666,
                 ],
-                JsonApiAssertMessages::JSONAPI_ERROR_ERROR_STATUS_IS_NOT_STRING
+                Messages::ERROR_STATUS_IS_NOT_STRING
             ],
             'code is not a string' => [
                 [
                     'code' => 13,
                     'status' => 'ok',
                 ],
-                JsonApiAssertMessages::JSONAPI_ERROR_ERROR_CODE_IS_NOT_STRING
+                Messages::ERROR_CODE_IS_NOT_STRING
             ],
             'title is not a string' => [
                 [
                     'title' => 13,
                     'status' => 'ok',
                 ],
-                JsonApiAssertMessages::JSONAPI_ERROR_ERROR_TITLE_IS_NOT_STRING
+                Messages::ERROR_TITLE_IS_NOT_STRING
             ],
             'details is not a string' => [
                 [
                     'details' => 13,
                     'status' => 'ok',
                 ],
-                JsonApiAssertMessages::JSONAPI_ERROR_ERROR_DETAILS_IS_NOT_STRING
+                Messages::ERROR_DETAILS_IS_NOT_STRING
             ],
             'source is not valid' => [
                 [
@@ -195,7 +192,6 @@ class JsonApiErrorsObjectTest extends TestCase
     }
 
     /**
-     * @note
      * @test
      */
     public function errors_object_is_valid()
@@ -211,21 +207,20 @@ class JsonApiErrorsObjectTest extends TestCase
             ]
         ];
 
-        $this->assertIsValidErrorsObject($data);
+        JsonApiAssert::assertIsValidErrorsObject($data);
     }
 
     /**
-     * @note
      * @test
      * @dataProvider notValidErrorsObjectProvider
      */
     public function errors_object_is_not_valid($data, $failureMessage)
     {
         $fn = function ($data) {
-            $this->assertIsValidErrorsObject($data);
+            JsonApiAssert::assertIsValidErrorsObject($data);
         };
 
-        $this->assertTestFail($fn, $failureMessage, $data);
+        JsonApiAssert::assertTestFail($fn, $failureMessage, $data);
     }
 
     public function notValidErrorsObjectProvider()
@@ -233,13 +228,13 @@ class JsonApiErrorsObjectTest extends TestCase
         return [
             'not an array' => [
                 'error',
-                JsonApiAssertMessages::JSONAPI_ERROR_ERRORS_OBJECT_NOT_ARRAY
+                Messages::ERRORS_OBJECT_NOT_ARRAY
             ],
             'not an array of objects' => [
                 [
                     'error' => 'not valid'
                 ],
-                JsonApiAssertMessages::JSONAPI_ERROR_ERRORS_OBJECT_NOT_ARRAY
+                Messages::ERRORS_OBJECT_NOT_ARRAY
             ],
             'error object not valid' => [
                 [

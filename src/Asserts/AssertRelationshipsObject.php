@@ -1,11 +1,11 @@
 <?php
-namespace VGirol\JsonApiAssert;
+namespace VGirol\JsonApiAssert\Asserts;
 
 use PHPUnit\Framework\Assert as PHPUnit;
-use VGirol\JsonApiAssert\JsonApiAssertMessages;
+use VGirol\JsonApiAssert\Messages;
 use PHPUnit\Framework\ExpectationFailedException;
 
-trait JsonApiAssertRelationshipsObject
+trait AssertRelationshipsObject
 {
     public static function assertIsValidRelationshipsObject($relationships)
     {
@@ -53,7 +53,7 @@ trait JsonApiAssertRelationshipsObject
         try {
             PHPUnit::assertIsArray(
                 $data,
-                JsonApiAssertMessages::JSONAPI_ERROR_RESOURCE_LINKAGE_NOT_ARRAY
+                Messages::RESOURCE_LINKAGE_NOT_ARRAY
             );
             try {
                 PHPUnit::assertNotEmpty($data);

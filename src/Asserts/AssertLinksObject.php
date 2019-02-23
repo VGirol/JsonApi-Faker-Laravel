@@ -1,17 +1,17 @@
 <?php
-namespace VGirol\JsonApiAssert;
+namespace VGirol\JsonApiAssert\Asserts;
 
 use PHPUnit\Framework\Assert as PHPUnit;
-use VGirol\JsonApiAssert\JsonApiAssertMessages;
+use VGirol\JsonApiAssert\Messages;
 use PHPUnit\Framework\ExpectationFailedException;
 
-trait JsonApiAssertLinksObject
+trait AssertLinksObject
 {
     public static function assertIsValidLinksObject($links, $allowedMembers)
     {
         PHPUnit::assertIsArray(
             $links,
-            JsonApiAssertMessages::JSONAPI_ERROR_LINKS_OBJECT_NOT_ARRAY
+            Messages::LINKS_OBJECT_NOT_ARRAY
         );
 
         static::assertContainsOnlyAllowedMembers(
@@ -41,7 +41,7 @@ trait JsonApiAssertLinksObject
         PHPUnit::assertArrayHasKey(
             'href',
             $link,
-            JsonApiAssertMessages::JSONAPI_ERROR_LINK_OBJECT_MISS_HREF_MEMBER
+            Messages::LINK_OBJECT_MISS_HREF_MEMBER
         );
 
         $allowed = ['href', 'meta'];

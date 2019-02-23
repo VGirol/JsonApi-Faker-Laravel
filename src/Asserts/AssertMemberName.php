@@ -1,22 +1,22 @@
 <?php
-namespace VGirol\JsonApiAssert;
+namespace VGirol\JsonApiAssert\Asserts;
 
 use PHPUnit\Framework\Assert as PHPUnit;
-use VGirol\JsonApiAssert\JsonApiAssertMessages;
+use VGirol\JsonApiAssert\Messages;
 
-trait JsonApiAssertMemberName
+trait AssertMemberName
 {
     public static function assertIsValidMemberName($name, $strict = false)
     {
         PHPUnit::assertIsString(
             $name,
-            JsonApiAssertMessages::JSONAPI_ERROR_MEMBER_NAME_IS_NOT_STRING
+            Messages::MEMBER_NAME_IS_NOT_STRING
         );
 
         PHPUnit::assertGreaterThanOrEqual(
             1,
             strlen($name),
-            JsonApiAssertMessages::JSONAPI_ERROR_MEMBER_NAME_IS_TOO_SHORT
+            Messages::MEMBER_NAME_IS_TOO_SHORT
         );
 
         // Globally allowed characters
@@ -30,14 +30,14 @@ trait JsonApiAssertMemberName
         PHPUnit::assertNotRegExp(
             $regex,
             $name,
-            JsonApiAssertMessages::JSONAPI_ERROR_MEMBER_NAME_HAVE_RESERVED_CHARACTERS
+            Messages::MEMBER_NAME_HAVE_RESERVED_CHARACTERS
         );
 
         $regex = $strict ? "/^[{$globally}]{1}.*[{$globally}]{1}$/u" : "/^[{$globally}{$globallyNotSafe}]{1}.*[{$globally}{$globallyNotSafe}]{1}$/u";
         PHPUnit::assertRegExp(
             $regex,
             $name,
-            JsonApiAssertMessages::JSONAPI_ERROR_MEMBER_NAME_START_AND_END_WITH_ALLOWED_CHARACTERS
+            Messages::MEMBER_NAME_START_AND_END_WITH_ALLOWED_CHARACTERS
         );
     }
 
@@ -63,7 +63,7 @@ trait JsonApiAssertMemberName
         PHPUnit::assertNotContains(
             $name,
             $forbidden,
-            JsonApiAssertMessages::JSONAPI_ERROR_MEMBER_NAME_NOT_ALLOWED
+            Messages::MEMBER_NAME_NOT_ALLOWED
         );
     }
 }

@@ -1,17 +1,13 @@
 <?php
-namespace VGirol\JsonApiAssert\Tests;
+namespace VGirol\JsonApiAssert\Tests\Asserts;
 
-use VGirol\JsonApiAssert\JsonApiAssert;
-use PHPUnit\Framework\Assert as PHPUnit;
+use VGirol\JsonApiAssert\Assert as JsonApiAssert;
 use VGirol\JsonApiAssert\Tests\TestCase;
-use VGirol\JsonApiAssert\JsonApiAssertMessages;
+use VGirol\JsonApiAssert\Messages;
 
-class JsonApiAttributesObjectTest extends TestCase
+class AttributesObjectTest extends TestCase
 {
-    use JsonApiAssert;
-
     /**
-     * @note
      * @test
      */
     public function attributes_object_is_valid()
@@ -20,21 +16,20 @@ class JsonApiAttributesObjectTest extends TestCase
             'key' => 'value'
         ];
 
-        $this->assertIsValidAttributesObject($data);
+        JsonApiAssert::assertIsValidAttributesObject($data);
     }
 
     /**
-     * @note
      * @test
      * @dataProvider notValidAttributesObjectProvider
      */
     public function attributes_object_is_not_valid($data, $failureMessage)
     {
         $fn = function ($data) {
-            $this->assertIsValidAttributesObject($data);
+            JsonApiAssert::assertIsValidAttributesObject($data);
         };
 
-        $this->assertTestFail($fn, $failureMessage, $data);
+        JsonApiAssert::assertTestFail($fn, $failureMessage, $data);
     }
 
     public function notValidAttributesObjectProvider()
@@ -42,7 +37,7 @@ class JsonApiAttributesObjectTest extends TestCase
         return [
             'not an array' => [
                 'failed',
-                JsonApiAssertMessages::JSONAPI_ERROR_ATTRIBUTES_OBJECT_IS_NOT_ARRAY
+                Messages::ATTRIBUTES_OBJECT_IS_NOT_ARRAY
             ],
             'key is not valid' => [
                 [

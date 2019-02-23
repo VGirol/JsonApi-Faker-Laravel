@@ -1,17 +1,13 @@
 <?php
-namespace VGirol\JsonApiAssert\Tests;
+namespace VGirol\JsonApiAssert\Tests\Asserts;
 
-use VGirol\JsonApiAssert\JsonApiAssert;
-use PHPUnit\Framework\Assert as PHPUnit;
+use VGirol\JsonApiAssert\Assert as JsonApiAssert;
 use VGirol\JsonApiAssert\Tests\TestCase;
-use VGirol\JsonApiAssert\JsonApiAssertMessages;
+use VGirol\JsonApiAssert\Messages;
 
-class JsonApiResourceObjectTest extends TestCase
+class ResourceObjectTest extends TestCase
 {
-    use JsonApiAssert;
-
     /**
-     * @note
      * @test
      */
     public function resource_has_valid_top_level_structure()
@@ -42,21 +38,20 @@ class JsonApiResourceObjectTest extends TestCase
             ]
         ];
 
-        $this->assertResourceObjectHasValidTopLevelStructure($data);
+        JsonApiAssert::assertResourceObjectHasValidTopLevelStructure($data);
     }
 
     /**
-     * @note
      * @test
      * @dataProvider hasotValidTopLevelStructureProvider
      */
     public function resource_has_not_valid_top_level_structure($data, $failureMessage)
     {
         $fn = function ($response) {
-            $this->assertResourceObjectHasValidTopLevelStructure($response);
+            JsonApiAssert::assertResourceObjectHasValidTopLevelStructure($response);
         };
 
-        $this->assertTestFail($fn, $failureMessage, $data);
+        JsonApiAssert::assertTestFail($fn, $failureMessage, $data);
     }
 
     public function hasotValidTopLevelStructureProvider()
@@ -64,7 +59,7 @@ class JsonApiResourceObjectTest extends TestCase
         return [
             'not an array' => [
                 'failed',
-                JsonApiAssertMessages::JSONAPI_ERROR_RESOURCE_IS_NOT_ARRAY
+                Messages::RESOURCE_IS_NOT_ARRAY
             ],
             'id is missing' => [
                 [
@@ -73,7 +68,7 @@ class JsonApiResourceObjectTest extends TestCase
                         'attr' => 'value'
                     ]
                 ],
-                JsonApiAssertMessages::JSONAPI_ERROR_RESOURCE_ID_MEMBER_IS_ABSENT
+                Messages::RESOURCE_ID_MEMBER_IS_ABSENT
             ],
             'type is missing' => [
                 [
@@ -82,7 +77,7 @@ class JsonApiResourceObjectTest extends TestCase
                         'attr' => 'value'
                     ]
                 ],
-                JsonApiAssertMessages::JSONAPI_ERROR_RESOURCE_TYPE_MEMBER_IS_ABSENT
+                Messages::RESOURCE_TYPE_MEMBER_IS_ABSENT
             ],
             'missing mandatory member' => [
                 [
@@ -103,7 +98,6 @@ class JsonApiResourceObjectTest extends TestCase
     }
 
     /**
-     * @note
      * @test
      */
     public function resource_id_member_is_valid()
@@ -113,21 +107,20 @@ class JsonApiResourceObjectTest extends TestCase
             'type' => 'test'
         ];
 
-        $this->assertResourceIdMember($data);
+        JsonApiAssert::assertResourceIdMember($data);
     }
 
     /**
-     * @note
      * @test
      * @dataProvider notValidResourceIdMemberProvider
      */
     public function resource_id_member_is_not_valid($data, $failureMessage)
     {
         $fn = function ($response) {
-            $this->assertResourceIdMember($response);
+            JsonApiAssert::assertResourceIdMember($response);
         };
 
-        $this->assertTestFail($fn, $failureMessage, $data);
+        JsonApiAssert::assertTestFail($fn, $failureMessage, $data);
     }
 
     public function notValidResourceIdMemberProvider()
@@ -138,20 +131,19 @@ class JsonApiResourceObjectTest extends TestCase
                     'id' => '',
                     'type' => 'test'
                 ],
-                JsonApiAssertMessages::JSONAPI_ERROR_RESOURCE_ID_MEMBER_IS_EMPTY
+                Messages::RESOURCE_ID_MEMBER_IS_EMPTY
             ],
             'id is not a string' => [
                 [
                     'id' => 1,
                     'type' => 'test'
                 ],
-                JsonApiAssertMessages::JSONAPI_ERROR_RESOURCE_ID_MEMBER_IS_NOT_STRING
+                Messages::RESOURCE_ID_MEMBER_IS_NOT_STRING
             ]
         ];
     }
 
     /**
-     * @note
      * @test
      */
     public function resource_type_member_is_valid()
@@ -161,21 +153,20 @@ class JsonApiResourceObjectTest extends TestCase
             'type' => 'test'
         ];
 
-        $this->assertResourceTypeMember($data);
+        JsonApiAssert::assertResourceTypeMember($data);
     }
 
     /**
-     * @note
      * @test
      * @dataProvider notValidResourceTypeMemberProvider
      */
     public function resource_type_member_is_not_valid($data, $failureMessage)
     {
         $fn = function ($response) {
-            $this->assertResourceTypeMember($response);
+            JsonApiAssert::assertResourceTypeMember($response);
         };
 
-        $this->assertTestFail($fn, $failureMessage, $data);
+        JsonApiAssert::assertTestFail($fn, $failureMessage, $data);
     }
 
     public function notValidResourceTypeMemberProvider()
@@ -186,27 +177,26 @@ class JsonApiResourceObjectTest extends TestCase
                     'id' => '1',
                     'type' => ''
                 ],
-                JsonApiAssertMessages::JSONAPI_ERROR_RESOURCE_TYPE_MEMBER_IS_EMPTY
+                Messages::RESOURCE_TYPE_MEMBER_IS_EMPTY
             ],
             'type is not a string' => [
                 [
                     'id' => '1',
                     'type' => 404
                 ],
-                JsonApiAssertMessages::JSONAPI_ERROR_RESOURCE_TYPE_MEMBER_IS_NOT_STRING
+                Messages::RESOURCE_TYPE_MEMBER_IS_NOT_STRING
             ],
             'type value has forbidden characters' => [
                 [
                     'id' => '1',
                     'type' => 'test+1'
                 ],
-                JsonApiAssertMessages::JSONAPI_ERROR_MEMBER_NAME_HAVE_RESERVED_CHARACTERS
+                Messages::MEMBER_NAME_HAVE_RESERVED_CHARACTERS
             ]
         ];
     }
 
     /**
-     * @note
      * @test
      */
     public function resource_identifier_object_is_valid()
@@ -219,21 +209,20 @@ class JsonApiResourceObjectTest extends TestCase
             ]
         ];
 
-        $this->assertIsValidResourceIdentifierObject($data);
+        JsonApiAssert::assertIsValidResourceIdentifierObject($data);
     }
 
     /**
-     * @note
      * @test
      * @dataProvider isNotValidResourceIdentifierObjectProvider
      */
     public function resource_identifier_object_is_not_valid($data, $failureMessage)
     {
         $fn = function ($response) {
-            $this->assertIsValidResourceIdentifierObject($response);
+            JsonApiAssert::assertIsValidResourceIdentifierObject($response);
         };
 
-        $this->assertTestFail($fn, $failureMessage, $data);
+        JsonApiAssert::assertTestFail($fn, $failureMessage, $data);
     }
 
     public function isNotValidResourceIdentifierObjectProvider()
@@ -241,33 +230,33 @@ class JsonApiResourceObjectTest extends TestCase
         return [
             'not an array' => [
                 'failed',
-                JsonApiAssertMessages::JSONAPI_ERROR_RESOURCE_IDENTIFIER_IS_NOT_ARRAY
+                Messages::RESOURCE_IDENTIFIER_IS_NOT_ARRAY
             ],
             'id is missing' => [
                 [
                     'type' => 'test'
                 ],
-                JsonApiAssertMessages::JSONAPI_ERROR_RESOURCE_ID_MEMBER_IS_ABSENT
+                Messages::RESOURCE_ID_MEMBER_IS_ABSENT
             ],
             'id is not valid' => [
                 [
                     'id' => 1,
                     'type' => 'test'
                 ],
-                JsonApiAssertMessages::JSONAPI_ERROR_RESOURCE_ID_MEMBER_IS_NOT_STRING
+                Messages::RESOURCE_ID_MEMBER_IS_NOT_STRING
             ],
             'type is missing' => [
                 [
                     'id' => '1'
                 ],
-                JsonApiAssertMessages::JSONAPI_ERROR_RESOURCE_TYPE_MEMBER_IS_ABSENT
+                Messages::RESOURCE_TYPE_MEMBER_IS_ABSENT
             ],
             'type is not valid' => [
                 [
                     'id' => '1',
                     'type' => 404
                 ],
-                JsonApiAssertMessages::JSONAPI_ERROR_RESOURCE_TYPE_MEMBER_IS_NOT_STRING
+                Messages::RESOURCE_TYPE_MEMBER_IS_NOT_STRING
             ],
             'member not allowed' => [
                 [
@@ -289,7 +278,6 @@ class JsonApiResourceObjectTest extends TestCase
     }
 
     /**
-     * @note
      * @test
      */
     public function resource_field_is_valid()
@@ -310,21 +298,20 @@ class JsonApiResourceObjectTest extends TestCase
             ]
         ];
 
-        $this->assertValidFields($data);
+        JsonApiAssert::assertValidFields($data);
     }
 
     /**
-     * @note
      * @test
      * @dataProvider isNotValidResourceFieldProvider
      */
     public function resource_field_is_not_valid($data, $failureMessage)
     {
         $fn = function ($response) {
-            $this->assertValidFields($response);
+            JsonApiAssert::assertValidFields($response);
         };
 
-        $this->assertTestFail($fn, $failureMessage, $data);
+        JsonApiAssert::assertTestFail($fn, $failureMessage, $data);
     }
 
     public function isNotValidResourceFieldProvider()
@@ -381,7 +368,6 @@ class JsonApiResourceObjectTest extends TestCase
     }
 
     /**
-     * @note
      * @test
      */
     public function resource_object_is_valid()
@@ -412,21 +398,20 @@ class JsonApiResourceObjectTest extends TestCase
             ]
         ];
 
-        $this->assertIsValidResourceObject($data);
+        JsonApiAssert::assertIsValidResourceObject($data);
     }
 
     /**
-     * @note
      * @test
      * @dataProvider isNotValidResourceObjectProvider
      */
     public function resource_object_is_not_valid($data, $failureMessage)
     {
         $fn = function ($response) {
-            $this->assertIsValidResourceObject($response);
+            JsonApiAssert::assertIsValidResourceObject($response);
         };
 
-        $this->assertTestFail($fn, $failureMessage, $data);
+        JsonApiAssert::assertTestFail($fn, $failureMessage, $data);
     }
 
     public function isNotValidResourceObjectProvider()
@@ -434,7 +419,7 @@ class JsonApiResourceObjectTest extends TestCase
         return [
             'not an array' => [
                 'failed',
-                JsonApiAssertMessages::JSONAPI_ERROR_RESOURCE_IS_NOT_ARRAY
+                Messages::RESOURCE_IS_NOT_ARRAY
             ],
             'id is not valid' => [
                 [
@@ -444,7 +429,7 @@ class JsonApiResourceObjectTest extends TestCase
                         'attr' => 'value'
                     ]
                 ],
-                JsonApiAssertMessages::JSONAPI_ERROR_RESOURCE_ID_MEMBER_IS_NOT_STRING
+                Messages::RESOURCE_ID_MEMBER_IS_NOT_STRING
             ],
             'type is not valid' => [
                 [
@@ -454,7 +439,7 @@ class JsonApiResourceObjectTest extends TestCase
                         'attr' => 'value'
                     ]
                 ],
-                JsonApiAssertMessages::JSONAPI_ERROR_RESOURCE_TYPE_MEMBER_IS_NOT_STRING
+                Messages::RESOURCE_TYPE_MEMBER_IS_NOT_STRING
             ],
             'missing mandatory member' => [
                 [

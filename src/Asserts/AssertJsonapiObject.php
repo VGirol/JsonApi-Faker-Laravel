@@ -1,16 +1,16 @@
 <?php
-namespace VGirol\JsonApiAssert;
+namespace VGirol\JsonApiAssert\Asserts;
 
 use PHPUnit\Framework\Assert as PHPUnit;
-use VGirol\JsonApiAssert\JsonApiAssertMessages;
+use VGirol\JsonApiAssert\Messages;
 
-trait JsonApiAssertJsonapiObject
+trait AssertJsonapiObject
 {
     public static function assertIsValidJsonapiObject($jsonapi)
     {
         static::assertIsNotArrayOfObjects(
             $jsonapi,
-            JsonApiAssertMessages::JSONAPI_ERROR_JSONAPI_OBJECT_NOT_ARRAY
+            Messages::OBJECT_NOT_ARRAY
         );
 
         $allowed = ['version', 'meta'];

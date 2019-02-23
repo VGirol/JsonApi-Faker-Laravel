@@ -1,16 +1,15 @@
 <?php
-namespace VGirol\JsonApiAssert;
+namespace VGirol\JsonApiAssert\Asserts;
 
-use PHPUnit\Framework\Assert as PHPUnit;
-use VGirol\JsonApiAssert\JsonApiAssertMessages;
+use VGirol\JsonApiAssert\Messages;
 
-trait JsonApiAssertMetaObject
+trait AssertMetaObject
 {
     public static function assertIsValidMetaObject($meta)
     {
         static::assertIsNotArrayOfObjects(
             $meta,
-            JsonApiAssertMessages::JSONAPI_ERROR_META_OBJECT_IS_NOT_ARRAY
+            Messages::META_OBJECT_IS_NOT_ARRAY
         );
 
         foreach (array_keys($meta) as $key) {

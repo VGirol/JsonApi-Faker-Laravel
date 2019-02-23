@@ -1,9 +1,9 @@
 <?php
-namespace VGirol\JsonApiAssert;
+namespace VGirol\JsonApiAssert\Constraint;
 
 use PHPUnit\Framework\Constraint\Constraint;
 
-class JsonApiContainsOnlyAllowedMembersConstraint extends Constraint
+class ContainsAtLeastOneConstraint extends Constraint
 {
     /**
      * @var array
@@ -20,10 +20,10 @@ class JsonApiContainsOnlyAllowedMembersConstraint extends Constraint
     /**
      * Returns a string representation of the constraint.
      */
-    public function toString(): string
+    public function toString() : string
     {
         return \sprintf(
-            'contains only elements of "%s"',
+            'contains at least one element of "%s"',
             \implode(', ', $this->members)
         );
     }
@@ -34,19 +34,19 @@ class JsonApiContainsOnlyAllowedMembersConstraint extends Constraint
      *
      * @param mixed $other value or object to evaluate
      */
-    protected function matches($other): bool
+    protected function matches($other) : bool
     {
         if (!is_array($other)) {
             return false;
         }
 
-        foreach ($other as $key => $value) {
-            if (!in_array($key, $this->members)) {
-                return false;
+        foreach ($this->members as $member) {
+            if (array_key_exists($member, $other)) {
+                return true;
             }
         }
 
-        return true;
+        return false;
     }
 
     /**
@@ -57,12 +57,17 @@ class JsonApiContainsOnlyAllowedMembersConstraint extends Constraint
      *
      * @param mixed $other evaluated value or object
      */
-    protected function failureDescription($other): string
+    protected function failureDescription($other) : string
     {
         return \sprintf(
-            '%s contains only elements of "%s"',
+            '%s contains at least one element of "%s"',
             $this->exporter->shortenedExport($other),
             \implode(', ', $this->members)
         );
+    }
+
+    public function check($other) : bool
+    {
+        return $this->matches($other);
     }
 }

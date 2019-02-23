@@ -1,16 +1,15 @@
 <?php
-namespace VGirol\JsonApiAssert;
+namespace VGirol\JsonApiAssert\Asserts;
 
-use PHPUnit\Framework\Assert as PHPUnit;
-use VGirol\JsonApiAssert\JsonApiAssertMessages;
+use VGirol\JsonApiAssert\Messages;
 
-trait JsonApiAssertAttributesObject
+trait AssertAttributesObject
 {
     public static function assertIsValidAttributesObject($attributes)
     {
         static::assertIsNotArrayOfObjects(
             $attributes,
-            JsonApiAssertMessages::JSONAPI_ERROR_ATTRIBUTES_OBJECT_IS_NOT_ARRAY
+            Messages::ATTRIBUTES_OBJECT_IS_NOT_ARRAY
         );
 
         static::assertFieldHasNoForbiddenMemberName($attributes);

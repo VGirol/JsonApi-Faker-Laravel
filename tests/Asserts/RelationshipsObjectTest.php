@@ -1,23 +1,19 @@
 <?php
-namespace VGirol\JsonApiAssert\Tests;
+namespace VGirol\JsonApiAssert\Tests\Asserts;
 
-use VGirol\JsonApiAssert\JsonApiAssert;
-use PHPUnit\Framework\Assert as PHPUnit;
+use VGirol\JsonApiAssert\Assert as JsonApiAssert;
 use VGirol\JsonApiAssert\Tests\TestCase;
-use VGirol\JsonApiAssert\JsonApiAssertMessages;
+use VGirol\JsonApiAssert\Messages;
 
-class JsonApiRelationshipsObjectTest extends TestCase
+class RelationshipsObjectTest extends TestCase
 {
-    use JsonApiAssert;
-
     /**
-     * @note
      * @test
      * @dataProvider validResourceLinkageProvider
      */
     public function resource_linkage_is_valid($data)
     {
-        $this->assertIsValidResourceLinkage($data);
+        JsonApiAssert::assertIsValidResourceLinkage($data);
     }
 
     public function validResourceLinkageProvider()
@@ -51,17 +47,16 @@ class JsonApiRelationshipsObjectTest extends TestCase
     }
 
     /**
-     * @note
      * @test
      * @dataProvider notValidResourceLinkageProvider
      */
     public function resource_linkage_is_not_valid($data, $failureMessage)
     {
         $fn = function ($data) {
-            $this->assertIsValidResourceLinkage($data);
+            JsonApiAssert::assertIsValidResourceLinkage($data);
         };
 
-        $this->assertTestFail($fn, $failureMessage, $data);
+        JsonApiAssert::assertTestFail($fn, $failureMessage, $data);
     }
 
     public function notValidResourceLinkageProvider()
@@ -69,7 +64,7 @@ class JsonApiRelationshipsObjectTest extends TestCase
         return [
             'not an array' => [
                 'not valid',
-                JsonApiAssertMessages::JSONAPI_ERROR_RESOURCE_LINKAGE_NOT_ARRAY
+                Messages::RESOURCE_LINKAGE_NOT_ARRAY
             ],
             'not valid single resource identifier object' => [
                 [
@@ -97,13 +92,12 @@ class JsonApiRelationshipsObjectTest extends TestCase
     }
 
     /**
-     * @note
      * @test
      * @dataProvider validRelationshipObjectProvider
      */
     public function relationship_object_is_valid($data)
     {
-        $this->assertIsValidRelationshipObject($data);
+        JsonApiAssert::assertIsValidRelationshipObject($data);
     }
 
     public function validRelationshipObjectProvider()
@@ -144,17 +138,16 @@ class JsonApiRelationshipsObjectTest extends TestCase
     }
 
     /**
-     * @note
      * @test
      * @dataProvider notValidRelationshipObjectProvider
      */
     public function relationship_object_is_not_valid($data, $failureMessage)
     {
         $fn = function ($data) {
-            $this->assertIsValidRelationshipObject($data);
+            JsonApiAssert::assertIsValidRelationshipObject($data);
         };
 
-        $this->assertTestFail($fn, $failureMessage, $data);
+        JsonApiAssert::assertTestFail($fn, $failureMessage, $data);
     }
 
     public function notValidRelationshipObjectProvider()
@@ -193,7 +186,6 @@ class JsonApiRelationshipsObjectTest extends TestCase
     }
 
     /**
-     * @note
      * @test
      */
     public function relationships_object_is_valid()
@@ -211,21 +203,20 @@ class JsonApiRelationshipsObjectTest extends TestCase
             ]
         ];
 
-        $this->assertIsValidRelationshipsObject($data);
+        JsonApiAssert::assertIsValidRelationshipsObject($data);
     }
 
     /**
-     * @note
      * @test
      * @dataProvider notValidRelationshipsObjectProvider
      */
     public function relationships_object_is_not_valid($data, $failureMessage)
     {
         $fn = function ($data) {
-            $this->assertIsValidRelationshipsObject($data);
+            JsonApiAssert::assertIsValidRelationshipsObject($data);
         };
 
-        $this->assertTestFail($fn, $failureMessage, $data);
+        JsonApiAssert::assertTestFail($fn, $failureMessage, $data);
     }
 
     public function notValidRelationshipsObjectProvider()

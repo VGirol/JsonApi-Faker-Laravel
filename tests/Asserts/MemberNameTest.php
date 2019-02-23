@@ -1,17 +1,13 @@
 <?php
-namespace VGirol\JsonApiAssert\Tests;
+namespace VGirol\JsonApiAssert\Tests\Asserts;
 
-use VGirol\JsonApiAssert\JsonApiAssert;
-use PHPUnit\Framework\Assert as PHPUnit;
+use VGirol\JsonApiAssert\Assert as JsonApiAssert;
 use VGirol\JsonApiAssert\Tests\TestCase;
-use VGirol\JsonApiAssert\JsonApiAssertMessages;
+use VGirol\JsonApiAssert\Messages;
 
-class JsonApiMemberNameTest extends TestCase
+class MemberNameTest extends TestCase
 {
-    use JsonApiAssert;
-
     /**
-     * @note
      * @test
      * @dataProvider validMemberNameProvider
      */
@@ -19,7 +15,7 @@ class JsonApiMemberNameTest extends TestCase
     {
         $data = 'valid-member';
 
-        $this->assertIsValidMemberName($data);
+        JsonApiAssert::assertIsValidMemberName($data);
     }
 
     public function validMemberNameProvider()
@@ -37,17 +33,16 @@ class JsonApiMemberNameTest extends TestCase
     }
 
     /**
-     * @note
      * @test
      * @dataProvider notValidMemberNameProvider
      */
     public function member_name_is_not_valid($data, $strict, $failureMessage)
     {
         $fn = function ($data, $strict) {
-            $this->assertIsValidMemberName($data, $strict);
+            JsonApiAssert::assertIsValidMemberName($data, $strict);
         };
 
-        $this->assertTestFail($fn, $failureMessage, $data, $strict);
+        JsonApiAssert::assertTestFail($fn, $failureMessage, $data, $strict);
     }
 
     public function notValidMemberNameProvider()
@@ -56,58 +51,56 @@ class JsonApiMemberNameTest extends TestCase
             'not a string' => [
                 123,
                 false,
-                JsonApiAssertMessages::JSONAPI_ERROR_MEMBER_NAME_IS_NOT_STRING
+                Messages::MEMBER_NAME_IS_NOT_STRING
             ],
             'too short' => [
                 '',
                 false,
-                JsonApiAssertMessages::JSONAPI_ERROR_MEMBER_NAME_IS_TOO_SHORT
+                Messages::MEMBER_NAME_IS_TOO_SHORT
             ],
             'strict mode' => [
                 'not valid',
                 true,
-                JsonApiAssertMessages::JSONAPI_ERROR_MEMBER_NAME_HAVE_RESERVED_CHARACTERS
+                Messages::MEMBER_NAME_HAVE_RESERVED_CHARACTERS
             ],
             'reserved characters' => [
                 'az-F%3_t',
                 false,
-                JsonApiAssertMessages::JSONAPI_ERROR_MEMBER_NAME_HAVE_RESERVED_CHARACTERS
+                Messages::MEMBER_NAME_HAVE_RESERVED_CHARACTERS
             ],
             'start with not globally allowed character' => [
                 '_az',
                 false,
-                JsonApiAssertMessages::JSONAPI_ERROR_MEMBER_NAME_START_AND_END_WITH_ALLOWED_CHARACTERS
+                Messages::MEMBER_NAME_START_AND_END_WITH_ALLOWED_CHARACTERS
             ],
             'end with not globally allowed character' => [
                 'az_',
                 false,
-                JsonApiAssertMessages::JSONAPI_ERROR_MEMBER_NAME_START_AND_END_WITH_ALLOWED_CHARACTERS
+                Messages::MEMBER_NAME_START_AND_END_WITH_ALLOWED_CHARACTERS
             ]
         ];
     }
 
     /**
-     * @note
      * @test
      */
     public function member_name_is_not_forbidden()
     {
         $name = 'valid';
-        $this->assertIsNotForbiddenMemberName($name);
+        JsonApiAssert::assertIsNotForbiddenMemberName($name);
     }
 
     /**
-     * @note
      * @test
      * @dataProvider forbiddenMemberNameProvider
      */
     public function member_name_is_forbidden($data, $failureMessage)
     {
         $fn = function ($data) {
-            $this->assertIsNotForbiddenMemberName($data);
+            JsonApiAssert::assertIsNotForbiddenMemberName($data);
         };
 
-        $this->assertTestFail($fn, $failureMessage, $data);
+        JsonApiAssert::assertTestFail($fn, $failureMessage, $data);
     }
 
     public function forbiddenMemberNameProvider()
@@ -115,11 +108,11 @@ class JsonApiMemberNameTest extends TestCase
         return [
             'relationships' => [
                 'relationships',
-                JsonApiAssertMessages::JSONAPI_ERROR_MEMBER_NAME_NOT_ALLOWED
+                Messages::MEMBER_NAME_NOT_ALLOWED
             ],
             'links' => [
                 'links',
-                JsonApiAssertMessages::JSONAPI_ERROR_MEMBER_NAME_NOT_ALLOWED
+                Messages::MEMBER_NAME_NOT_ALLOWED
             ]
         ];
     }
@@ -129,7 +122,7 @@ class JsonApiMemberNameTest extends TestCase
     //  */
     // public function testValidField($data)
     // {
-    //     $this->assertHasNoForbiddenMemberName($data);
+    //     JsonApiAssert::assertHasNoForbiddenMemberName($data);
     // }
 
     // public function validFieldProvider()
@@ -155,10 +148,10 @@ class JsonApiMemberNameTest extends TestCase
     // public function testNotValidField($data, $failureMessage)
     // {
     //     $fn = function ($data) {
-    //         $this->assertHasNoForbiddenMemberName($data);
+    //         JsonApiAssert::assertHasNoForbiddenMemberName($data);
     //     };
 
-    //     $this->assertTestFail($fn, $failureMessage, $data);
+    //     JsonApiAssert::assertTestFail($fn, $failureMessage, $data);
     // }
 
     // public function notValidFieldProvider()
@@ -168,7 +161,7 @@ class JsonApiMemberNameTest extends TestCase
     //             [
     //                 'links' => 'not allowed member name'
     //             ],
-    //             JsonApiAssertMessages::JSONAPI_ERROR_MEMBER_NAME_NOT_ALLOWED
+    //             Messages::MEMBER_NAME_NOT_ALLOWED
     //         ],
     //         'not valid (complex)' => [
     //             [
@@ -178,7 +171,7 @@ class JsonApiMemberNameTest extends TestCase
     //                     'links' => 'not allowed member name'
     //                 ]
     //             ],
-    //             JsonApiAssertMessages::JSONAPI_ERROR_MEMBER_NAME_NOT_ALLOWED
+    //             Messages::MEMBER_NAME_NOT_ALLOWED
     //         ]
     //     ];
     // }

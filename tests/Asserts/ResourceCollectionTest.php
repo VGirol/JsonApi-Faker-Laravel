@@ -1,22 +1,19 @@
 <?php
-namespace VGirol\JsonApiAssert\Tests;
+namespace VGirol\JsonApiAssert\Tests\Asserts;
 
-use VGirol\JsonApiAssert\JsonApiAssert;
+use VGirol\JsonApiAssert\Assert as JsonApiAssert;
 use VGirol\JsonApiAssert\Tests\TestCase;
-use VGirol\JsonApiAssert\JsonApiAssertMessages;
+use VGirol\JsonApiAssert\Messages;
 
-class JsonApiResourceCollectionTest extends TestCase
+class ResourceCollectionTest extends TestCase
 {
-    use JsonApiAssert;
-
     /**
-     * @note
      * @test
      * @dataProvider validDataForResourceCollectionProvider
      */
     public function resource_collection_is_valid($data)
     {
-        $this->assertIsValidResourceCollection($data, true);
+        JsonApiAssert::assertIsValidResourceCollection($data, true);
     }
 
     public function validDataForResourceCollectionProvider()
@@ -67,17 +64,16 @@ class JsonApiResourceCollectionTest extends TestCase
     }
 
     /**
-     * @note
      * @test
      * @dataProvider notValidDataForResourceCollectionProvider
      */
     public function resource_collection_is_not_valid($data, $failureMessage)
     {
         $fn = function ($data) {
-            $this->assertIsValidResourceCollection($data, true);
+            JsonApiAssert::assertIsValidResourceCollection($data, true);
         };
 
-        $this->assertTestFail($fn, $failureMessage, $data);
+        JsonApiAssert::assertTestFail($fn, $failureMessage, $data);
     }
 
     public function notValidDataForResourceCollectionProvider()
@@ -103,7 +99,7 @@ class JsonApiResourceCollectionTest extends TestCase
                         'id' => '3'
                     ]
                 ],
-                JsonApiAssertMessages::JSONAPI_ERROR_PRIMARY_DATA_SAME_TYPE
+                Messages::PRIMARY_DATA_SAME_TYPE
             ]
         ];
     }

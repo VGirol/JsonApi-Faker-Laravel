@@ -1,23 +1,19 @@
 <?php
-namespace VGirol\JsonApiAssert\Tests;
+namespace VGirol\JsonApiAssert\Tests\Asserts;
 
-use VGirol\JsonApiAssert\JsonApiAssert;
-use PHPUnit\Framework\Assert as PHPUnit;
+use VGirol\JsonApiAssert\Assert as JsonApiAssert;
 use VGirol\JsonApiAssert\Tests\TestCase;
-use VGirol\JsonApiAssert\JsonApiAssertMessages;
+use VGirol\JsonApiAssert\Messages;
 
-class JsonApiPrimaryDataTest extends TestCase
+class PrimaryDataTest extends TestCase
 {
-    use JsonApiAssert;
-
     /**
-     * @note
      * @test
      * @dataProvider validDataForSingleResourceProvider
      */
     public function single_resource_is_valid($data)
     {
-        $this->assertIsValidSingleResource($data, true);
+        JsonApiAssert::assertIsValidSingleResource($data, true);
     }
 
     public function validDataForSingleResourceProvider()
@@ -42,17 +38,16 @@ class JsonApiPrimaryDataTest extends TestCase
     }
 
     /**
-     * @note
      * @test
      * @dataProvider notValidDataForSingleResourceProvider
      */
     public function single_resource_is_not_valid($data, $failureMessage)
     {
         $fn = function ($data) {
-            $this->assertIsValidSingleResource($data);
+            JsonApiAssert::assertIsValidSingleResource($data);
         };
 
-        $this->assertTestFail($fn, $failureMessage, $data);
+        JsonApiAssert::assertTestFail($fn, $failureMessage, $data);
     }
 
     public function notValidDataForSingleResourceProvider()
@@ -63,7 +58,7 @@ class JsonApiPrimaryDataTest extends TestCase
                     'id' => 666,
                     'type' => 'test'
                 ],
-                JsonApiAssertMessages::JSONAPI_ERROR_RESOURCE_ID_MEMBER_IS_NOT_STRING
+                Messages::RESOURCE_ID_MEMBER_IS_NOT_STRING
             ],
             'resource object not valid' => [
                 [
@@ -80,13 +75,12 @@ class JsonApiPrimaryDataTest extends TestCase
     }
 
     /**
-     * @note
      * @test
      * @dataProvider validPrimaryDataProvider
      */
     public function primary_data_is_valid($data)
     {
-        $this->assertIsValidPrimaryData($data);
+        JsonApiAssert::assertIsValidPrimaryData($data);
     }
 
     public function validPrimaryDataProvider()
@@ -123,17 +117,16 @@ class JsonApiPrimaryDataTest extends TestCase
     }
 
     /**
-     * @note
      * @test
      * @dataProvider notValidPrimaryDataProvider
      */
     public function primary_data_is_not_valid($data, $failureMessage)
     {
         $fn = function ($data) {
-            $this->assertIsValidPrimaryData($data);
+            JsonApiAssert::assertIsValidPrimaryData($data);
         };
 
-        $this->assertTestFail($fn, $failureMessage, $data);
+        JsonApiAssert::assertTestFail($fn, $failureMessage, $data);
     }
 
     public function notValidPrimaryDataProvider()

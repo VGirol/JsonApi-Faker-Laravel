@@ -1,23 +1,19 @@
 <?php
-namespace VGirol\JsonApiAssert\Tests;
+namespace VGirol\JsonApiAssert\Tests\Asserts;
 
-use VGirol\JsonApiAssert\JsonApiAssert;
-use PHPUnit\Framework\Assert as PHPUnit;
+use VGirol\JsonApiAssert\Assert as JsonApiAssert;
 use VGirol\JsonApiAssert\Tests\TestCase;
-use VGirol\JsonApiAssert\JsonApiAssertMessages;
+use VGirol\JsonApiAssert\Messages;
 
-class JsonApiLinksObjectTest extends TestCase
+class LinksObjectTest extends TestCase
 {
-    use JsonApiAssert;
-
     /**
-     * @note
      * @test
      * @dataProvider validLinkObjectProvider
      */
     public function link_object_is_valid($data)
     {
-        $this->assertIsValidLinkObject($data);
+        JsonApiAssert::assertIsValidLinkObject($data);
     }
 
     public function validLinkObjectProvider()
@@ -41,17 +37,16 @@ class JsonApiLinksObjectTest extends TestCase
     }
 
     /**
-     * @note
      * @test
      * @dataProvider notValidLinkObjectProvider
      */
     public function link_object_is_not_valid($data, $failureMessage)
     {
         $fn = function ($data) {
-            $this->assertIsValidLinkObject($data);
+            JsonApiAssert::assertIsValidLinkObject($data);
         };
 
-        $this->assertTestFail($fn, $failureMessage, $data);
+        JsonApiAssert::assertTestFail($fn, $failureMessage, $data);
     }
 
     public function notValidLinkObjectProvider()
@@ -65,7 +60,7 @@ class JsonApiLinksObjectTest extends TestCase
                 [
                     'meta' => 'error'
                 ],
-                JsonApiAssertMessages::JSONAPI_ERROR_LINK_OBJECT_MISS_HREF_MEMBER
+                Messages::LINK_OBJECT_MISS_HREF_MEMBER
             ],
             'not only allowed members' => [
                 [
@@ -86,7 +81,6 @@ class JsonApiLinksObjectTest extends TestCase
     }
 
     /**
-     * @note
      * @test
      */
     public function links_object_is_valid()
@@ -98,21 +92,20 @@ class JsonApiLinksObjectTest extends TestCase
 
         $allowed = [ 'self', 'related' ];
 
-        $this->assertIsValidLinksObject($data, $allowed);
+        JsonApiAssert::assertIsValidLinksObject($data, $allowed);
     }
 
     /**
-     * @note
      * @test
      * @dataProvider notValidLinksObjectProvider
      */
     public function links_object_is_not_valid($data, $allowed, $failureMessage)
     {
         $fn = function ($data, $allowed) {
-            $this->assertIsValidLinksObject($data, $allowed);
+            JsonApiAssert::assertIsValidLinksObject($data, $allowed);
         };
 
-        $this->assertTestFail($fn, $failureMessage, $data, $allowed);
+        JsonApiAssert::assertTestFail($fn, $failureMessage, $data, $allowed);
     }
 
     public function notValidLinksObjectProvider()
@@ -121,7 +114,7 @@ class JsonApiLinksObjectTest extends TestCase
             'not an array' => [
                 'error',
                 ['self', 'related'],
-                JsonApiAssertMessages::JSONAPI_ERROR_LINKS_OBJECT_NOT_ARRAY
+                Messages::LINKS_OBJECT_NOT_ARRAY
             ],
             'not only allowed members' => [
                 [
@@ -149,7 +142,7 @@ class JsonApiLinksObjectTest extends TestCase
     //  */
     // public function links_object_is_valid($data, $withPagination, $forError)
     // {
-    //     $this->assertIsValidLinksObject($data, $withPagination, $forError);
+    //     JsonApiAssert::assertIsValidLinksObject($data, $withPagination, $forError);
     // }
 
     // public function validLinksObjectProvider()
@@ -192,10 +185,10 @@ class JsonApiLinksObjectTest extends TestCase
     // public function links_object_is_not_valid($data, $withPagination, $forError, $failureMessage)
     // {
     //     $fn = function ($data, $withPagination, $forError) {
-    //         $this->assertIsValidLinksObject($data, $withPagination, $forError);
+    //         JsonApiAssert::assertIsValidLinksObject($data, $withPagination, $forError);
     //     };
 
-    //     $this->assertTestFail($fn, $failureMessage, $data, $withPagination, $forError);
+    //     JsonApiAssert::assertTestFail($fn, $failureMessage, $data, $withPagination, $forError);
     // }
 
     // public function notValidLinksObjectProvider()
@@ -205,7 +198,7 @@ class JsonApiLinksObjectTest extends TestCase
     //             'error',
     //             false,
     //             false,
-    //             JsonApiAssertMessages::JSONAPI_ERROR_LINKS_OBJECT_NOT_ARRAY
+    //             Messages::LINKS_OBJECT_NOT_ARRAY
     //         ],
     //         'pagination not allowed' => [
     //             [
