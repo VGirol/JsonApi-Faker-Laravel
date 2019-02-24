@@ -6,16 +6,12 @@
     "license": "MIT",
     "require": {
         "php": "^7.1.3",
-<<<<<<< HEAD
         "phpunit/phpunit": "^7.0",
         "laravel/laravel": "^5.7",
         "vgirol/jsonapi-assert": "dev-master"
     },
     "require-dev": {
         "orchestra/testbench": "^3.7"
-=======
-        "phpunit/phpunit": "^7.0"
->>>>>>> c1c6d7926d945bca5f8a0a608a032f3d4c51fc0b
     },
     "repositories": [
         {
