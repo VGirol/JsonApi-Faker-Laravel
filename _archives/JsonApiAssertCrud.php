@@ -1,8 +1,9 @@
 <?php
 
-namespace VGirol\JsonApiAssert;
+namespace VGirol\JsonApiAssert\Laravel;
 
 use Illuminate\Http\JsonResponse;
+use VGirol\JsonApiAssert\JsonApiAssert;
 use PHPUnit\Framework\Assert as PHPUnit;
 
 trait JsonApiAssertCrud
@@ -28,20 +29,20 @@ trait JsonApiAssertCrud
 
         static::assertResourceIdentifierObjectEqualsModel($model, $resource);
 
-        static::assertHasAttributes($resource);
+        JsonApiAssert::assertHasAttributes($resource);
         PHPUnit::assertEquals(
             $model->getAttributes(),
             $resource['attributes']
         );
 
-        static::assertHasLinks($resource);
+        JsonApiAssert::assertHasLinks($resource);
     }
 
     public static function assertResourceObjectListEqualsCollection($collection, $data, $options)
     {
         $options = static::mergeOptionsWithDefault($options);
 
-        static::assertIsArrayOfObjects($data);
+        JsonApiAssert::assertIsArrayOfObjects($data);
         PHPUnit::assertEquals($options['dataCount'], count($data));
 
         list($dataIndex, $colIndex) = static::getListOfIndex($options);
@@ -52,21 +53,21 @@ trait JsonApiAssertCrud
 
     public static function assertResponseMetaObjectSubset($expected, $json)
     {
-        static::assertHasMeta($json);
+        JsonApiAssert::assertHasMeta($json);
         $meta = $json['meta'];
         PHPUnit::assertArraySubset($expected, $meta);
     }
 
     public static function assertResponseLinksObjectSubset($expected, $json)
     {
-        static::assertHasLinks($json);
+        JsonApiAssert::assertHasLinks($json);
         $links = $json['links'];
         PHPUnit::assertArraySubset($expected, $links);
     }
 
     public static function assertResponseLinksObjectContains($expected, $json)
     {
-        static::assertHasLinks($json);
+        JsonApiAssert::assertHasLinks($json);
         $links = $json['links'];
         foreach ($expected as $key => $value) {
             PHPUnit::assertArrayHasKey($key, $links);
@@ -80,16 +81,16 @@ trait JsonApiAssertCrud
     {
         PHPUnit::assertEquals(strval($statusCode), $error['status']);
         PHPUnit::assertEquals(JsonResponse::$statusTexts[$statusCode], $error['title']);
-        static::assertHasMember($error, 'details');
+        JsonApiAssert::assertHasMember($error, 'details');
         if (config('app.debug')) {
-            static::assertHasMeta($error);
+            JsonApiAssert::assertHasMeta($error);
         }
     }
 
     public static function assertResponseSingleResourceLinkageEquals($expected, $resLinkage)
     {
-        static::assertIsValidResourceLinkage($resLinkage);
-        static::assertIsNotArrayOfObjects($resLinkage);
+        JsonApiAssert::assertIsValidResourceLinkage($resLinkage);
+        JsonApiAssert::assertIsNotArrayOfObjects($resLinkage);
         static::assertResourceIdentifierObjectEqualsModel($expected, $resLinkage);
     }
 
@@ -97,8 +98,8 @@ trait JsonApiAssertCrud
     {
         $options = static::mergeOptionsWithDefault($options);
 
-        static::assertIsValidResourceLinkage($data);
-        static::assertIsArrayOfObjects($data);
+        JsonApiAssert::assertIsValidResourceLinkage($data);
+        JsonApiAssert::assertIsArrayOfObjects($data);
 
         list($dataIndex, $colIndex) = static::getListOfIndex($options);
         for ($i = 0; $i < count($dataIndex); $i++) {
