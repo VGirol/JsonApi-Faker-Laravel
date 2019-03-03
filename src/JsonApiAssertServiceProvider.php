@@ -13,17 +13,6 @@ class JsonApiAssertServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        if ($this->app->runningInConsole()) {
-            $this->publishes([
-                __DIR__ . '/../config/jsonapi-assert.php' => config_path('jsonapi-assert.php'),
-            ], 'config');
-        }
-
-        $this->mergeConfigFrom(
-            __DIR__ . '/../config/jsonapi-assert.php',
-            'jsonapi-assert'
-        );
-
         foreach (glob(__DIR__ . '/macro/*.php') as $file) {
             require_once($file);
         }

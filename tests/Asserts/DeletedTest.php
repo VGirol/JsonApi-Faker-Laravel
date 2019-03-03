@@ -6,17 +6,17 @@ use Illuminate\Foundation\Testing\TestResponse;
 use VGirol\JsonApiAssert\Laravel\Tests\TestCase;
 use VGirol\JsonApiAssert\Assert as JsonApiAssert;
 
-class DeletionTest extends TestCase
+class DeletedTest extends TestCase
 {
     /**
      * @test
      */
-    public function response_deletion()
+    public function response_deleted()
     {
         $status = 200;
         $content = [
             'meta' => [
-                'result' => 'it works'
+                'message' => 'Deleting succeed'
             ]
         ];
         $headers = [
@@ -26,26 +26,26 @@ class DeletionTest extends TestCase
         $response = Response::create(json_encode($content), $status, $headers);
         $response = TestResponse::fromBaseResponse($response);
 
-        $response->assertJsonApiDeletion(true);
+        $response->assertJsonApiDeleted();
     }
 
     /**
      * @test
-     * @dataProvider notValidResponseDeletion
+     * @dataProvider notValidResponseDeleted
      */
-    public function response_deletion_failed($status, $headers, $content, $failureMsg)
+    public function response_deleted_failed($status, $headers, $content, $failureMsg)
     {
         $fn = function ($status, $headers, $content) {
             $response = Response::create(json_encode($content), $status, $headers);
             $response = TestResponse::fromBaseResponse($response);
 
-            $response->assertJsonApiDeletion(true);
+            $response->assertJsonApiDeleted();
         };
 
         JsonApiAssert::assertTestFail($fn, $failureMsg, $status, $headers, $content);
     }
 
-    public function notValidResponseDeletion()
+    public function notValidResponseDeleted()
     {
         return [
             'resource not found' => [
@@ -86,6 +86,18 @@ class DeletionTest extends TestCase
                 ],
                 null
             ],
+            'meta not valid' => [
+                200,
+                [
+                    'Content-Type' => [$this->mediaType]
+                ],
+                [
+                    'meta' => [
+                        'result+' => 'failed'
+                    ]
+                ],
+                null
+            ],
             'not only meta' => [
                 200,
                 [
@@ -96,79 +108,6 @@ class DeletionTest extends TestCase
                     'meta' => [
                         'result' => 'it works'
                     ]
-                ],
-                null
-            ]
-        ];
-    }
-
-    /**
-     * @test
-     */
-    public function response_deletion_with_no_content()
-    {
-        $status = 204;
-        $content = '';
-        $headers = [
-            'Content-Type' => [$this->mediaType]
-        ];
-
-        $response = Response::create(json_encode($content), $status, $headers);
-        $response = TestResponse::fromBaseResponse($response);
-
-        $response->assertJsonApiDeletion(false);
-    }
-
-    /**
-     * @test
-     * @dataProvider notValidResponseDeletionWithNoContent
-     */
-    public function response_deletion_with_no_content_failed($status, $headers, $content, $failureMsg)
-    {
-        $fn = function ($status, $headers, $content) {
-            $response = Response::create($content, $status, $headers);
-            $response = TestResponse::fromBaseResponse($response);
-
-            $response->assertJsonApiDeletion(false);
-        };
-
-        JsonApiAssert::assertTestFail($fn, $failureMsg, $status, $headers, $content);
-    }
-
-    public function notValidResponseDeletionWithNoContent()
-    {
-        return [
-            'resource not found' => [
-                404,
-                [
-                    'Content-Type' => [$this->mediaType]
-                ],
-                [
-                    'errors' => [
-                        [
-                            'status' => '404',
-                            'title' => 'Not Found',
-                            'details' => 'description'
-                        ]
-                    ]
-                ],
-                'Expected status code 204 but received 404.'
-            ],
-            'bad header' => [
-                204,
-                [
-                    'Content-Type' => [$this->mediaType.'; param=value']
-                ],
-                '',
-                null
-            ],
-            'has content' => [
-                204,
-                [
-                    'Content-Type' => [$this->mediaType]
-                ],
-                [
-                    'links' => []
                 ],
                 null
             ]
