@@ -87,25 +87,25 @@ trait JsonApiAssertCrud
         }
     }
 
-    public static function assertResponseSingleResourceLinkageEquals($expected, $resLinkage)
-    {
-        JsonApiAssert::assertIsValidResourceLinkage($resLinkage);
-        JsonApiAssert::assertIsNotArrayOfObjects($resLinkage);
-        static::assertResourceIdentifierObjectEqualsModel($expected, $resLinkage);
-    }
+    // public static function assertResponseSingleResourceLinkageEquals($expected, $resLinkage)
+    // {
+    //     JsonApiAssert::assertIsValidResourceLinkage($resLinkage);
+    //     JsonApiAssert::assertIsNotArrayOfObjects($resLinkage);
+    //     static::assertResourceIdentifierObjectEqualsModel($expected, $resLinkage);
+    // }
 
-    public static function assertResponseResourceLinkageListEqualsCollection($collection, $data, $options)
-    {
-        $options = static::mergeOptionsWithDefault($options);
+    // public static function assertResponseResourceLinkageListEqualsCollection($collection, $data, $options)
+    // {
+    //     $options = static::mergeOptionsWithDefault($options);
 
-        JsonApiAssert::assertIsValidResourceLinkage($data);
-        JsonApiAssert::assertIsArrayOfObjects($data);
+    //     JsonApiAssert::assertIsValidResourceLinkage($data);
+    //     JsonApiAssert::assertIsArrayOfObjects($data);
 
-        list($dataIndex, $colIndex) = static::getListOfIndex($options);
-        for ($i = 0; $i < count($dataIndex); $i++) {
-            static::assertResourceIdentifierObjectEqualsModel($collection[$colIndex[$i]], $data[$dataIndex[$i]]);
-        }
-    }
+    //     list($dataIndex, $colIndex) = static::getListOfIndex($options);
+    //     for ($i = 0; $i < count($dataIndex); $i++) {
+    //         static::assertResourceIdentifierObjectEqualsModel($collection[$colIndex[$i]], $data[$dataIndex[$i]]);
+    //     }
+    // }
 
     // public static function mergeOptionsWithDefault($options = [])
     // {

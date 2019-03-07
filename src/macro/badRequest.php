@@ -3,6 +3,10 @@
 use Illuminate\Foundation\Testing\TestResponse;
 use VGirol\JsonApiAssert\Laravel\AssertResponse;
 
+TestResponse::macro('assertJsonApiResponse400', function ($expectedErrors) {
+    AssertResponse::assertErrorResponse($this, 400, $expectedErrors);
+});
+
 TestResponse::macro('assertJsonApiResponse403', function ($expectedErrors) {
     AssertResponse::assertErrorResponse($this, 403, $expectedErrors);
 });

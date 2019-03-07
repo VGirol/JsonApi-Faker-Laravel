@@ -10,6 +10,7 @@ use VGirol\JsonApiAssert\Laravel\Asserts\AssertStructure;
 use VGirol\JsonApiAssert\Laravel\Asserts\AssertUpdated;
 use VGirol\JsonApiAssert\Laravel\Asserts\AssertFetched;
 use VGirol\JsonApiAssert\Laravel\Asserts\AssertFetchedCollection;
+use VGirol\JsonApiAssert\Laravel\Asserts\AssertFetchedRelationships;
 
 class AssertResponse
 {
@@ -24,4 +25,5 @@ class AssertResponse
     use AssertUpdated;
     use AssertFetched;
     use AssertFetchedCollection;
+    use AssertFetchedRelationships;
 }

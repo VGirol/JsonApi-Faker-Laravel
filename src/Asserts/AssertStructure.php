@@ -70,6 +70,49 @@ trait AssertStructure
         }
     }
 
+    /**
+     * Undocumented function
+     *
+     * @param Illuminate\Database\Eloquent\Model|null $model
+     * @param string|null $resourceType
+     * @param [type] $resLinkage
+     * @return void
+     */
+    public static function assertSingleResourceLinkageEquals($model, $resourceType, $resLinkage)
+    {
+        if (is_null($model)) {
+            PHPUnit::assertNull($resLinkage);
+        } else {
+            JsonApiAssert::assertIsValidResourceLinkage($resLinkage);
+            JsonApiAssert::assertIsNotArrayOfObjects($resLinkage);
+            static::assertResourceIdentifierObjectEqualsModel($model, $resourceType, $resLinkage);
+        }
+    }
+
+    public static function assertResponseResourceLinkageListEqualsCollection($collection, $data, $options)
+    {
+        $options = static::mergeOptionsWithDefault($options);
+
+        JsonApiAssert::assertIsValidResourceLinkage($data);
+        JsonApiAssert::assertIsArrayOfObjects($data);
+
+        list($dataIndex, $colIndex) = static::getListOfIndex($options);
+        for ($i = 0; $i < count($dataIndex); $i++) {
+            static::assertResourceIdentifierObjectEqualsModel($collection[$colIndex[$i]], $options['resourceType'], $data[$dataIndex[$i]]);
+        }
+    }
+
+     public static function getJsonFromPath($json, $path)
+    {
+        $path = explode('.', $path);
+        foreach ($path as $member) {
+            JsonApiAssert::assertHasMember($json, $member);
+            $json = $json[$member];
+        }
+
+        return $json;
+    }
+
     public static function mergeOptionsWithDefault($options = [])
     {
         foreach (static::getDefaultOptions() as $key => $value) {

@@ -40,14 +40,24 @@ trait AssertFetchedCollection
         PHPUnit::assertArraySubset($expected, $links);
     }
 
-    public static function getJsonFromPath($json, $path)
+    public static function assertNoPaginationLinks(TestResponse $response, $path = null)
     {
-        $path = explode('.', $path);
-        foreach ($path as $member) {
-            JsonApiAssert::assertHasMember($json, $member);
-            $json = $json[$member];
+        // Decode JSON response
+        $json = $response->json();
+
+        if (!is_null($path)) {
+            $json = static::getJsonFromPath($json, $path);
         }
 
-        return $json;
+        if (!isset($json['links'])) {
+            PHPUnit::assertTrue(true);
+
+            return;
+        }
+
+        $links = $json['links'];
+        foreach (['first', 'last', 'prev', 'next'] as $key) {
+            PHPUnit::assertArrayNotHasKey($key, $links);
+        }
     }
 }
