@@ -32,18 +32,13 @@ class FetchedCollectionTest extends TestCase
         $response = Response::create(json_encode($content), $status, $headers);
         $response = TestResponse::fromBaseResponse($response);
 
-        $options = [
-            'colCount' => count($data),
-            'resourceType' => $resourceType,
-            'itemPerPage' => 20
-        ];
-        $response->assertJsonApiFetchedResourceCollection($collection, $options);
+        $response->assertJsonApiFetchedResourceCollection($collection, $resourceType);
     }
 
-    private function getCollection()
+    private function getCollection($count = 10)
     {
         $collect = [];
-        for ($i = 1; $i <= 10; $i++) {
+        for ($i = 1; $i <= $count; $i++) {
             $model = new ModelForTest([
                 'TST_ID' => $i,
                 'TST_NAME' => "test_{$i}",
@@ -72,81 +67,38 @@ class FetchedCollectionTest extends TestCase
 
     /**
      * @test
-     * @dataProvider paginationLinksProvider
      */
-    public function response_pagination_links($content, $expected, $path)
+    public function response_pagination_links()
     {
         $status = 200;
         $headers = [
             'Content-Type' => [$this->mediaType]
         ];
 
+        $content = [
+            'links' => [
+                'first' => 'url',
+                'last' => 'url'
+            ]
+        ];
+        $expected = [
+            'first' => 'url',
+            'last' => 'url'
+        ];
+
         $response = Response::create(json_encode($content), $status, $headers);
         $response = TestResponse::fromBaseResponse($response);
 
-        $response->assertJsonApiPaginationLinks($expected, $path);
-    }
-
-    public function paginationLinksProvider()
-    {
-        return [
-            'top level links member' => [
-                [
-                    'links' => [
-                        'first' => 'url',
-                        'last' => 'url'
-                    ]
-                ],
-                [
-                    'first' => 'url',
-                    'last' => 'url'
-                ],
-                null
-            ],
-            'included member' => [
-                [
-                    'included' => [
-                        'links' => [
-                            'first' => 'url',
-                            'last' => 'url'
-                        ]
-                    ]
-                ],
-                [
-                    'first' => 'url',
-                    'last' => 'url'
-                ],
-                'included'
-            ],
-            'anywhere member' => [
-                [
-                    'meta' => [
-                        'test' => [
-                            'faraway' => [
-                                'links' => [
-                                    'first' => 'url',
-                                    'last' => 'url'
-                                ]
-                            ]
-                        ]
-                    ]
-                ],
-                [
-                    'first' => 'url',
-                    'last' => 'url'
-                ],
-                'meta.test.faraway'
-            ]
-        ];
+        $response->assertJsonApiPaginationLinks($expected);
     }
 
     /**
      * @test
      * @dataProvider paginationLinksFailedProvider
      */
-    public function response_pagination_links_failed($content, $expected, $path, $failureMsg)
+    public function response_pagination_links_failed($content, $expected, $failureMsg)
     {
-        $fn = function ($content, $expected, $path) {
+        $fn = function ($content, $expected) {
             $status = 200;
             $headers = [
                 'Content-Type' => [$this->mediaType]
@@ -155,10 +107,10 @@ class FetchedCollectionTest extends TestCase
             $response = Response::create(json_encode($content), $status, $headers);
             $response = TestResponse::fromBaseResponse($response);
 
-            $response->assertJsonApiPaginationLinks($expected, $path);
+            $response->assertJsonApiPaginationLinks($expected);
         };
 
-        JsonApiAssert::assertTestFail($fn, $failureMsg, $content, $expected, $path);
+        JsonApiAssert::assertTestFail($fn, $failureMsg, $content, $expected);
     }
 
     public function paginationLinksFailedProvider()
@@ -174,7 +126,6 @@ class FetchedCollectionTest extends TestCase
                     'first' => 'url',
                     'last' => 'url'
                 ],
-                null,
                 sprintf(Messages::HAS_MEMBER, 'links')
             ],
             'bad links member' => [
@@ -188,8 +139,7 @@ class FetchedCollectionTest extends TestCase
                     'first' => 'url',
                     'last' => 'url'
                 ],
-                null,
-                Messages::ONLY_ALLOWED_MEMBERS
+                null
             ],
             'no match' => [
                 [
@@ -202,24 +152,7 @@ class FetchedCollectionTest extends TestCase
                     'first' => 'url',
                     'last' => 'url'
                 ],
-                null,
                 null
-            ],
-            'bad path' => [
-                [
-                    'included' => [
-                        'links' => [
-                            'first' => 'url',
-                            'last' => 'url'
-                        ]
-                    ]
-                ],
-                [
-                    'first' => 'url',
-                    'last' => 'url'
-                ],
-                'included.bad',
-                sprintf(Messages::HAS_MEMBER, 'bad')
             ]
         ];
     }

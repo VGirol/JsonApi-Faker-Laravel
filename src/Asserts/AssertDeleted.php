@@ -8,16 +8,24 @@ use VGirol\JsonApiAssert\Assert as JsonApiAssert;
 
 trait AssertDeleted
 {
-    public static function assertDeleted(TestResponse $response)
+    public static function assertDeleted(TestResponse $response, $expectedMeta = null)
     {
         $response->assertStatus(200);
         $response->assertHeader(static::$headerName, static::$mediaType);
 
         // Decode JSON response
-        $content = $response->json();
+        $json = $response->json();
 
-        JsonApiAssert::assertContainsOnlyAllowedMembers(['meta', 'jsonapi'], $content);
-        PHPUnit::assertArrayHasKey('meta', $content);
-        JsonApiAssert::assertIsValidMetaObject($content['meta']);
+        // Checks response structure
+        JsonApiAssert::assertHasValidStructure($json);
+
+        JsonApiAssert::assertContainsOnlyAllowedMembers(['meta', 'jsonapi'], $json);
+        PHPUnit::assertArrayHasKey('meta', $json);
+
+        // Checks meta object
+        $meta = $json['meta'];
+        if (!is_null($expectedMeta)) {
+            PHPUnit::assertEquals($expectedMeta, $meta);
+        }
     }
 }

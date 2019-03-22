@@ -4,6 +4,9 @@ namespace VGirol\JsonApiAssert\Laravel;
 
 use Illuminate\Support\ServiceProvider;
 
+/**
+ * Undocumented class
+ */
 class JsonApiAssertServiceProvider extends ServiceProvider
 {
     /**

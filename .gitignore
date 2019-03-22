@@ -3,3 +3,4 @@ report/
 vendor/
 composer.lock
 _archives/
+.phpunit.result.cache

@@ -4,7 +4,7 @@ namespace VGirol\JsonApiAssert\Laravel\Asserts;
 
 use Illuminate\Foundation\Testing\TestResponse;
 use VGirol\JsonApiAssert\Assert as JsonApiAssert;
-use PHPUnit\Framework\Assert as PHPUnit;
+use DMS\PHPUnitExtensions\ArraySubset\Assert as AssertArray;
 
 trait AssertFetchedRelationships
 {
@@ -25,7 +25,7 @@ trait AssertFetchedRelationships
         static::assertSingleResourceLinkageEquals($expectedModel, $resourceType, $data);
     }
 
-    public static function assertFetchedToManyRelationships(TestResponse $response, $expectedCollection, $options)
+    public static function assertFetchedToManyRelationships(TestResponse $response, $expectedCollection, $resourceType)
     {
         $response->assertStatus(200);
         $response->assertHeader(static::$headerName, static::$mediaType);
@@ -39,7 +39,7 @@ trait AssertFetchedRelationships
         // Checks data member
         JsonApiAssert::assertHasData($json);
         $data = $json['data'];
-        static::assertResponseResourceLinkageListEqualsCollection($expectedCollection, $data, $options);
+        static::assertResponseResourceLinkageListEqualsCollection($expectedCollection, $resourceType, $data);
     }
 
     public static function assertRelationshipsLinks(TestResponse $response, $expected, $path = null)
@@ -54,6 +54,6 @@ trait AssertFetchedRelationships
         JsonApiAssert::assertHasLinks($json);
         $links = $json['links'];
         JsonApiAssert::assertContainsOnlyAllowedMembers(['self', 'related'], $links);
-        PHPUnit::assertArraySubset($expected, $links);
+        AssertArray::assertArraySubset($expected, $links);
     }
 }
