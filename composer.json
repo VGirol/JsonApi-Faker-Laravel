@@ -12,7 +12,9 @@
         "vgirol/jsonapi-assert": "dev-master"
     },
     "require-dev": {
-        "orchestra/testbench": "^3.8"
+        "infection/infection": "dev-master",
+        "orchestra/testbench": "^3.8",
+        "squizlabs/php_codesniffer": "^3.0"
     },
     "repositories": [
         {
@@ -41,7 +43,19 @@
         }
     },
     "scripts": {
-        "test": "./vendor/bin/phpunit tests"
+        "post-update-cmd": [
+            "@setup"
+        ],
+        "setup": "bash install/setup.sh",
+        "test": "./vendor/bin/phpunit tests ",
+        "coverage": "./vendor/bin/phpunit tests --coverage-xml=build/coverage/coverage-xml --log-junit=build/coverage/phpunit.junit.xml",
+        "infection": "./vendor/bin/infection --coverage=build/coverage --threads=$(nproc) --configuration=infection.json.dist",
+        "php-linting": "./vendor/bin/phpcs --encoding=utf-8",
+        "build": [
+            "@php-linting",
+            "@coverage",
+            "@infection"
+        ]
     },
     "extra": {
         "laravel": {

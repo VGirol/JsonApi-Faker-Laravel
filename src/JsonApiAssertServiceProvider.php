@@ -16,7 +16,7 @@ class JsonApiAssertServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        foreach (glob(__DIR__ . '/macro/*.php') as $file) {
+        foreach (glob(__DIR__ . '/macro/**/*.php') as $file) {
             require_once($file);
         }
     }
@@ -27,5 +27,6 @@ class JsonApiAssertServiceProvider extends ServiceProvider
      * @return void
      */
     public function register()
-    { }
+    {
+    }
 }

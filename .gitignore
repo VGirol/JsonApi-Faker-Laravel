@@ -1,5 +1,5 @@
 !.gitignore
-report/
+build/
 vendor/
 composer.lock
 _archives/

@@ -2,15 +2,13 @@
 
 namespace VGirol\JsonApiAssert\Laravel\Asserts;
 
-use VGirol\JsonApiAssert\Assert as JsonApiAssert;
-
 trait AssertHelpers
 {
-    public static function getJsonFromPath($json, $path)
+    private static function getJsonFromPath($json, $path)
     {
         $path = explode('.', $path);
         foreach ($path as $member) {
-            JsonApiAssert::assertHasMember($json, $member);
+            static::assertHasMember($member, $json);
             $json = $json[$member];
         }
 
