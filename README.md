@@ -54,7 +54,7 @@ This package provides the class `VGirol\JsonApiAssert\Laravel\Assert`. That clas
 Asserts that an errors array contains a given subset of expected errors.
 
 Definition:
-`assertErrorsContains($expectedErrors, $errors, $strict)`
+`VGirol\JsonApiAssert\Laravel\Assert::assertErrorsContains($expectedErrors, $errors, $strict)`
 
 Parameters :
 - `$expectedErrors` (array)
@@ -71,7 +71,7 @@ It will do the following checks :
 Asserts that the response has 200 status code and content with primary data represented as resource identifier objects and corresponding to the provided collection or model and resource type.
 
 Definition:
-`assertFetchedRelationshipsResponse(TestResponse $response, $expected, $resourceType, $strict)`
+`VGirol\JsonApiAssert\Laravel\Assert::assertFetchedRelationshipsResponse(TestResponse $response, $expected, $resourceType, $strict)`
 
 Parameters :
 - `$response` (Illuminate\Foundation\Testing\TestResponse)
@@ -88,8 +88,8 @@ It will do the following checks :
 
 Asserts that the response has 200 status code and content with primary data corresponding to the provided collection and resource type.
 
-Definition :  
-`assertFetchedResourceCollectionResponse(TestResponse $response, $expectedCollection, $expectedResourceType, bool $strict)`
+Definition :
+`VGirol\JsonApiAssert\Laravel\Assert::assertFetchedResourceCollectionResponse(TestResponse $response, $expectedCollection, $expectedResourceType, bool $strict)`
 
 Parameters :
 - `$response` (Illuminate\Foundation\Testing\TestResponse)
@@ -106,8 +106,8 @@ It will do the following checks :
 
 Asserts that the response has 200 status code and content with primary data corresponding to the provided model and resource type.
 
-Definition :  
-`assertFetchedSingleResourceResponse($response, $expectedModel, $resourceType, $strict)`
+Definition :
+`VGirol\JsonApiAssert\Laravel\Assert::assertFetchedSingleResourceResponse($response, $expectedModel, $resourceType, $strict)`
 
 Parameters :
 - `$response` (Illuminate\Foundation\Testing\TestResponse)
@@ -124,8 +124,8 @@ It will do the following checks :
 
 Asserts that a response object is a valid '201 Created' response following a creation request.
 
-Definition :  
-`assertIsCreatedResponse($response, $expectedModel, $resourceType, $strict)`
+Definition :
+`VGirol\JsonApiAssert\Laravel\Assert::assertIsCreatedResponse($response, $expectedModel, $resourceType, $strict)`
 
 Parameters :
 - `$response` (Illuminate\Foundation\Testing\TestResponse)
@@ -143,8 +143,8 @@ It will do the following checks :
 
 Asserts that a response object is a valid '200 OK' response following a deletion request.
 
-Definition :  
-`assertIsDeletedResponse($response, $expectedMeta = null, $strict = false)`
+Definition :
+`VGirol\JsonApiAssert\Laravel\Assert::assertIsDeletedResponse($response, $expectedMeta = null, $strict = false)`
 
 Parameters :
 - `$response` (Illuminate\Foundation\Testing\TestResponse)
@@ -161,8 +161,8 @@ It will do the following checks :
 
 Asserts that an error response (status code 4xx) is valid.
 
-Definition :  
-`assertIsErrorResponse($response, $status, $errors, $strict)`
+Definition :
+`VGirol\JsonApiAssert\Laravel\Assert::assertIsErrorResponse($response, $status, $errors, $strict)`
 
 Parameters :
 - `$response` (Illuminate\Foundation\Testing\TestResponse)
@@ -179,8 +179,8 @@ It will do the following checks :
 
 Asserts that a response is a valid '204 No Content' response.
 
-Definition :  
-`assertIsNoContentResponse($response)`
+Definition :
+`VGirol\JsonApiAssert\Laravel\Assert::assertIsNoContentResponse($response)`
 
 Parameters :
 - `$response` (Illuminate\Foundation\Testing\TestResponse)
@@ -194,8 +194,8 @@ It will do the following checks :
 
 Asserts that a response object is a valid '200 OK' response following an update request.
 
-Definition :  
-`assertIsUpdatedResponse($response, $expectedModel, $resourceType, $strict)`
+Definition :
+`VGirol\JsonApiAssert\Laravel\Assert::assertIsUpdatedResponse($response, $expectedModel, $resourceType, $strict)`
 
 Parameters :
 - `$response` (Illuminate\Foundation\Testing\TestResponse)
@@ -214,8 +214,8 @@ It will do the following checks :
 
 Asserts that an array of resource objects correspond to a given collection.
 
-Definition :  
-`assertResourceCollectionEquals($expectedCollection, $expectedResourceType, $collection)`
+Definition :
+`VGirol\JsonApiAssert\Laravel\Assert::assertResourceCollectionEquals($expectedCollection, $expectedResourceType, $collection)`
 
 Parameters
 - `$expectedCollection` (Illuminate\Database\Eloquent\Collection)
@@ -233,7 +233,7 @@ It will do the following checks :
 Asserts that an array of resource identifer objects correspond to a given collection.
 
 Definition :
-`assertResourceIdentifierCollectionEquals($refCollection, $resourceType, $collection)`
+`VGirol\JsonApiAssert\Laravel\Assert::assertResourceIdentifierCollectionEquals($refCollection, $resourceType, $collection)`
 
 Parameters :
 - `$refCollection` (Illuminate\Database\Eloquent\Collection)
@@ -250,7 +250,7 @@ It will do the following checks :
 Asserts that a resource identifier object has "id" and "type" member equal to the given parameters.
 
 Definition :
-`assertResourceIdentifierEquals($expectedId, $expectedResourceType, $resource)`
+`VGirol\JsonApiAssert\Laravel\Assert::assertResourceIdentifierEquals($expectedId, $expectedResourceType, $resource)`
 
 Parameters :
 - `$expectedId` (integer|string)
@@ -265,7 +265,7 @@ It will do the following checks :
 Asserts that a resource linkage object correspond to a given reference object which can be either the null value, a single resource identifier object, an empty collection or a collection of resource identifier ojects.
 
 Definition :
-`assertResourceLinkageEquals($reference, $resourceType, $resLinkage, $strict)`
+`VGirol\JsonApiAssert\Laravel\Assert::assertResourceLinkageEquals($reference, $resourceType, $resLinkage, $strict)`
 
 Parameters :
 - `$reference` (Illuminate\Database\Eloquent\Collection|Illuminate\Database\Eloquent\Model|null)
@@ -283,8 +283,8 @@ It will do the following checks :
 
 Asserts that a resource object correspond to a given model.
 
-Definition :  
-`assertResourceObjectEquals($expectedModel, $expectedResourceType, $resource)`
+Definition :
+`VGirol\JsonApiAssert\Laravel\Assert::assertResourceObjectEquals($expectedModel, $expectedResourceType, $resource)`
 
 Parameters :
 - `$expectedModel` (Illuminate\Database\Eloquent\Model)
@@ -301,8 +301,8 @@ It will do the following checks :
 
 ### assertJsonApiCreated
 
-Definition :  
-`assertJsonApiCreated'($expectedModel, $resourceType, $strict = false)`
+Definition :
+`Illuminate\Foundation\Testing\TestResponse::assertJsonApiCreated'($expectedModel, $resourceType, $strict = false)`
 
 Parameters :
 - `$expectedModel` (Illuminate\Database\Eloquent\Model)
@@ -339,8 +339,8 @@ $response->assertJsonApiCreated($model, 'my-model');
 
 ### assertJsonApiDeleted
 
-Definition :  
-`assertJsonApiDeleted($expectedMeta = null, $strict = false)`
+Definition :
+`Illuminate\Foundation\Testing\TestResponse::assertJsonApiDeleted($expectedMeta = null, $strict = false)`
 
 Parameters :
 - `$expectedMeta` (array, default null)
@@ -365,8 +365,8 @@ $response->assertJsonApiDeleted($expectedMeta);
 
 ### assertJsonApiErrorResponse
 
-Definition :  
-`assertJsonApiErrorResponse($status, $errors, $strict = false)`
+Definition :
+`Illuminate\Foundation\Testing\TestResponse::assertJsonApiErrorResponse($status, $errors, $strict = false)`
 
 Parameters :
 - `$status` (integer)
@@ -395,8 +395,8 @@ $response->assertJsonApiErrorResponse(
 
 ### assertJsonApiFetchedRelationships
 
-Definition :  
-`assertJsonApiFetchedRelationships($expected, $resourceType = null, $strict = false)`
+Definition :
+`Illuminate\Foundation\Testing\TestResponse::assertJsonApiFetchedRelationships($expected, $resourceType = null, $strict = false)`
 
 Parameters :
 - `$expected` (Illuminate\Database\Eloquent\Collection|Illuminate\Database\Eloquent\Model|null)
@@ -421,8 +421,8 @@ $response->assertJsonApiFetchedRelationships($related, 'my-related');
 
 ### assertJsonApiFetchedResourceCollection
 
-Definition :  
-`assertJsonApiFetchedResourceCollection($expectedCollection, $expectedResourceType, $strict = false)`
+Definition :
+`Illuminate\Foundation\Testing\TestResponse::assertJsonApiFetchedResourceCollection($expectedCollection, $expectedResourceType, $strict = false)`
 
 Parameters :
 - `$expectedCollection` (Illuminate\Database\Eloquent\Collection)
@@ -445,8 +445,8 @@ $response->assertJsonApiFetchedResourceCollection($collection, 'my-model');
 
 ### assertJsonApiFetchedSingleResource
 
-Definition :  
-`assertJsonApiFetchedSingleResource($expectedModel, $resourceType, $strict = false)`
+Definition :
+`Illuminate\Foundation\Testing\TestResponse::assertJsonApiFetchedSingleResource($expectedModel, $resourceType, $strict = false)`
 
 Parameters :
 - `$expectedModel` (Illuminate\Database\Eloquent\Model)
@@ -469,8 +469,8 @@ $response->assertJsonApiFetchedSingleResource($model, 'my-model');
 
 ### assertJsonApiNoContent
 
-Definition :  
-`assertJsonApiNoContent()`
+Definition :
+`Illuminate\Foundation\Testing\TestResponse::assertJsonApiNoContent()`
 
 See [`VGirol\JsonApiAssert\Laravel\Assert::assertIsNoContentResponse`](#assertIsNoContentResponse).
 
@@ -487,8 +487,8 @@ $response->assertJsonApiNoContent();
 
 ### `assertJsonApiResponse400`
 
-Definition :  
-`assertJsonApiResponse400($errors, $strict = false)`
+Definition :
+`Illuminate\Foundation\Testing\TestResponse::assertJsonApiResponse400($errors, $strict = false)`
 
 Parameters :
 - `$errors` (array) : the expected error objects.
@@ -498,8 +498,8 @@ See [`assertJsonApiErrorResponse`](#assertJsonApiErrorResponse).
 
 ### `assertJsonApiResponse403`
 
-Definition :  
-`assertJsonApiResponse403($errors, $strict = false)`
+Definition :
+`Illuminate\Foundation\Testing\TestResponse::assertJsonApiResponse403($errors, $strict = false)`
 
 Parameters :
 - `$errors` (array) : the expected error objects.
@@ -509,8 +509,8 @@ See [`assertJsonApiErrorResponse`](#assertJsonApiErrorResponse).
 
 ### `assertJsonApiResponse404`
 
-Definition :  
-`assertJsonApiResponse404($errors, $strict = false)`
+Definition :
+`Illuminate\Foundation\Testing\TestResponse::assertJsonApiResponse404($errors, $strict = false)`
 
 Parameters :
 - `$errors` (array) : the expected error objects.
@@ -520,8 +520,8 @@ See [`assertJsonApiErrorResponse`](#assertJsonApiErrorResponse).
 
 ### `assertJsonApiResponse406`
 
-Definition :  
-`assertJsonApiResponse406($errors, $strict = false)`
+Definition :
+`Illuminate\Foundation\Testing\TestResponse::assertJsonApiResponse406($errors, $strict = false)`
 
 Parameters :
 - `$errors` (array) : the expected error objects.
@@ -531,8 +531,8 @@ See [`assertJsonApiErrorResponse`](#assertJsonApiErrorResponse).
 
 ### `assertJsonApiResponse409`
 
-Definition :  
-`assertJsonApiResponse409($errors, $strict = false)`
+Definition :
+`Illuminate\Foundation\Testing\TestResponse::assertJsonApiResponse409($errors, $strict = false)`
 
 Parameters :
 - `$errors` (array) : the expected error objects.
@@ -542,8 +542,8 @@ See [`assertJsonApiErrorResponse`](#assertJsonApiErrorResponse).
 
 ### `assertJsonApiResponse415`
 
-Definition :  
-`assertJsonApiResponse415($errors, $strict = false)`
+Definition :
+`Illuminate\Foundation\Testing\TestResponse::assertJsonApiResponse415($errors, $strict = false)`
 
 Parameters :
 - `$errors` (array) : the expected error objects.
@@ -553,15 +553,15 @@ See [`assertJsonApiErrorResponse`](#assertJsonApiErrorResponse).
 
 ### assertJsonApiUpdated
 
-Definition :  
-`assertJsonApiUpdated($expectedModel, $resourceType, $strict = false)`
-
-See [`VGirol\JsonApiAssert\Laravel\Assert::assertIsUpdatedResponse`](#assertIsUpdatedResponse).
+Definition :
+`Illuminate\Foundation\Testing\TestResponse::assertJsonApiUpdated($expectedModel, $resourceType, $strict = false)`
 
 Parameters :
 - `$expectedModel` (Illuminate\Database\Eloquent\Model)  
 - `$resourceType` (string)  
 - `$strict` (boolean, default : false) : if true, unsafe characters are not allowed when checking members name.
+
+See [`VGirol\JsonApiAssert\Laravel\Assert::assertIsUpdatedResponse`](#assertIsUpdatedResponse).
 
 ```php
 use App\MyModel;
@@ -590,88 +590,6 @@ $response = $this->json('PATCH', route('mymodel.update', ['id' => $model->getKey
 
 // Check response
 $response->assertJsonApiUpdated($model, $resourceType);
-```
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-### `assertJsonApiFetchedToOneRelationships`
-
-Asserts that the response has :
-- `200 OK` status code
-- header `Content-Type: application/vnd.api+json` without any media type parameters
-- content with primary data represented as resource linkage and corresponding to the provided model and resource type.
-
-```php
-use Illuminate\Database\Eloquent\Model;
-
-$model = new Model();
-$response->assertJsonApiFetchedToOneRelationships($model, 'resourceType');
-```
-
-### `assertJsonApiFetchedToManyRelationships`
-
-Asserts that the response has :
-- `200 OK` status code
-- header `Content-Type: application/vnd.api+json` without any media type parameters
-- content with primary data represented as resource linkage and corresponding to the provided collection.
-
-```php
-use Illuminate\Database\Eloquent\Model;
-
-$collection = new Collection([...]);
-$response->assertJsonApiFetchedToManyRelationships($collection, 'resourceType');
-```
-
-### `assertJsonApiNoPaginationLinks`
-
-Asserts that the json object specified by the path has no pagination links.
-
-```php
-$response->assertJsonApiNoPaginationLinks();
-```
-
-### `assertJsonApiPaginationLinks`
-
-Asserts that the response has pagination links with a subset equal to the expected links provided.
-
-```php
-$response->assertJsonApiPaginationLinks([
-    'first' => ...,
-    'last' => ...
-]);
-```
-
-### `assertJsonApiRelationshipsLinks`
-
-Asserts that the json object specified by the path has relationships links with a subset corresponding to the expected links provided.
-
-```php
-$response->assertJsonApiPaginationLinks(
-    [
-        'self' => ...,
-        'related' => ...
-    ],
-    'data.relationships.relatedList'
-);
 ```
 
 ## Changelog
