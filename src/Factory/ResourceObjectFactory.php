@@ -7,6 +7,7 @@ use VGirol\JsonApiAssert\Factory\ResourceObjectFactory as BaseFactory;
 class ResourceObjectFactory extends BaseFactory
 {
     use HasModel;
+    use HasRelationships;
 
     public function __construct($model, string $resourceType)
     {

@@ -73,28 +73,28 @@ class CollectionFactory extends BaseFactory
         );
     }
 
-    public function appendRelationships(array $relationships): self
-    {
-        foreach ($relationships as $name) {
-            $this->each(function ($resource) use ($name) {
-                if ($this->isResourceIdentifier()) {
-                    return;
-                }
+    // public function appendRelationships(array $relationships): self
+    // {
+    //     foreach ($relationships as $name) {
+    //         $this->each(function ($resource) use ($name) {
+    //             if ($this->isResourceIdentifier()) {
+    //                 return;
+    //             }
 
-                $resource->appendRelationship($name);
-            });
-        }
+    //             $resource->appendRelationship($name);
+    //         });
+    //     }
 
-        return $this;
-    }
+    //     return $this;
+    // }
 
-    protected function roFactory($model, $resourceType)
-    {
-        return $this->factory(ResourceObjectFactory::class, [$model, $resourceType]);
-    }
+    // protected function roFactory($model, $resourceType)
+    // {
+    //     return $this->factory(ResourceObjectFactory::class, [$model, $resourceType]);
+    // }
 
-    protected function riFactory($model, $resourceType)
-    {
-        return $this->factory(ResourceIdentifierFactory::class, [$model, $resourceType]);
-    }
+    // protected function riFactory($model, $resourceType)
+    // {
+    //     return $this->factory(ResourceIdentifierFactory::class, [$model, $resourceType]);
+    // }
 }
