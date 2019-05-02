@@ -12,9 +12,13 @@ use VGirol\JsonApiAssert\Laravel\Asserts\Response\AssertFetchedRelationships;
 use VGirol\JsonApiAssert\Laravel\Asserts\Response\AssertNoContent;
 use VGirol\JsonApiAssert\Laravel\Asserts\Response\AssertUpdated;
 use VGirol\JsonApiAssert\Laravel\Asserts\Structure\AssertErrors;
-use VGirol\JsonApiAssert\Laravel\Asserts\Structure\AssertResource;
-use VGirol\JsonApiAssert\Laravel\Asserts\Structure\AssertResourceLinkage;
+use VGirol\JsonApiAssert\Laravel\Asserts\Structure\AssertJsonapiObject;
+use VGirol\JsonApiAssert\Laravel\Asserts\Structure\AssertLinks;
+use VGirol\JsonApiAssert\Laravel\Asserts\Structure\AssertPagination;
 
+/**
+ * This class provide a set of assertions to test API response using the JSON:API specification.
+ */
 class Assert extends JsonApiAssert
 {
     use HeaderTrait;
@@ -29,7 +33,8 @@ class Assert extends JsonApiAssert
     use AssertFetchedCollection;
     use AssertFetchedRelationships;
 
-    use AssertResource;
-    use AssertResourceLinkage;
     use AssertErrors;
+    use AssertPagination;
+    use AssertLinks;
+    use AssertJsonapiObject;
 }

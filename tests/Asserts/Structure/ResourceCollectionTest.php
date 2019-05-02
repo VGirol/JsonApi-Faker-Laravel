@@ -1,8 +1,7 @@
 <?php
 namespace VGirol\JsonApiAssert\Laravel\Tests\Asserts\Structure;
 
-use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
 use VGirol\JsonApiAssert\Laravel\Assert;
 use VGirol\JsonApiAssert\Laravel\Tests\TestCase;
 use VGirol\JsonApiAssert\Laravel\Tests\Tools\Models\ModelForTest;
@@ -20,7 +19,7 @@ class ResourceCollectionTest extends TestCase
         for ($i = 1; $i < 5; $i++) {
             $attributes = [
                 'TST_ID' => 10 + $i,
-                'TST_NAME' => 'test'.$i,
+                'TST_NAME' => 'test' . $i,
                 'TST_NUMBER' => 1000 * $i + 123,
                 'TST_CREATION_DATE' => null
             ];
@@ -58,7 +57,7 @@ class ResourceCollectionTest extends TestCase
         for ($i = 1; $i < 3; $i++) {
             $attributes = [
                 'TST_ID' => 10 + $i,
-                'TST_NAME' => 'test'.$i,
+                'TST_NAME' => 'test' . $i,
                 'TST_NUMBER' => 1000 * $i + 123,
                 'TST_CREATION_DATE' => null
             ];
@@ -127,8 +126,8 @@ class ResourceCollectionTest extends TestCase
             'attributes' => $attributes
         ];
 
-        $this->setInvalidArgumentException(1, Collection::class, null);
+        $this->setInvalidArgumentException(1, Collection::class, [$model]);
 
-        Assert::assertResourceCollectionEquals(collect([$model]), $resourceType, [$resource]);
+        Assert::assertResourceCollectionEquals([$model], $resourceType, [$resource]);
     }
 }

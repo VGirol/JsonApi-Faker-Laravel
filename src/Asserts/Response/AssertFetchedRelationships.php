@@ -3,7 +3,11 @@
 namespace VGirol\JsonApiAssert\Laravel\Asserts\Response;
 
 use Illuminate\Foundation\Testing\TestResponse;
+use VGirol\JsonApiAssert\Members;
 
+/**
+ * Fetched relationships response
+ */
 trait AssertFetchedRelationships
 {
     /**
@@ -11,31 +15,36 @@ trait AssertFetchedRelationships
      * represented as resource identifier objects and corresponding to the provided collection
      * or model and resource type.
      *
-     * @param TestResponse $response
-     * @param Collection|Model|null $expected
-     * @param string $resourceType
+     * @param \Illuminate\Foundation\Testing\TestResponse $response
+     * @param array|null $expected
      * @param boolean $strict
      *
      * @throws \PHPUnit\Framework\ExpectationFailedException
      */
-    public static function assertFetchedRelationshipsResponse(
-        TestResponse $response,
-        $expected,
-        $resourceType,
-        $strict
-    ) {
+    public static function assertFetchedRelationshipsResponse(TestResponse $response, $expected, $strict)
+    {
         $response->assertStatus(200);
-        $response->assertHeader(static::$headerName, static::$mediaType);
+        $response->assertHeader(
+            static::$headerName,
+            static::$mediaType
+        );
 
         // Decode JSON response
         $json = $response->json();
 
         // Checks response structure
-        static::assertHasValidStructure($json, $strict);
+        static::assertHasValidStructure(
+            $json,
+            $strict
+        );
 
         // Checks data member
         static::assertHasData($json);
-        $data = $json['data'];
-        static::assertResourceLinkageEquals($expected, $resourceType, $data, $strict);
+        $data = $json[Members::DATA];
+        static::assertResourceLinkageEquals(
+            $expected,
+            $data,
+            $strict
+        );
     }
 }

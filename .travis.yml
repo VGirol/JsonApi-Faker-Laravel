@@ -11,7 +11,7 @@ before_script:
   - gpg --with-fingerprint --verify infection.phar.asc infection.phar
   - chmod +x infection.phar
 script:
-  - composer build
+  - composer travis
 after_script:
   - wget https://scrutinizer-ci.com/ocular.phar
   - php ocular.phar code-coverage:upload --format=php-clover ./build/logs/clover.xml

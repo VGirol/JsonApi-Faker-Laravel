@@ -4,13 +4,17 @@ namespace VGirol\JsonApiAssert\Laravel\Asserts\Response;
 
 use Illuminate\Foundation\Testing\TestResponse;
 use PHPUnit\Framework\Assert as PHPUnit;
+use VGirol\JsonApiAssert\Members;
 
+/**
+ * Deleted response
+ */
 trait AssertDeleted
 {
     /**
      * Asserts that a response object is a valid '200 OK' response following a deletion request.
      *
-     * @param Illuminate\Foundation\Testing\TestResponse $response
+     * @param \Illuminate\Foundation\Testing\TestResponse $response
      * @param array|null $expectedMeta If not null, it is the expected "meta" object.
      * @param boolean $strict If true, unsafe characters are not allowed when checking members name.
      *
@@ -22,20 +26,35 @@ trait AssertDeleted
         bool $strict
     ) {
         $response->assertStatus(200);
-        $response->assertHeader(static::$headerName, static::$mediaType);
+        $response->assertHeader(
+            static::$headerName,
+            static::$mediaType
+        );
 
         // Decode JSON response
         $json = $response->json();
 
         // Checks response structure
-        static::assertHasValidStructure($json, $strict);
+        static::assertHasValidStructure(
+            $json,
+            $strict
+        );
 
-        static::assertContainsOnlyAllowedMembers(['meta', 'jsonapi'], $json);
+        static::assertContainsOnlyAllowedMembers(
+            [
+                Members::META,
+                Members::JSONAPI
+            ],
+            $json
+        );
 
         // Checks meta object
-        $meta = $json['meta'];
+        $meta = $json[Members::META];
         if (!is_null($expectedMeta)) {
-            PHPUnit::assertEquals($expectedMeta, $meta);
+            PHPUnit::assertEquals(
+                $expectedMeta,
+                $meta
+            );
         }
     }
 }

@@ -5,22 +5,22 @@ use VGirol\JsonApiAssert\Laravel\Assert;
 
 TestResponse::macro(
     'assertJsonApiFetchedSingleResource',
-    function ($expectedModel, $resourceType, $strict = false) {
-        Assert::assertFetchedSingleResourceResponse($this, $expectedModel, $resourceType, $strict);
+    function ($expected, $strict = false) {
+        Assert::assertFetchedSingleResourceResponse($this, $expected, $strict);
     }
 );
 
 TestResponse::macro(
     'assertJsonApiFetchedResourceCollection',
-    function ($expectedCollection, $expectedResourceType, $strict = false) {
-        Assert::assertFetchedResourceCollectionResponse($this, $expectedCollection, $expectedResourceType, $strict);
+    function ($expected, $strict = false) {
+        Assert::assertFetchedResourceCollectionResponse($this, $expected, $strict);
     }
 );
 
 TestResponse::macro(
     'assertJsonApiFetchedRelationships',
     function ($expected, $resourceType = null, $strict = false) {
-        Assert::assertFetchedRelationshipsResponse($this, $expected, $resourceType, $strict);
+        Assert::assertFetchedRelationshipsResponse($this, $expected, $strict);
     }
 );
 

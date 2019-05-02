@@ -21,7 +21,7 @@ namespace Illuminate\Foundation\Testing {
      * @method void assertJsonApiErrorResponse(int $status, array $errors, boolean $strict)
      *      Asserts that the response has the given status code and the provided errors object.
      *
-     * @method void assertJsonApiFetchedResourceCollection(Illuminate\Database\Eloquent\Collection $collection, string $resourceType, boolean $strict)
+     * @method void assertJsonApiFetchedResourceCollection(Illuminate\Support\Collection $collection, string $resourceType, boolean $strict)
      *      Asserts that the response has 200 status code and content with primary datat corresponding to the provided collection and resource type.
      *
      * @method void assertJsonApiFetchedSingleResource(Illuminate\Database\Eloquent\Model $model, string $resourceType, boolean $strict)
@@ -30,7 +30,7 @@ namespace Illuminate\Foundation\Testing {
      * @method void assertJsonApiNoContent()
      *      Asserts that the response has 204 status code and no content.
      *
-     * @method void assertJsonApiFetchedRelationships(Illuminate\Database\Eloquent\Collection|Illuminate\Database\Eloquent\Model|null $expected, string $resourceType, $strict)
+     * @method void assertJsonApiFetchedRelationships(Illuminate\Support\Collection|Illuminate\Database\Eloquent\Model|null $expected, string $resourceType, $strict)
      *      Asserts that the response has 200 status code and content with primary data represented as resource identifier objects and corresponding to the provided collection or model and resource type.
      *
      * @method void assertJsonApiResponse400(array $errors)
@@ -56,7 +56,8 @@ namespace Illuminate\Foundation\Testing {
      * @method void assertJsonApiNoPaginationLinks() Asserts that the response has no pagination links.
      * @method void assertJsonApiPaginationLinks(array $expected) Asserts that the response has pagination links with a subset equal to the expected links provided.
      * @method void assertJsonApiRelationshipsLinks(array $expected, string $path) Asserts that the json object specified by the path has relationships links with a subset corresponding to the expected links provided.
-     * @method void assertJsonApiRelationshipsObjectEquals(Illuminate\Database\Eloquent\Collection $expectedCollection, string $expectedResourceType, string $expectedRelationshipName, array $resource)
+     * @method void assertJsonApiRelationshipsObjectEquals(Illuminate\Support\Collection $expectedCollection, string $expectedResourceType, string $expectedRelationshipName, array $resource)
      */
-    class TestResponse {}
+    class TestResponse
+    { }
 }

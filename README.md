@@ -46,7 +46,6 @@ VGirol\JsonApiAssert\Laravel\JsonApiAssertServiceProvider::class
 
 This package provides the class `VGirol\JsonApiAssert\Laravel\Assert`. That class extends the `VGirol\JsonApiAssert\Assert` class with new assertions methods.
 
-
 ## Assertions (`VGirol\JsonApiAssert\Laravel\Assert`)
 
 ### assertErrorsContains
@@ -54,14 +53,17 @@ This package provides the class `VGirol\JsonApiAssert\Laravel\Assert`. That clas
 Asserts that an errors array contains a given subset of expected errors.
 
 Definition:
-`VGirol\JsonApiAssert\Laravel\Assert::assertErrorsContains($expectedErrors, $errors, $strict)`
+
+`assertErrorsContains($expectedErrors, $errors, $strict)`
 
 Parameters :
-- `$expectedErrors` (array)
-- `$errors` (array)
-- `$strict` (boolean) : if true, unsafe characters are not allowed when checking members name.
+
+- `array` `$expectedErrors`
+- `array` `$errors`
+- `boolean` `$strict` : if true, unsafe characters are not allowed when checking members name.
 
 It will do the following checks :
+
 - asserts that the errors array is valid.
 - asserts that the errors array length is greater or equal than the expected errors array length.
 - asserts that each expected error is present in the errors array.
@@ -71,15 +73,18 @@ It will do the following checks :
 Asserts that the response has 200 status code and content with primary data represented as resource identifier objects and corresponding to the provided collection or model and resource type.
 
 Definition:
+
 `VGirol\JsonApiAssert\Laravel\Assert::assertFetchedRelationshipsResponse(TestResponse $response, $expected, $resourceType, $strict)`
 
 Parameters :
+
 - `$response` (Illuminate\Foundation\Testing\TestResponse)
-- `$expected` (Illuminate\Database\Eloquent\Collection|Model|null)
+- `$expected` (Illuminate\Support\Collection|Model|null)
 - `$resourceType` (string)
 - `$strict` (boolean) : if true, unsafe characters are not allowed when checking members name.
 
 It will do the following checks :
+
 - asserts that the response has `200 OK` status code
 - asserts that the response has header `Content-Type: application/vnd.api+json` without any media type parameters
 - asserts that the response has content with primary data represented as resource identifier objects and corresponding to the provided collection or model and resource type ([assertResourceLinkageEquals](#assertResourceLinkageEquals)).
@@ -89,15 +94,18 @@ It will do the following checks :
 Asserts that the response has 200 status code and content with primary data corresponding to the provided collection and resource type.
 
 Definition :
+
 `VGirol\JsonApiAssert\Laravel\Assert::assertFetchedResourceCollectionResponse(TestResponse $response, $expectedCollection, $expectedResourceType, bool $strict)`
 
 Parameters :
+
 - `$response` (Illuminate\Foundation\Testing\TestResponse)
-- `$expectedCollection` (Illuminate\Database\Eloquent\Collection)
+- `$expectedCollection` (Illuminate\Support\Collection)
 - `$expectedResourceType` (string)
 - `$strict` (boolean) : if true, unsafe characters are not allowed when checking members name.
 
 It will do the following checks :
+
 - asserts that the response has `200 OK` status code
 - asserts that the response has header `Content-Type: application/vnd.api+json` without any media type parameters
 - asserts that the response has content with primary data corresponding to the provided collection and resource type ([assertResourceCollectionEquals](#assertResourceCollectionEquals)).
@@ -107,15 +115,18 @@ It will do the following checks :
 Asserts that the response has 200 status code and content with primary data corresponding to the provided model and resource type.
 
 Definition :
+
 `VGirol\JsonApiAssert\Laravel\Assert::assertFetchedSingleResourceResponse($response, $expectedModel, $resourceType, $strict)`
 
 Parameters :
+
 - `$response` (Illuminate\Foundation\Testing\TestResponse)
 - `$expectedModel` (Illuminate\Database\Eloquent\Model)
 - `$resourceType` (string)
 - `$strict` (boolean) : if true, unsafe characters are not allowed when checking members name.
 
 It will do the following checks :
+
 - asserts that the response has `200 OK` status code
 - asserts that the response has header `Content-Type: application/vnd.api+json` without any media type parameters
 - asserts that the response has content with primary data corresponding to the provided model and resource type ([assertResourceObjectEquals](#assertResourceObjectEquals)).
@@ -125,15 +136,18 @@ It will do the following checks :
 Asserts that a response object is a valid '201 Created' response following a creation request.
 
 Definition :
+
 `VGirol\JsonApiAssert\Laravel\Assert::assertIsCreatedResponse($response, $expectedModel, $resourceType, $strict)`
 
 Parameters :
+
 - `$response` (Illuminate\Foundation\Testing\TestResponse)
 - `$expectedModel` (Illuminate\Database\Eloquent\Model)
 - `$resourceType` (string)
 - `$strict` (boolean) : if true, unsafe characters are not allowed when checking members name.
 
 It will do the following checks :
+
 - asserts that the response has `201 Created` status code.
 - asserts that the response has header `Content-Type: application/vnd.api+json` without any media type parameters.
 - asserts that the response has content with primary data corresponding to the provided model and resource type ([assertResourceObjectEquals](#assertResourceObjectEquals)).
@@ -144,14 +158,17 @@ It will do the following checks :
 Asserts that a response object is a valid '200 OK' response following a deletion request.
 
 Definition :
+
 `VGirol\JsonApiAssert\Laravel\Assert::assertIsDeletedResponse($response, $expectedMeta = null, $strict = false)`
 
 Parameters :
+
 - `$response` (Illuminate\Foundation\Testing\TestResponse)
 - `$expectedMeta` (array) : if not null, it is the expected "meta" object.
 - `$strict` (boolean) : if true, unsafe characters are not allowed when checking members name.
 
 It will do the following checks :
+
 - asserts that the response has `200 OK` status code.
 - asserts that the response has header `Content-Type: application/vnd.api+json` without any media type parameters.
 - asserts that the response has content with only `meta` or `jsonapi` members.
@@ -162,15 +179,18 @@ It will do the following checks :
 Asserts that an error response (status code 4xx) is valid.
 
 Definition :
+
 `VGirol\JsonApiAssert\Laravel\Assert::assertIsErrorResponse($response, $status, $errors, $strict)`
 
 Parameters :
+
 - `$response` (Illuminate\Foundation\Testing\TestResponse)
 - `$status` (integer)
 - `$errors` (array) : an array of the expected error objects.
 - `$strict` (boolean) : if true, unsafe characters are not allowed when checking members name.
 
 It will do the following checks :
+
 - asserts that the response has the given status code.
 - asserts that the response has header `Content-Type: application/vnd.api+json` without any media type parameters.
 - asserts that the response has content with `errors` member that contains a subset corresponding to the provided error objects ([assertErrorsContains](#assertErrorsContains)).
@@ -180,12 +200,15 @@ It will do the following checks :
 Asserts that a response is a valid '204 No Content' response.
 
 Definition :
+
 `VGirol\JsonApiAssert\Laravel\Assert::assertIsNoContentResponse($response)`
 
 Parameters :
+
 - `$response` (Illuminate\Foundation\Testing\TestResponse)
 
 It will do the following checks :
+
 - asserts that the response has `204 No Content` status code.
 - asserts that the response has header `Content-Type: application/vnd.api+json` without any media type parameters.
 - asserts that the response has no content.
@@ -195,18 +218,21 @@ It will do the following checks :
 Asserts that a response object is a valid '200 OK' response following an update request.
 
 Definition :
+
 `VGirol\JsonApiAssert\Laravel\Assert::assertIsUpdatedResponse($response, $expectedModel, $resourceType, $strict)`
 
 Parameters :
+
 - `$response` (Illuminate\Foundation\Testing\TestResponse)
 - `$expectedModel` (Illuminate\Database\Eloquent\Model)  
 - `$resourceType` (string)  
 - `$strict` (boolean) : if true, unsafe characters are not allowed when checking members name.
 
 It will do the following checks :
+
 - asserts that the response has `200 OK` status code.
 - asserts that the response has header `Content-Type: application/vnd.api+json` without any media type parameters.
-- asserts that the response has content with : 
+- asserts that the response has content with :
   - either primary data corresponding to the model and resource type provided
   - or only `meta` member otherwise.
 
@@ -215,32 +241,37 @@ It will do the following checks :
 Asserts that an array of resource objects correspond to a given collection.
 
 Definition :
+
 `VGirol\JsonApiAssert\Laravel\Assert::assertResourceCollectionEquals($expectedCollection, $expectedResourceType, $collection)`
 
-Parameters
-- `$expectedCollection` (Illuminate\Database\Eloquent\Collection)
+Parameters :
+
+- `$expectedCollection` (Illuminate\Support\Collection)
 - `$expectedResourceType` (string)
 - `$collection` (array)
 
 It will do the following checks :
+
 - asserts that the collection to check is an array of objects.
 - asserts that the two collections have the same count of items.
 - asserts that each resource object of the collection correspond to the model at the same index in the given expected collection ([assertResourceObjectEquals](#assertResourceObjectEquals)).
-
 
 ### assertResourceIdentifierCollectionEquals
 
 Asserts that an array of resource identifer objects correspond to a given collection.
 
 Definition :
+
 `VGirol\JsonApiAssert\Laravel\Assert::assertResourceIdentifierCollectionEquals($refCollection, $resourceType, $collection)`
 
 Parameters :
-- `$refCollection` (Illuminate\Database\Eloquent\Collection)
+
+- `$refCollection` (Illuminate\Support\Collection)
 - `$resourceType` (string)
 - `$collection` (array)
 
 It will do the following checks :
+
 - asserts that the given collection is an array of objects.
 - asserts that the two collections have the same count of items.
 - asserts that each resource identifier object of the collection correspond to the model at the same index in the given expected collection ([assertResourceIdentifierEquals](#assertResourceIdentifierEquals)).
@@ -250,14 +281,17 @@ It will do the following checks :
 Asserts that a resource identifier object has "id" and "type" member equal to the given parameters.
 
 Definition :
+
 `VGirol\JsonApiAssert\Laravel\Assert::assertResourceIdentifierEquals($expectedId, $expectedResourceType, $resource)`
 
 Parameters :
+
 - `$expectedId` (integer|string)
 - `$expectedResourceType` (string)
 - `$resource` (array)
 
 It will do the following checks :
+
 - asserts that "id" and "type" members of the resource identifier corresponds to the given parameters.
 
 ### assertResourceLinkageEquals
@@ -265,15 +299,18 @@ It will do the following checks :
 Asserts that a resource linkage object correspond to a given reference object which can be either the null value, a single resource identifier object, an empty collection or a collection of resource identifier ojects.
 
 Definition :
+
 `VGirol\JsonApiAssert\Laravel\Assert::assertResourceLinkageEquals($reference, $resourceType, $resLinkage, $strict)`
 
 Parameters :
-- `$reference` (Illuminate\Database\Eloquent\Collection|Illuminate\Database\Eloquent\Model|null)
+
+- `$reference` (Illuminate\Support\Collection|Illuminate\Database\Eloquent\Model|null)
 - `$resourceType` (string|null)
 - `$resLinkage` (array|null)
 - `$strict` (boolean, default : false) : if true, unsafe characters are not allowed when checking members name.
 
 It will do the following checks :
+
 - if the reference is `null`, asserts that the resource linkage is `null`.
 - if the reference is an instance of the `Model` class, asserts that the resource linkage is not an array of objects and corresponds to the given reference object ([assertResourceIdentifierEquals](#assertResourceIdentifierEquals)).
 - if the reference is an empty collection, asserts that the resource linkage is an empty array.
@@ -284,27 +321,31 @@ It will do the following checks :
 Asserts that a resource object correspond to a given model.
 
 Definition :
+
 `VGirol\JsonApiAssert\Laravel\Assert::assertResourceObjectEquals($expectedModel, $expectedResourceType, $resource)`
 
 Parameters :
+
 - `$expectedModel` (Illuminate\Database\Eloquent\Model)
 - `$expectedResourceType` (string)
 - `$resource` (array)
 
 It will do the following checks :
+
 - asserts that "id" and "type" members of the resource corresponds to the given model ([assertResourceIdentifierEquals](#assertResourceIdentifierEquals)).
 - asserts that the resource has "attributes" member.
 - asserts that the attributes object of the resource corresponds to the attributes of the given model.
-
 
 ## Macros (`Illuminate\Foundation\Testing\TestResponse`)
 
 ### assertJsonApiCreated
 
 Definition :
+
 `Illuminate\Foundation\Testing\TestResponse::assertJsonApiCreated'($expectedModel, $resourceType, $strict = false)`
 
 Parameters :
+
 - `$expectedModel` (Illuminate\Database\Eloquent\Model)
 - `$resourceType` (string)
 - `$strict` (boolean, default : false) : if true, unsafe characters are not allowed when checking members name.
@@ -340,9 +381,11 @@ $response->assertJsonApiCreated($model, 'my-model');
 ### assertJsonApiDeleted
 
 Definition :
+
 `Illuminate\Foundation\Testing\TestResponse::assertJsonApiDeleted($expectedMeta = null, $strict = false)`
 
 Parameters :
+
 - `$expectedMeta` (array, default null)
 - `$strict` (boolean, default null) : if true, unsafe characters are not allowed when checking members name.
 
@@ -366,9 +409,11 @@ $response->assertJsonApiDeleted($expectedMeta);
 ### assertJsonApiErrorResponse
 
 Definition :
+
 `Illuminate\Foundation\Testing\TestResponse::assertJsonApiErrorResponse($status, $errors, $strict = false)`
 
 Parameters :
+
 - `$status` (integer)
 - `$errors` (array) : the expected error objects.
 - `$strict` (boolean, default false) : if true, unsafe characters are not allowed when checking members name.
@@ -396,10 +441,12 @@ $response->assertJsonApiErrorResponse(
 ### assertJsonApiFetchedRelationships
 
 Definition :
+
 `Illuminate\Foundation\Testing\TestResponse::assertJsonApiFetchedRelationships($expected, $resourceType = null, $strict = false)`
 
 Parameters :
-- `$expected` (Illuminate\Database\Eloquent\Collection|Illuminate\Database\Eloquent\Model|null)
+
+- `$expected` (Illuminate\Support\Collection|Illuminate\Database\Eloquent\Model|null)
 - `$resourceType` (string, default = null)
 - `$strict` (boolean, default false) : if true, unsafe characters are not allowed when checking members name.
 
@@ -407,7 +454,7 @@ See [`VGirol\JsonApiAssert\Laravel\Assert::assertFetchedRelationshipsResponse`](
 
 ```php
 use App\MyModel;
-use App\MyRelated;
+use App\MyModel;
 
 // Creates an object with filled out fields
 $model = factory(MyModel::class)->create();
@@ -422,10 +469,12 @@ $response->assertJsonApiFetchedRelationships($related, 'my-related');
 ### assertJsonApiFetchedResourceCollection
 
 Definition :
+
 `Illuminate\Foundation\Testing\TestResponse::assertJsonApiFetchedResourceCollection($expectedCollection, $expectedResourceType, $strict = false)`
 
 Parameters :
-- `$expectedCollection` (Illuminate\Database\Eloquent\Collection)
+
+- `$expectedCollection` (Illuminate\Support\Collection)
 - `$expectedResourceType` (string)
 - `$strict` (boolean, default false) : if true, unsafe characters are not allowed when checking members name.
 
@@ -446,9 +495,11 @@ $response->assertJsonApiFetchedResourceCollection($collection, 'my-model');
 ### assertJsonApiFetchedSingleResource
 
 Definition :
+
 `Illuminate\Foundation\Testing\TestResponse::assertJsonApiFetchedSingleResource($expectedModel, $resourceType, $strict = false)`
 
 Parameters :
+
 - `$expectedModel` (Illuminate\Database\Eloquent\Model)
 - `$resourceType` (string)
 - `$strict` (boolean, default false) : if true, unsafe characters are not allowed when checking members name.
@@ -488,9 +539,11 @@ $response->assertJsonApiNoContent();
 ### `assertJsonApiResponse400`
 
 Definition :
+
 `Illuminate\Foundation\Testing\TestResponse::assertJsonApiResponse400($errors, $strict = false)`
 
 Parameters :
+
 - `$errors` (array) : the expected error objects.
 - `$strict` (boolean, default false) : if true, unsafe characters are not allowed when checking members name.
 
@@ -499,9 +552,11 @@ See [`assertJsonApiErrorResponse`](#assertJsonApiErrorResponse).
 ### `assertJsonApiResponse403`
 
 Definition :
+
 `Illuminate\Foundation\Testing\TestResponse::assertJsonApiResponse403($errors, $strict = false)`
 
 Parameters :
+
 - `$errors` (array) : the expected error objects.
 - `$strict` (boolean, default false) : if true, unsafe characters are not allowed when checking members name.
 
@@ -510,9 +565,11 @@ See [`assertJsonApiErrorResponse`](#assertJsonApiErrorResponse).
 ### `assertJsonApiResponse404`
 
 Definition :
+
 `Illuminate\Foundation\Testing\TestResponse::assertJsonApiResponse404($errors, $strict = false)`
 
 Parameters :
+
 - `$errors` (array) : the expected error objects.
 - `$strict` (boolean, default false) : if true, unsafe characters are not allowed when checking members name.
 
@@ -521,9 +578,11 @@ See [`assertJsonApiErrorResponse`](#assertJsonApiErrorResponse).
 ### `assertJsonApiResponse406`
 
 Definition :
+
 `Illuminate\Foundation\Testing\TestResponse::assertJsonApiResponse406($errors, $strict = false)`
 
 Parameters :
+
 - `$errors` (array) : the expected error objects.
 - `$strict` (boolean, default false) : if true, unsafe characters are not allowed when checking members name.
 
@@ -532,9 +591,11 @@ See [`assertJsonApiErrorResponse`](#assertJsonApiErrorResponse).
 ### `assertJsonApiResponse409`
 
 Definition :
+
 `Illuminate\Foundation\Testing\TestResponse::assertJsonApiResponse409($errors, $strict = false)`
 
 Parameters :
+
 - `$errors` (array) : the expected error objects.
 - `$strict` (boolean, default false) : if true, unsafe characters are not allowed when checking members name.
 
@@ -543,9 +604,11 @@ See [`assertJsonApiErrorResponse`](#assertJsonApiErrorResponse).
 ### `assertJsonApiResponse415`
 
 Definition :
+
 `Illuminate\Foundation\Testing\TestResponse::assertJsonApiResponse415($errors, $strict = false)`
 
 Parameters :
+
 - `$errors` (array) : the expected error objects.
 - `$strict` (boolean, default false) : if true, unsafe characters are not allowed when checking members name.
 
@@ -554,9 +617,11 @@ See [`assertJsonApiErrorResponse`](#assertJsonApiErrorResponse).
 ### assertJsonApiUpdated
 
 Definition :
+
 `Illuminate\Foundation\Testing\TestResponse::assertJsonApiUpdated($expectedModel, $resourceType, $strict = false)`
 
 Parameters :
+
 - `$expectedModel` (Illuminate\Database\Eloquent\Model)  
 - `$resourceType` (string)  
 - `$strict` (boolean, default : false) : if true, unsafe characters are not allowed when checking members name.
@@ -564,7 +629,7 @@ Parameters :
 See [`VGirol\JsonApiAssert\Laravel\Assert::assertIsUpdatedResponse`](#assertIsUpdatedResponse).
 
 ```php
-use App\MyModel;
+use App\MyRelated;
 
 $resourceType = 'my-model';
 
@@ -599,7 +664,7 @@ Please see [CHANGELOG](CHANGELOG.md) for more information what has changed recen
 ## Testing
 
 ```sh
-$ composer test
+composer test
 ```
 
 ## Contributing

@@ -1,7 +1,7 @@
 <?php
 namespace VGirol\JsonApiAssert\Laravel\Tests\Asserts\Response;
 
-use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Collection;
 use Illuminate\Foundation\Testing\TestResponse;
 use Illuminate\Http\Response;
 use VGirol\JsonApiAssert\Laravel\Tests\TestCase;

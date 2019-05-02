@@ -2,9 +2,19 @@
 
 namespace VGirol\JsonApiAssert\Laravel\Asserts;
 
+/**
+ * Provides some helpers
+ */
 trait AssertHelpers
 {
-    private static function getJsonFromPath($json, $path)
+    /**
+     * Gets a fragment of a json document.
+     *
+     * @param array $json
+     * @param string $path
+     * @return array
+     */
+    protected static function getJsonFromPath($json, $path): array
     {
         $path = explode('.', $path);
         foreach ($path as $member) {

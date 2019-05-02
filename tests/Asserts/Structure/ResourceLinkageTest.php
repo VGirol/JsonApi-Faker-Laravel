@@ -1,7 +1,7 @@
 <?php
 namespace VGirol\JsonApiAssert\Laravel\Tests\Asserts\Structure;
 
-use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Collection;
 use VGirol\JsonApiAssert\Laravel\Assert;
 use VGirol\JsonApiAssert\Laravel\Tests\TestCase;
 use VGirol\JsonApiAssert\Laravel\Tests\Tools\Models\ModelForTest;

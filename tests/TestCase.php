@@ -2,16 +2,17 @@
 
 namespace VGirol\JsonApiAssert\Laravel\Tests;
 
-use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Collection;
 use Orchestra\Testbench\TestCase as BaseTestCase;
-use PHPUnit\Framework\ExpectationFailedException;
 use VGirol\JsonApiAssert\Laravel\HeaderTrait;
 use VGirol\JsonApiAssert\Laravel\JsonApiAssertServiceProvider;
 use VGirol\JsonApiAssert\Laravel\Tests\Tools\Models\ModelForTest;
+use VGirol\JsonApiAssert\SetExceptionsTrait;
 
 abstract class TestCase extends BaseTestCase
 {
     use HeaderTrait;
+    use SetExceptionsTrait;
 
     /**
      * Load package service provider
@@ -26,29 +27,6 @@ abstract class TestCase extends BaseTestCase
         ];
     }
 
-    protected function setFailureException($msg)
-    {
-        $this->expectException(ExpectationFailedException::class);
-        if (!is_null($msg)) {
-            $this->expectExceptionMessage($msg);
-        }
-    }
-
-    protected function setInvalidArgumentException(int $arg, string $type, $value = null)
-    {
-        $this->expectException(\PHPUnit\Framework\Exception::class);
-        $this->expectExceptionMessageRegExp(
-            \sprintf(
-                '/Argument #%d%sof %s::%s\(\) must be a %s/',
-                $arg,
-                '[\s\S]*',
-                '.*',
-                '.*',
-                \preg_quote($type)
-            )
-        );
-    }
-
     protected function createCollection($count = 5)
     {
         $collection = new Collection();
@@ -59,12 +37,12 @@ abstract class TestCase extends BaseTestCase
         return $collection;
     }
 
-    protected function createModel($i = 0)
+    protected function createModel($index = 0)
     {
         $attributes = [
-            'TST_ID' => 10 + $i,
-            'TST_NAME' => 'test' . $i,
-            'TST_NUMBER' => 1000 * $i + 123,
+            'TST_ID' => 10 + $index,
+            'TST_NAME' => 'test' . $index,
+            'TST_NUMBER' => 1000 * $index + 123,
             'TST_CREATION_DATE' => null
         ];
 
@@ -107,6 +85,21 @@ abstract class TestCase extends BaseTestCase
         if (!is_null($additional)) {
             $resource = array_merge($resource, $additional);
         }
+
+        return $resource;
+    }
+
+    protected function addErrorToResourceCollection($collection)
+    {
+        $index = rand(1, $collection->count() - 1);
+        $this->addErrorToResource($collection[$index]);
+
+        return $collection;
+    }
+
+    protected function addErrorToResource($resource)
+    {
+        $resource['id'] = strval(intval($resource['id']) + 10);
 
         return $resource;
     }

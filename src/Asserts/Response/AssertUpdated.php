@@ -3,41 +3,55 @@
 namespace VGirol\JsonApiAssert\Laravel\Asserts\Response;
 
 use Illuminate\Foundation\Testing\TestResponse;
+use VGirol\JsonApiAssert\Members;
 
+/**
+ * Updated response
+ */
 trait AssertUpdated
 {
     /**
      * Asserts that a response object is a valid '200 OK' response following an update request.
      *
-     * @param Illuminate\Foundation\Testing\TestResponse $response
-     * @param Illuminate\Database\Eloquent\Model $expectedModel
-     * @param string $resourceType
+     * @param \Illuminate\Foundation\Testing\TestResponse $response
+     * @param array $expected
      * @param boolean $strict If true, unsafe characters are not allowed when checking members name.
      *
      * @throws \PHPUnit\Framework\ExpectationFailedException
      */
-    public static function assertIsUpdatedResponse(
-        TestResponse $response,
-        $expectedModel,
-        $resourceType,
-        bool $strict
-    ) {
+    public static function assertIsUpdatedResponse(TestResponse $response, $expected, bool $strict)
+    {
         $response->assertStatus(200);
-        $response->assertHeader(static::$headerName, static::$mediaType);
+        $response->assertHeader(
+            static::$headerName,
+            static::$mediaType
+        );
 
         // Decode JSON response
         $json = $response->json();
 
         // Checks response structure
-        static::assertHasValidStructure($json, $strict);
+        static::assertHasValidStructure(
+            $json,
+            $strict
+        );
 
         // Checks presence of "meta" or "data" member
-        static::assertContainsAtLeastOneMember(['meta', 'data'], $json);
+        static::assertContainsAtLeastOneMember(
+            [
+                Members::META,
+                Members::DATA
+            ],
+            $json
+        );
 
         // Checks data member
-        if (isset($json['data'])) {
-            $data = $json['data'];
-            static::assertResourceObjectEquals($expectedModel, $resourceType, $data);
+        if (isset($json[Members::DATA])) {
+            $data = $json[Members::DATA];
+            static::assertResourceObjectEquals(
+                $expected,
+                $data
+            );
         }
     }
 }
