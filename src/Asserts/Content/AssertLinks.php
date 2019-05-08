@@ -1,6 +1,6 @@
 <?php
 
-namespace VGirol\JsonApiAssert\Laravel\Asserts\Structure;
+namespace VGirol\JsonApiAssert\Laravel\Asserts\Content;
 
 use Illuminate\Foundation\Testing\TestResponse;
 use VGirol\JsonApiAssert\Members;

@@ -2,6 +2,7 @@
 
 namespace VGirol\JsonApiAssert\Laravel\Asserts\Response;
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Testing\TestResponse;
 use VGirol\JsonApiAssert\Members;
 
@@ -13,14 +14,17 @@ trait AssertUpdated
     /**
      * Asserts that a response object is a valid '200 OK' response following an update request.
      *
-     * @param \Illuminate\Foundation\Testing\TestResponse $response
+     * @param TestResponse $response
      * @param array $expected
      * @param boolean $strict If true, unsafe characters are not allowed when checking members name.
      *
      * @throws \PHPUnit\Framework\ExpectationFailedException
      */
-    public static function assertIsUpdatedResponse(TestResponse $response, $expected, bool $strict)
-    {
+    public static function assertIsUpdatedResponse(
+        TestResponse $response,
+        $expected,
+        bool $strict
+    ) {
         $response->assertStatus(200);
         $response->assertHeader(
             static::$headerName,

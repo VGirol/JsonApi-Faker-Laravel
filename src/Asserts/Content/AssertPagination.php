@@ -1,8 +1,7 @@
 <?php
 
-namespace VGirol\JsonApiAssert\Laravel\Asserts\Structure;
+namespace VGirol\JsonApiAssert\Laravel\Asserts\Content;
 
-use DMS\PHPUnitExtensions\ArraySubset\Assert as AssertArray;
 use Illuminate\Foundation\Testing\TestResponse;
 use PHPUnit\Framework\Assert as PHPUnit;
 use VGirol\JsonApiAssert\Members;

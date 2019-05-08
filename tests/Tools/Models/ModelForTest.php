@@ -10,7 +10,7 @@ class ModelForTest extends Model
     protected $primaryKey = 'TST_ID';
     public $timestamps = false;
 
-    protected $resourceObjectType = 'jsonapitest';
+    protected $resourceObjectType = 'test';
 
     /**
      * The attributes that are mass assignable.
@@ -23,11 +23,6 @@ class ModelForTest extends Model
         'TST_NUMBER',
         'TST_CREATION_DATE'
     ];
-
-    public function setIdAttribute($value)
-    {
-        $this->attributes['TST_ID'] = $value;
-    }
 
     public function getResourceType(): string
     {

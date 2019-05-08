@@ -9,7 +9,7 @@ class ResourceObjectFactory extends BaseFactory
     use HasModel;
     use HasRelationships;
 
-    public function __construct($model, string $resourceType)
+    public function __construct($model, ?string $resourceType)
     {
         $this->setModel($model)
             ->setId($model->getKey())

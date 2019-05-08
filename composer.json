@@ -7,7 +7,6 @@
     "require": {
         "php": "^7.2",
         "phpunit/phpunit": "^8.0",
-        "dms/phpunit-arraysubset-asserts": "^0.1",
         "laravel/laravel": "^5.8",
         "vgirol/jsonapi-assert": "dev-master"
     },

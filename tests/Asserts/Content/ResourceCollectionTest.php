@@ -12,7 +12,7 @@ class ResourceCollectionTest extends TestCase
     /**
      * @test
      */
-    public function assertResourceCollectionEquals()
+    public function assertResourceCollectionEqualsCollection()
     {
         $expected = new Collection();
         $collection = [];
@@ -30,27 +30,27 @@ class ResourceCollectionTest extends TestCase
 
             $resource = [
                 'type' => $model->getResourceType(),
-                'id' => $model->getKey(),
+                'id' => strval($model->getKey()),
                 'attributes' => $attributes
             ];
             array_push($collection, $resource);
         }
 
-        Assert::assertResourceCollectionEquals($expected, $model->getResourceType(), $collection);
+        Assert::assertResourceCollectionEqualsCollection($expected, $model->getResourceType(), $collection);
     }
 
     /**
      * @test
-     * @dataProvider assertResourceCollectionEqualsFailedProvider
+     * @dataProvider assertResourceCollectionEqualsCollectionFailedProvider
      */
-    public function assertResourceCollectionEqualsFailed($expected, $resourceType, $collection, $failureMsg)
+    public function assertResourceCollectionEqualsCollectionFailed($expected, $resourceType, $collection, $failureMsg)
     {
         $this->setFailureException($failureMsg);
 
-        Assert::assertResourceCollectionEquals($expected, $resourceType, $collection);
+        Assert::assertResourceCollectionEqualsCollection($expected, $resourceType, $collection);
     }
 
-    public function assertResourceCollectionEqualsFailedProvider()
+    public function assertResourceCollectionEqualsCollectionFailedProvider()
     {
         $expected = new Collection();
         $collection = [];
@@ -106,28 +106,28 @@ class ResourceCollectionTest extends TestCase
         ];
     }
 
-    /**
-     * @test
-     */
-    public function assertResourceCollectionEqualsInvalidArguments()
-    {
-        $attributes = [
-            'TST_ID' => 10,
-            'TST_NAME' => 'test',
-            'TST_NUMBER' => 123,
-            'TST_CREATION_DATE' => null
-        ];
+    // /**
+    //  * @test
+    //  */
+    // public function assertResourceCollectionEqualsCollectionInvalidArguments()
+    // {
+    //     $attributes = [
+    //         'TST_ID' => 10,
+    //         'TST_NAME' => 'test',
+    //         'TST_NUMBER' => 123,
+    //         'TST_CREATION_DATE' => null
+    //     ];
 
-        $model = $attributes;
-        $resourceType = 'test';
-        $resource = [
-            'type' => $resourceType,
-            'id' => 10,
-            'attributes' => $attributes
-        ];
+    //     $model = $attributes;
+    //     $resourceType = 'test';
+    //     $resource = [
+    //         'type' => $resourceType,
+    //         'id' => 10,
+    //         'attributes' => $attributes
+    //     ];
 
-        $this->setInvalidArgumentException(1, Collection::class, [$model]);
+    //     $this->setInvalidArgumentException(1, Collection::class, [$model]);
 
-        Assert::assertResourceCollectionEquals([$model], $resourceType, [$resource]);
-    }
+    //     Assert::assertResourceCollectionEqualsCollection([$model], $resourceType, [$resource]);
+    // }
 }

@@ -14,8 +14,8 @@ trait AssertCreated
     /**
      * Asserts that a response object is a valid '201 Created' response following a creation request.
      *
-     * @param \Illuminate\Foundation\Testing\TestResponse $response
-     * @param $expected
+     * @param TestResponse $response
+     * @param array $expected
      * @param boolean $strict If true, unsafe characters are not allowed when checking members name.
      *
      * @throws \PHPUnit\Framework\ExpectationFailedException

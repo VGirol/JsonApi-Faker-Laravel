@@ -360,7 +360,7 @@ $resourceType = 'my-model';
 
 // Creates an object with filled out fields
 $model = factory(MyModel::class)->make();
-$model->setIdAttribute($id);
+$model->setAttribute('ID', $id);
 
 // Creates content of the request
 $content = [

@@ -3,37 +3,65 @@ declare (strict_types = 1);
 
 namespace VGirol\JsonApiAssert\Laravel\Factory;
 
+use Illuminate\Database\Eloquent\Relations\Relation;
+
 trait HasRelationships
 {
-    public function appendRelationship(string $name): self
+    /**
+     * Undocumented function
+     *
+     * @param string $name
+     * @param string $resourceType
+     * @param string $className
+     * @return static
+     */
+    public function loadRelationship(string $name, string $resourceType)
     {
-        $collection =$this->getRelatedCollection($name);
+        $relation = $this->getRelation($name);
 
-        $factory = $this->getCollectionfactory($collection, true);
-        $relationship = [
-            'data' => $factory->toArray()
-        ];
+        $relationship = $this->createRelationshipFactory($name);
+        $this->fillRelationshipFactory($relationship, $relation, $resourceType);
         $this->addRelationship($name, $relationship);
 
         return $this;
     }
 
-    private function getRelatedCollection(string $name)
+    /**
+     * Undocumented function
+     *
+     * @param RelationshipFactory $relationship
+     * @param Relation $relation
+     * @param string $resourceType
+     * @return void
+     */
+    protected function fillRelationshipFactory($relationship, $relation, string $resourceType): void
+    {
+        $relationship->setData($relation, $resourceType);
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @param string $name
+     * @return Relation
+     */
+    protected function getRelation(string $name)
     {
         if (!$this->model->relationLoaded($name)) {
             $this->model->load($name);
         }
 
-        $collection = $this->model->getRelation($name);
-        $collection = is_null($collection) ? collect([]) : $collection;
-
-        return $collection;
+        return $this->model->getRelation($name);
     }
 
-    private function getCollectionFactory($collection, $isRI)
+    /**
+     * Undocumented function
+     *
+     * @param mixed ...$args
+     * @return RelationshipFactory
+     */
+    protected function createRelationshipFactory(...$args)
     {
-        $className = $this->helper()->getClassName('collection');
-
-        return call_user_func_array([$className, 'create'], [$collection, $isRI]);
+        return HelperFactory::create('relationship', ...$args);
     }
 }

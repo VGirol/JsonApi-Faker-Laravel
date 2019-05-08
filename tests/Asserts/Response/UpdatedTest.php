@@ -11,7 +11,7 @@ class UpdatedTest extends TestCase
 {
     /**
      * @test
-     * @dataProvider validResponseUpdated
+     * @dataProvider responseUpdatedProvider
      */
     public function responseUpdated($content, $model, $resourceType, $strict)
     {
@@ -26,10 +26,10 @@ class UpdatedTest extends TestCase
         $response->assertJsonApiUpdated($model, $resourceType, $strict);
     }
 
-    public function validResponseUpdated()
+    public function responseUpdatedProvider()
     {
         $model = new ModelForTest();
-        $model->setIdAttribute(1);
+        $model->setAttribute('TST_ID', 1);
         $content = [
             'data' => [
                 'type' => $model->getResourceType(),
@@ -63,7 +63,7 @@ class UpdatedTest extends TestCase
 
     /**
      * @test
-     * @dataProvider notValidResponseUpdated
+     * @dataProvider responseUpdatedFailedProvider
      */
     public function responseUpdatedFailed($status, $headers, $content, $model, $resourceType, $strict, $failureMsg)
     {
@@ -75,7 +75,7 @@ class UpdatedTest extends TestCase
         $response->assertJsonApiUpdated($model, $resourceType, $strict);
     }
 
-    public function notValidResponseUpdated()
+    public function responseUpdatedFailedProvider()
     {
         $model = new ModelForTest([
             'TST_ID' => 10,

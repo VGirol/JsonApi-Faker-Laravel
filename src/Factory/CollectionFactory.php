@@ -4,8 +4,6 @@ namespace VGirol\JsonApiAssert\Laravel\Factory;
 
 use Illuminate\Support\Collection;
 use VGirol\JsonApiAssert\Factory\CollectionFactory as BaseFactory;
-use VGirol\JsonApiAssert\Laravel\Factory\ResourceIdentifierFactory;
-use VGirol\JsonApiAssert\Laravel\Factory\ResourceObjectFactory;
 
 class CollectionFactory extends BaseFactory
 {
@@ -14,14 +12,24 @@ class CollectionFactory extends BaseFactory
      *
      * @var \Illuminate\Support\Collection
      */
-    protected $baseCollection;
+    protected $collection;
 
     protected $isResourceIdentifier;
 
-    public function __construct($collection, $isRI = false)
+    protected $resourceType;
+
+    public function __construct($collection, $resourceType, $isRI = false)
     {
-        $this->isResourceIdentifier($isRI)
-            ->setBaseCollection($collection);
+        $this->setResourceType($resourceType)
+            ->isResourceIdentifier($isRI)
+            ->setCollection($collection);
+    }
+
+    public function setResourceType(?string $type): self
+    {
+        $this->resourceType = $type;
+
+        return $this;
     }
 
     /**
@@ -44,49 +52,63 @@ class CollectionFactory extends BaseFactory
     /**
      * Undocumented function
      *
-     * @param \Illuminate\Support\Collection $collection
-     * @return self
+     * @param array|\Illuminate\Support\Collection $collection
+     * @return static
      */
-    public function setBaseCollection($collection): self
+    public function setCollection($collection)
     {
-        $this->baseCollection = $collection;
+        $base = is_array($collection) ? collect($collection) : $collection;
+        $this->collection = $base;
 
-        $this->setCollection(
-            $this->transform()->toArray()
-        );
+        if (is_array($collection)) {
+            $array = $collection;
+        } else {
+            $array = $this->transform();
+            if (!is_null($array)) {
+                $array = $array->toArray();
+            }
+        }
+        parent::setCollection($array);
 
         return $this;
     }
 
-    protected function transform(): Collection
+    protected function transform(): ?Collection
     {
-        return $this->baseCollection->map(
-            function ($model, $key) {
-                if ($this->isResourceIdentifier()) {
-                    $resource = $this->riFactory($model);
-                } else {
-                    $resource = $this->roFactory($model);
-                }
+        if (is_null($this->collection)) {
+            return null;
+        }
 
-                return $resource;
+        return $this->collection->map(
+            function ($model) {
+                return $this->resourceFactory(
+                    $this->isResourceIdentifier() ? 'resource-identifier' : 'resource-object',
+                    $model,
+                    $this->resourceType
+                );
             }
         );
     }
 
-    // public function appendRelationships(array $relationships): self
-    // {
-    //     foreach ($relationships as $name) {
-    //         $this->each(function ($resource) use ($name) {
-    //             if ($this->isResourceIdentifier()) {
-    //                 return;
-    //             }
+    protected function resourceFactory(string $type, ...$args)
+    {
+        return HelperFactory::create($type, ...$args);
+    }
 
-    //             $resource->appendRelationship($name);
-    //         });
-    //     }
+    public function appendRelationships(array $relationships): self
+    {
+        if ($this->isResourceIdentifier()) {
+            return $this;
+        }
 
-    //     return $this;
-    // }
+        foreach ($relationships as $name => $resourceType) {
+            $this->each(function ($resource) use ($name, $resourceType) {
+                $resource->loadRelationship($name, $resourceType);
+            });
+        }
+
+        return $this;
+    }
 
     // protected function roFactory($model, $resourceType)
     // {

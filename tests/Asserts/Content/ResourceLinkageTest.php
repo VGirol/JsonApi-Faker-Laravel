@@ -12,50 +12,65 @@ class ResourceLinkageTest extends TestCase
     /**
      * @test
      */
-    public function assertResourceIdentifierEquals()
+    public function assertResourceIdentifierEqualsModel()
     {
-        $expectedId = 10;
-        $resourceType = 'test';
-        $resource = [
-            'type' => $resourceType,
-            'id' => $expectedId
+        $id = 10;
+        $attributes = [
+            'TST_ID' => $id,
+            'TST_NAME' => 'test',
+            'TST_NUMBER' => 123,
+            'TST_CREATION_DATE' => null
         ];
 
-        Assert::assertResourceIdentifierEquals($expectedId, $resourceType, $resource);
+        $model = new ModelForTest();
+        $model->setRawAttributes($attributes);
+
+        $resource = [
+            'type' => $model->getResourceType(),
+            'id' => strval($id),
+        ];
+
+        Assert::assertResourceIdentifierEqualsModel($model, $model->getResourceType(), $resource);
     }
 
     /**
      * @test
-     * @dataProvider assertResourceIdentifierEqualsFailedProvider
+     * @dataProvider assertResourceIdentifierEqualsModelFailedProvider
      */
-    public function assertResourceIdentifierEqualsFailed($expectedId, $resourceType, $resource, $failureMsg)
+    public function assertResourceIdentifierEqualsModelFailed($model, $resource, $failureMsg)
     {
         $this->setFailureException($failureMsg);
 
-        Assert::assertResourceIdentifierEquals($expectedId, $resourceType, $resource);
+        Assert::assertResourceIdentifierEqualsModel($model, $model->getResourceType(), $resource);
     }
 
-    public function assertResourceIdentifierEqualsFailedProvider()
+    public function assertResourceIdentifierEqualsModelFailedProvider()
     {
-        $resourceType = 'test';
-        $expectedId = 10;
+        $id = 10;
+        $attributes = [
+            'TST_ID' => $id,
+            'TST_NAME' => 'test',
+            'TST_NUMBER' => 123,
+            'TST_CREATION_DATE' => null
+        ];
+
+        $model = new ModelForTest();
+        $model->setRawAttributes($attributes);
 
         return [
             'not same type' => [
-                $expectedId,
-                $resourceType,
+                $model,
                 [
                     'type' => 'wrong',
-                    'id' => $expectedId
+                    'id' => $id
                 ],
                 null
             ],
             'not same id' => [
-                $expectedId,
-                $resourceType,
+                $model,
                 [
-                    'type' => $resourceType,
-                    'id' => $expectedId + 2
+                    'type' => $model->getResourceType(),
+                    'id' => $id + 2
                 ],
                 null
             ]
@@ -71,7 +86,7 @@ class ResourceLinkageTest extends TestCase
         $collection = $this->createResourceCollection($refCollection, true, false);
         $resourceType = $refCollection[0]->getResourceType();
 
-        Assert::assertResourceIdentifierCollectionEquals($refCollection, $resourceType, $collection);
+        Assert::assertResourceIdentifierCollectionEqualsCollection($refCollection, $resourceType, $collection);
     }
 
     /**

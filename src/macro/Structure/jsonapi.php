@@ -6,6 +6,6 @@ use VGirol\JsonApiAssert\Laravel\Assert;
 TestResponse::macro(
     'assertJsonApiJsonapiObject',
     function ($expected) {
-        Assert::assertTopLevelJsonapiObjectEquals($this, $expected);
+        Assert::assertResponseJsonapiObjectEquals($this, $expected);
     }
 );

@@ -6,7 +6,7 @@ use VGirol\JsonApiAssert\Factory\HelperFactory as BaseFactory;
 
 class HelperFactory extends BaseFactory
 {
-    protected function getAliases()
+    public static function getAliases(): array
     {
         return array_merge(
             parent::getAliases(),

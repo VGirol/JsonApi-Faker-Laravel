@@ -1,6 +1,6 @@
 <?php
 
-namespace VGirol\JsonApiAssert\Laravel\Asserts\Structure;
+namespace VGirol\JsonApiAssert\Laravel\Asserts\Content;
 
 use Illuminate\Foundation\Testing\TestResponse;
 use VGirol\JsonApiAssert\Members;
@@ -13,7 +13,7 @@ trait AssertJsonapiObject
      * @param \Illuminate\Foundation\Testing\TestResponse $response
      * @param array $expected
      */
-    public static function assertTopLevelJsonapiObjectEquals(TestResponse $response, $expected)
+    public static function assertResponseJsonapiObjectEquals(TestResponse $response, $expected)
     {
         if (!\is_array($expected)) {
             static::invalidArgument(
