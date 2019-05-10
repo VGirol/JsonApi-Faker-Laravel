@@ -48,7 +48,7 @@ class ResourceObjectFactoryTest extends TestCase
         ];
 
         $factory = HelperFactory::create('resource-object', $model, $type);
-        $factory->loadRelationship($name);
+        $factory->loadRelationships($name);
 
         $result = $factory->toArray();
 

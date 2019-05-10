@@ -3,27 +3,26 @@ declare (strict_types = 1);
 
 namespace VGirol\JsonApiAssert\Laravel\Factory;
 
-use Illuminate\Database\Eloquent\Model;
-
-trait HasModel
+trait HasRouteName
 {
     /**
      * Undocumented variable
      *
-     * @var Model
+     * @var string
      */
-    protected $model;
+    protected $routeName;
+
 
     /**
      * Undocumented function
      *
-     * @param Model $model
+     * @param string $routeName
      * @return static
      */
-    public function setModel($model)
+    public function setRouteName(string $routeName)
     {
-        $this->model = $model;
-
+        $this->routeName = $routeName;
+    
         return $this;
     }
 }

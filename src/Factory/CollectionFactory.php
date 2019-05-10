@@ -3,40 +3,49 @@
 namespace VGirol\JsonApiAssert\Laravel\Factory;
 
 use Illuminate\Support\Collection;
+use VGirol\JsonApiAssert\Factory\HasResourceType;
 use VGirol\JsonApiAssert\Factory\CollectionFactory as BaseFactory;
 
 class CollectionFactory extends BaseFactory
 {
+    use HasRouteName;
+    use HasResourceType;
+
     /**
      * Undocumented variable
      *
-     * @var \Illuminate\Support\Collection
+     * @var Collection
      */
     protected $collection;
 
+    /**
+     * Undocumented variable
+     *
+     * @var boolean
+     */
     protected $isResourceIdentifier;
 
-    protected $resourceType;
-
-    public function __construct($collection, $resourceType, $isRI = false)
+    /**
+     * Undocumented function
+     *
+     * @param Collection $collection
+     * @param string $resourceType
+     * @param string $routeName
+     * @param boolean $isRI
+     */
+    public function __construct($collection, string $resourceType, string $routeName, $isRI = false)
     {
         $this->setResourceType($resourceType)
+            ->setRouteName($routeName)
             ->isResourceIdentifier($isRI)
             ->setCollection($collection);
-    }
-
-    public function setResourceType(?string $type): self
-    {
-        $this->resourceType = $type;
-
-        return $this;
     }
 
     /**
      * Undocumented function
      *
      * @param boolean|null $isRI
-     * @return boolean|self
+     * @return boolean|static
      */
     public function isResourceIdentifier($isRI = null)
     {
@@ -52,7 +61,7 @@ class CollectionFactory extends BaseFactory
     /**
      * Undocumented function
      *
-     * @param array|\Illuminate\Support\Collection $collection
+     * @param Collection|array $collection
      * @return static
      */
     public function setCollection($collection)
@@ -73,6 +82,11 @@ class CollectionFactory extends BaseFactory
         return $this;
     }
 
+    /**
+     * Undocumented function
+     *
+     * @return Collection|null
+     */
     protected function transform(): ?Collection
     {
         if (is_null($this->collection)) {
@@ -90,33 +104,35 @@ class CollectionFactory extends BaseFactory
         );
     }
 
+    /**
+     * Undocumented function
+     *
+     * @param string $type
+     * @param mixed ...$args
+     * @return void
+     */
     protected function resourceFactory(string $type, ...$args)
     {
-        return HelperFactory::create($type, ...$args);
+        $arguments = array_merge([$type], $args, [$this->routeName]);
+        return call_user_func_array([HelperFactory::class, 'create'], $arguments);
     }
 
-    public function appendRelationships(array $relationships): self
+    /**
+     * Undocumented function
+     *
+     * @param array $relationships
+     * @return static
+     */
+    public function appendRelationships(array $relationships)
     {
         if ($this->isResourceIdentifier()) {
             return $this;
         }
 
-        foreach ($relationships as $name => $resourceType) {
-            $this->each(function ($resource) use ($name, $resourceType) {
-                $resource->loadRelationship($name, $resourceType);
-            });
-        }
+        $this->each(function ($resource) use ($relationships) {
+            $resource->appendRelationships($relationships);
+        });
 
         return $this;
     }
-
-    // protected function roFactory($model, $resourceType)
-    // {
-    //     return $this->factory(ResourceObjectFactory::class, [$model, $resourceType]);
-    // }
-
-    // protected function riFactory($model, $resourceType)
-    // {
-    //     return $this->factory(ResourceIdentifierFactory::class, [$model, $resourceType]);
-    // }
 }

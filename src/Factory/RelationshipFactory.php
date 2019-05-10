@@ -15,7 +15,12 @@ class RelationshipFactory extends BaseFactory
      */
     protected $name;
 
-    public function __construct($name)
+    /**
+     * Undocumented function
+     *
+     * @param string $name
+     */
+    public function __construct(string $name)
     {
         $this->name = $name;
     }
@@ -24,16 +29,17 @@ class RelationshipFactory extends BaseFactory
      * Undocumented function
      *
      * @param ResourceIdentifierFactory|CollectionFactory|Model|Collection|null $data
-     * @param string|null $resourceType
+     * @param string $resourceType
+     * @param string $routeName
      * @return static
      */
-    public function setData($data, $resourceType = null)
+    public function setData($data, string $resourceType = null, string $routeName = null)
     {
         if (is_a($data, Model::class)) {
             $data = HelperFactory::create('resource-identifier', $data, $resourceType);
         }
         if (is_a($data, Collection::class)) {
-            $data = HelperFactory::create('collection', $data, $resourceType, true);
+            $data = HelperFactory::create('collection', $data, $resourceType, $routeName, true);
         }
         $this->data = $data;
 
