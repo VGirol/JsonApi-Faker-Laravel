@@ -16,13 +16,13 @@ trait HasRouteName
     /**
      * Undocumented function
      *
-     * @param string $routeName
+     * @param string|null $routeName
      * @return static
      */
-    public function setRouteName(string $routeName)
+    public function setRouteName(?string $routeName)
     {
         $this->routeName = $routeName;
-    
+
         return $this;
     }
 }

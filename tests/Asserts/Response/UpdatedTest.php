@@ -3,8 +3,8 @@ namespace VGirol\JsonApiAssert\Laravel\Tests\Asserts\Response;
 
 use Illuminate\Foundation\Testing\TestResponse;
 use Illuminate\Http\Response;
+use VGirol\JsonApiAssert\Laravel\Factory\HelperFactory;
 use VGirol\JsonApiAssert\Laravel\Tests\TestCase;
-use VGirol\JsonApiAssert\Laravel\Tests\Tools\Models\ModelForTest;
 use VGirol\JsonApiAssert\Messages;
 
 class UpdatedTest extends TestCase
@@ -13,7 +13,7 @@ class UpdatedTest extends TestCase
      * @test
      * @dataProvider responseUpdatedProvider
      */
-    public function responseUpdated($content, $model, $resourceType, $strict)
+    public function responseUpdated($content, $expected, $strict)
     {
         $status = 200;
         $headers = [
@@ -23,29 +23,31 @@ class UpdatedTest extends TestCase
         $response = Response::create(json_encode($content), $status, $headers);
         $response = TestResponse::fromBaseResponse($response);
 
-        $response->assertJsonApiUpdated($model, $resourceType, $strict);
+        $response->assertJsonApiUpdated($expected, $strict);
     }
 
     public function responseUpdatedProvider()
     {
-        $model = new ModelForTest();
-        $model->setAttribute('TST_ID', 1);
-        $content = [
-            'data' => [
-                'type' => $model->getResourceType(),
-                'id' => strval($model->getKey()),
-                'attributes' => $model->toArray(),
-                'links' => [
-                    'self' => 'url'
-                ]
+        $selfUrl = 'url';
+        $additional = [
+            'links' => [
+                'self' => $selfUrl
             ]
         ];
+
+        $model = $this->createModel();
+        $content = [
+            'data' => $this->createResource($model, false, null, $additional)
+        ];
+
+        $expected = HelperFactory::create('resource-object', $model, $this->resourceType, $this->routeName)
+            ->addLink('self', $selfUrl)
+            ->toArray();
 
         return [
             'with data' => [
                 $content,
-                $model,
-                $model->getResourceType(),
+                $expected,
                 false
             ],
             'with meta' => [
@@ -54,7 +56,6 @@ class UpdatedTest extends TestCase
                         'valid' => 'response'
                     ]
                 ],
-                null,
                 null,
                 false
             ]
@@ -65,24 +66,21 @@ class UpdatedTest extends TestCase
      * @test
      * @dataProvider responseUpdatedFailedProvider
      */
-    public function responseUpdatedFailed($status, $headers, $content, $model, $resourceType, $strict, $failureMsg)
+    public function responseUpdatedFailed($status, $headers, $content, $expected, $strict, $failureMsg)
     {
         $response = Response::create(json_encode($content), $status, $headers);
         $response = TestResponse::fromBaseResponse($response);
 
         $this->setFailureException($failureMsg);
 
-        $response->assertJsonApiUpdated($model, $resourceType, $strict);
+        $response->assertJsonApiUpdated($expected, $strict);
     }
 
     public function responseUpdatedFailedProvider()
     {
-        $model = new ModelForTest([
-            'TST_ID' => 10,
-            'TST_NAME' => 'name',
-            'TST_NUMBER' => 123,
-            'TST_CREATION_DATE' => null
-        ]);
+        $model = $this->createModel();
+
+        $expected = HelperFactory::create('resource-object', $model, $this->resourceType, $this->routeName)->toArray();
 
         return [
             'wrong status code' => [
@@ -91,19 +89,9 @@ class UpdatedTest extends TestCase
                     static::$headerName => [static::$mediaType]
                 ],
                 [
-                    'data' => [
-                        'type' => $model->getResourceType(),
-                        'id' => '10',
-                        'attributes' => [
-                            'TST_ID' => 10,
-                            'TST_NAME' => 'name',
-                            'TST_NUMBER' => 123,
-                            'TST_CREATION_DATE' => null
-                        ]
-                    ]
+                    'data' => $this->createResource($model, false)
                 ],
-                $model,
-                $model->getResourceType(),
+                $expected,
                 false,
                 'Expected status code 200 but received 202.'
             ],
@@ -111,19 +99,9 @@ class UpdatedTest extends TestCase
                 200,
                 [],
                 [
-                    'data' => [
-                        'type' => $model->getResourceType(),
-                        'id' => '10',
-                        'attributes' => [
-                            'TST_ID' => 10,
-                            'TST_NAME' => 'name',
-                            'TST_NUMBER' => 123,
-                            'TST_CREATION_DATE' => null
-                        ]
-                    ]
+                    'data' => $this->createResource($model, false)
                 ],
-                $model,
-                $model->getResourceType(),
+                $expected,
                 false,
                 'Header [Content-Type] not present on response.'
             ],
@@ -133,19 +111,9 @@ class UpdatedTest extends TestCase
                     static::$headerName => [static::$mediaType]
                 ],
                 [
-                    'data' => [
-                        'type' => $model->getResourceType(),
-                        'id' => 10,
-                        'attributes' => [
-                            'TST_ID' => 10,
-                            'TST_NAME' => 'name',
-                            'TST_NUMBER' => 123,
-                            'TST_CREATION_DATE' => null
-                        ]
-                    ]
+                    'data' => $this->createResource($model, false, 'structure')
                 ],
-                $model,
-                $model->getResourceType(),
+                $expected,
                 false,
                 Messages::RESOURCE_ID_MEMBER_IS_NOT_STRING
             ],
@@ -163,8 +131,7 @@ class UpdatedTest extends TestCase
                         ]
                     ]
                 ],
-                $model,
-                $model->getResourceType(),
+                $expected,
                 false,
                 null
             ],
@@ -174,19 +141,9 @@ class UpdatedTest extends TestCase
                     static::$headerName => [static::$mediaType]
                 ],
                 [
-                    'data' => [
-                        'type' => $model->getResourceType(),
-                        'id' => '10',
-                        'attributes' => [
-                            'TST_ID' => 10,
-                            'TST_NAME' => 'name',
-                            'TST_NUMBER' => 666,
-                            'TST_CREATION_DATE' => null
-                        ]
-                    ]
+                    'data' => $this->createResource($model, false, 'value')
                 ],
-                $model,
-                $model->getResourceType(),
+                $expected,
                 false,
                 null
             ]

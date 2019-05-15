@@ -1,9 +1,9 @@
 <?php
 namespace VGirol\JsonApiAssert\Laravel\Tests\Asserts\Response;
 
-use Illuminate\Support\Collection;
 use Illuminate\Foundation\Testing\TestResponse;
 use Illuminate\Http\Response;
+use VGirol\JsonApiAssert\Laravel\Factory\HelperFactory;
 use VGirol\JsonApiAssert\Laravel\Tests\TestCase;
 use VGirol\JsonApiAssert\Messages;
 
@@ -14,6 +14,7 @@ class FetchedRelationshipsCollectionTest extends TestCase
      */
     public function responseFetchedEmptyToManyRelationships()
     {
+        $strict = false;
         $status = 200;
         $content = [
             'data' => []
@@ -21,11 +22,12 @@ class FetchedRelationshipsCollectionTest extends TestCase
         $headers = [
             self::$headerName => [self::$mediaType]
         ];
+        $expected = HelperFactory::create('collection', collect([]), $this->resourceType, $this->routeName, true)->toArray();
 
         $response = Response::create(json_encode($content), $status, $headers);
         $response = TestResponse::fromBaseResponse($response);
 
-        $response->assertJsonApiFetchedRelationships(new Collection([]));
+        $response->assertJsonApiFetchedRelationships($expected, $strict);
     }
 
     /**
@@ -33,21 +35,21 @@ class FetchedRelationshipsCollectionTest extends TestCase
      */
     public function responseFetchedToManyRelationships()
     {
+        $strict = false;
         $collection = $this->createCollection();
-
-        $resourceType = $collection->first()->getResourceType();
         $status = 200;
         $content = [
-            'data' => $this->createResourceCollection($collection, true, false)
+            'data' => $this->createResourceCollection($collection, true, null)
         ];
         $headers = [
             self::$headerName => [self::$mediaType]
         ];
+        $expected = HelperFactory::create('collection', $collection, $this->resourceType, $this->routeName, true)->toArray();
 
         $response = Response::create(json_encode($content), $status, $headers);
         $response = TestResponse::fromBaseResponse($response);
 
-        $response->assertJsonApiFetchedRelationships($collection, $resourceType);
+        $response->assertJsonApiFetchedRelationships($expected, $strict);
     }
 
     /**
@@ -58,8 +60,7 @@ class FetchedRelationshipsCollectionTest extends TestCase
         $status,
         $headers,
         $content,
-        $model,
-        $resourceType,
+        $expected,
         $strict,
         $failureMsg
     ) {
@@ -68,7 +69,7 @@ class FetchedRelationshipsCollectionTest extends TestCase
 
         $this->setFailureException($failureMsg);
 
-        $response->assertJsonApiFetchedRelationships($model, $resourceType, $strict);
+        $response->assertJsonApiFetchedRelationships($expected, $strict);
     }
 
     public function responseFetchedToManyRelationshipsFailedProvider()
@@ -78,17 +79,16 @@ class FetchedRelationshipsCollectionTest extends TestCase
             self::$headerName => [self::$mediaType]
         ];
         $collection = $this->createCollection();
-        $resourceType = $collection->first()->getResourceType();
+        $expected = HelperFactory::create('collection', $collection, $this->resourceType, $this->routeName, true)->toArray();
 
         return [
             'wrong status' => [
                 400,
                 $headers,
                 [
-                    'data' => $this->createResourceCollection($collection, true, false)
+                    'data' => $this->createResourceCollection($collection, true, null)
                 ],
-                $collection,
-                $resourceType,
+                $expected,
                 false,
                 'Expected status code 200 but received 400.'
             ],
@@ -96,10 +96,9 @@ class FetchedRelationshipsCollectionTest extends TestCase
                 $status,
                 [],
                 [
-                    'data' => $this->createResourceCollection($collection, true, false)
+                    'data' => $this->createResourceCollection($collection, true, null)
                 ],
-                $collection,
-                $resourceType,
+                $expected,
                 false,
                 'Header [Content-Type] not present on response.'
             ],
@@ -107,11 +106,10 @@ class FetchedRelationshipsCollectionTest extends TestCase
                 $status,
                 $headers,
                 [
-                    'data' => $this->createResourceCollection($collection, true, false),
+                    'data' => $this->createResourceCollection($collection, true, null),
                     'anything' => 'not valid'
                 ],
-                $collection,
-                $resourceType,
+                $expected,
                 false,
                 Messages::ONLY_ALLOWED_MEMBERS
             ],
@@ -125,8 +123,7 @@ class FetchedRelationshipsCollectionTest extends TestCase
                         ]
                     ]
                 ],
-                $collection,
-                $resourceType,
+                $expected,
                 false,
                 sprintf(Messages::HAS_MEMBER, 'data')
             ],
@@ -134,10 +131,9 @@ class FetchedRelationshipsCollectionTest extends TestCase
                 $status,
                 $headers,
                 [
-                    'data' => $this->createResourceCollection($collection, true, true)
+                    'data' => $this->createResourceCollection($collection, true, 'value')
                 ],
-                $collection,
-                $resourceType,
+                $expected,
                 false,
                 null
             ]

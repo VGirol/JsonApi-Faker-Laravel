@@ -4,22 +4,18 @@ namespace VGirol\JsonApiAssert\Laravel\Tests\Factory;
 use PHPUnit\Framework\Assert as PHPUnit;
 use VGirol\JsonApiAssert\Laravel\Factory\HelperFactory;
 use VGirol\JsonApiAssert\Laravel\Tests\TestCase;
-use VGirol\JsonApiAssert\Laravel\Tests\Tools\Models\ModelForTest;
 
 class ResourceObjectFactoryTest extends TestCase
 {
-    use CanCreate;
-
     /**
      * @test
      */
     public function resourceObjectFactory()
     {
-        $type = 'test';
+        $model = $this->createModel();
+        $expected = $this->createResource($model, false, null);
 
-        list($model, $expected) = $this->modelFactory($type, false);
-
-        $factory = HelperFactory::create('resource-object', $model, $type);
+        $factory = HelperFactory::create('resource-object', $model, $this->resourceType, $this->routeName);
 
         $result = $factory->toArray();
 
@@ -31,24 +27,24 @@ class ResourceObjectFactoryTest extends TestCase
      */
     public function resourceObjectFactoryWithRelationships()
     {
-        $type = 'test';
-        list($model, $expected) = $this->modelFactory($type, false);
+        $name = 'related';
+        $model = $this->createModel();
 
         $count = 5;
-        $rel_type = 'test2';
-        $name = 'related';
-        list($collection, $rel_expected) = $this->collectionFactory($count, $rel_type, true);
-        $relationship = HelperFactory::create('relationship');
-        $relationship->setData($collection, $rel_type);
+        $related = $this->createCollection($count);
 
-        $expected['relationships'] = [
-            $name => [
-                'data' => $rel_expected
+        $model->setRelation($name, $related);
+
+        $expected = $this->createResource($model, false, null, [
+            'relationships' => [
+                $name => [
+                    'data' => $this->createResourceCollection($related, true, null)
+                ]
             ]
-        ];
+        ]);
 
-        $factory = HelperFactory::create('resource-object', $model, $type);
-        $factory->loadRelationships($name);
+        $factory = HelperFactory::create('resource-object', $model, $this->resourceType, $this->routeName);
+        $factory->loadRelationship($name, $this->resourceType);
 
         $result = $factory->toArray();
 

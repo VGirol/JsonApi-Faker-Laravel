@@ -1,11 +1,9 @@
 <?php
 namespace VGirol\JsonApiAssert\Laravel\Tests\Asserts\Structure;
 
-use Illuminate\Database\Eloquent\Model;
 use VGirol\JsonApiAssert\Laravel\Assert;
 use VGirol\JsonApiAssert\Laravel\Tests\TestCase;
 use VGirol\JsonApiAssert\Laravel\Tests\Tools\Models\ModelForTest;
-use VGirol\JsonApiAssert\Messages;
 
 class ResourceTest extends TestCase
 {
@@ -14,24 +12,10 @@ class ResourceTest extends TestCase
      */
     public function assertResourceObjectEqualsModel()
     {
-        $id = 10;
-        $attributes = [
-            'TST_ID' => $id,
-            'TST_NAME' => 'test',
-            'TST_NUMBER' => 123,
-            'TST_CREATION_DATE' => null
-        ];
+        $model = $this->createModel();
+        $resource = $this->createResource($model, false, null);
 
-        $model = new ModelForTest();
-        $model->setRawAttributes($attributes);
-
-        $resource = [
-            'type' => $model->getResourceType(),
-            'id' => strval($id),
-            'attributes' => $attributes
-        ];
-
-        Assert::assertResourceObjectEqualsModel($model, $model->getResourceType(), $resource);
+        Assert::assertResourceObjectEqualsModel($model, $this->resourceType, $resource);
     }
 
     // /**

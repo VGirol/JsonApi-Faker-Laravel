@@ -12,10 +12,10 @@ class ResourceIdentifierFactory extends BaseFactory
     /**
      * Undocumented function
      *
-     * @param Model $model
-     * @param string $resourceType
+     * @param Model|null $model
+     * @param string|null $resourceType
      */
-    public function __construct($model, string $resourceType)
+    public function __construct($model, ?string $resourceType)
     {
         $this->setModel($model)
             ->setId(is_null($model) ? null : $model->getKey())

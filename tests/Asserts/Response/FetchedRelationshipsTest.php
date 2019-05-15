@@ -3,6 +3,7 @@ namespace VGirol\JsonApiAssert\Laravel\Tests\Asserts\Response;
 
 use Illuminate\Foundation\Testing\TestResponse;
 use Illuminate\Http\Response;
+use VGirol\JsonApiAssert\Laravel\Factory\HelperFactory;
 use VGirol\JsonApiAssert\Laravel\Tests\TestCase;
 use VGirol\JsonApiAssert\Messages;
 
@@ -32,20 +33,21 @@ class FetchedRelationshipsTest extends TestCase
      */
     public function responseFetchedToOneRelationships()
     {
+        $strict = false;
         $model = $this->createModel();
-        $resourceType = $model->getResourceType();
         $status = 200;
         $content = [
-            'data' => $this->createResource($model, true, false)
+            'data' => $this->createResource($model, true, null)
         ];
         $headers = [
             self::$headerName => [self::$mediaType]
         ];
+        $expected = HelperFactory::create('resource-identifier', $model, $this->resourceType)->toArray();
 
         $response = Response::create(json_encode($content), $status, $headers);
         $response = TestResponse::fromBaseResponse($response);
 
-        $response->assertJsonApiFetchedRelationships($model, $resourceType);
+        $response->assertJsonApiFetchedRelationships($expected, $strict);
     }
 
     /**
@@ -56,8 +58,7 @@ class FetchedRelationshipsTest extends TestCase
         $status,
         $headers,
         $content,
-        $model,
-        $resourceType,
+        $expected,
         $strict,
         $failureMsg
     ) {
@@ -66,7 +67,7 @@ class FetchedRelationshipsTest extends TestCase
 
         $this->setFailureException($failureMsg);
 
-        $response->assertJsonApiFetchedRelationships($model, $resourceType, $strict);
+        $response->assertJsonApiFetchedRelationships($expected, $strict);
     }
 
     public function responseFetchedToOneRelationshipsFailedProvider()
@@ -76,16 +77,16 @@ class FetchedRelationshipsTest extends TestCase
             self::$headerName => [self::$mediaType]
         ];
         $model = $this->createModel();
+        $expected = HelperFactory::create('resource-identifier', $model, $this->resourceType)->toArray();
 
         return [
             'wrong status' => [
                 400,
                 $headers,
                 [
-                    'data' => $this->createResource($model, true, false)
+                    'data' => $this->createResource($model, true, null)
                 ],
-                $model,
-                $model->getResourceType(),
+                $expected,
                 false,
                 'Expected status code 200 but received 400.'
             ],
@@ -93,10 +94,9 @@ class FetchedRelationshipsTest extends TestCase
                 $status,
                 [],
                 [
-                    'data' => $this->createResource($model, true, false)
+                    'data' => $this->createResource($model, true, null)
                 ],
-                $model,
-                $model->getResourceType(),
+                $expected,
                 false,
                 'Header [Content-Type] not present on response.'
             ],
@@ -104,11 +104,10 @@ class FetchedRelationshipsTest extends TestCase
                 $status,
                 $headers,
                 [
-                    'data' => $this->createResource($model, true, false),
+                    'data' => $this->createResource($model, true, null),
                     'anything' => 'not valid'
                 ],
-                $model,
-                $model->getResourceType(),
+                $expected,
                 false,
                 Messages::ONLY_ALLOWED_MEMBERS
             ],
@@ -122,8 +121,7 @@ class FetchedRelationshipsTest extends TestCase
                         ]
                     ]
                 ],
-                $model,
-                $model->getResourceType(),
+                $expected,
                 false,
                 sprintf(Messages::HAS_MEMBER, 'data')
             ],
@@ -131,10 +129,9 @@ class FetchedRelationshipsTest extends TestCase
                 $status,
                 $headers,
                 [
-                    'data' => $this->createResource($model, true, true)
+                    'data' => $this->createResource($model, true, 'value')
                 ],
-                $model,
-                $model->getResourceType(),
+                $expected,
                 false,
                 null
             ]

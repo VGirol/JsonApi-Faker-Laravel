@@ -12,8 +12,7 @@ trait AssertFetchedRelationships
 {
     /**
      * Asserts that the response has 200 status code and content with primary data
-     * represented as resource identifier objects and corresponding to the provided collection
-     * or model and resource type.
+     * represented as resource identifier objects and corresponding to the expected json fragment.
      *
      * @param \Illuminate\Foundation\Testing\TestResponse $response
      * @param array|null $expected

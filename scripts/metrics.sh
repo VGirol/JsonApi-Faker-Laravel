@@ -1,8 +1,9 @@
 #!/bin/bash
 
-PHPUNIT_PATH="./build/scripts/phpunit.sh"
-INFECTION_PATH="./build/scripts/infection.sh"
-PHPMETRICS_PATH="./build/scripts/phpmetrics.sh"
+BASE_PATH="./scripts"
+PHPUNIT_PATH="$BASE_PATH/phpunit.sh"
+INFECTION_PATH="$BASE_PATH/infection.sh"
+PHPMETRICS_PATH="$BASE_PATH/phpmetrics.sh"
 
 . "$PHPUNIT_PATH"
 . "$INFECTION_PATH"

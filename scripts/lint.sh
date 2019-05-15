@@ -1,11 +1,12 @@
 #!/bin/bash
 
-PHPCS_PATH="./build/scripts/phpcs.sh"
-PHPMD_PATH="./build/scripts/phpmd.sh"
-PHPCPD_PATH="./build/scripts/phpcpd.sh"
-PHPMND_PATH="./build/scripts/phpmnd.sh"
-PHPSTAN_PATH="./build/scripts/phpstan.sh"
-PHAN_PATH="./build/scripts/phan.sh"
+BASE_PATH="./scripts"
+PHPCS_PATH="$BASE_PATH/phpcs.sh"
+PHPMD_PATH="$BASE_PATH/phpmd.sh"
+PHPCPD_PATH="$BASE_PATH/phpcpd.sh"
+PHPMND_PATH="$BASE_PATH/phpmnd.sh"
+PHPSTAN_PATH="$BASE_PATH/phpstan.sh"
+PHAN_PATH="$BASE_PATH/phan.sh"
 
 . "$PHPCS_PATH"
 . "$PHPMD_PATH"

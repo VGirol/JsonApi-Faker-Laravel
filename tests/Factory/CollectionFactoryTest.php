@@ -7,8 +7,6 @@ use VGirol\JsonApiAssert\Laravel\Tests\TestCase;
 
 class CollectionFactoryTest extends TestCase
 {
-    use CanCreate;
-
     /**
      * @test
      */
@@ -16,7 +14,7 @@ class CollectionFactoryTest extends TestCase
     {
         $expected = null;
 
-        $factory = HelperFactory::create('collection', null, null);
+        $factory = HelperFactory::create('collection', null, null, null);
 
         $result = $factory->toArray();
 
@@ -31,7 +29,7 @@ class CollectionFactoryTest extends TestCase
         $expected = [];
         $collection = [];
 
-        $factory = HelperFactory::create('collection', $collection, null);
+        $factory = HelperFactory::create('collection', $collection, $this->resourceType, $this->routeName);
 
         $result = $factory->toArray();
 
@@ -44,11 +42,11 @@ class CollectionFactoryTest extends TestCase
      */
     public function resourceCollection($isRI)
     {
-        $type = 'test';
         $count = 5;
-        list($collection, $expected) = $this->collectionFactory($count, $type, $isRI);
+        $collection = $this->createCollection($count);
+        $expected = $this->createResourceCollection($collection, $isRI, null);
 
-        $factory = HelperFactory::create('collection', $collection, $type, $isRI);
+        $factory = HelperFactory::create('collection', $collection, $this->resourceType, $this->routeName, $isRI);
 
         $result = $factory->toArray();
 

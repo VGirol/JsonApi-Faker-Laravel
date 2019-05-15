@@ -6,6 +6,7 @@ use VGirol\JsonApiAssert\Laravel\Assert;
 use VGirol\JsonApiAssert\Laravel\Tests\TestCase;
 use VGirol\JsonApiAssert\Laravel\Tests\Tools\Models\ModelForTest;
 use VGirol\JsonApiAssert\Messages;
+use VGirol\JsonApiAssert\Laravel\Tests\Tools\Models\DummyModel;
 
 class ResourceCollectionTest extends TestCase
 {
@@ -14,29 +15,30 @@ class ResourceCollectionTest extends TestCase
      */
     public function assertResourceCollectionEqualsCollection()
     {
-        $expected = new Collection();
-        $collection = [];
-        for ($i = 1; $i < 5; $i++) {
-            $attributes = [
-                'TST_ID' => 10 + $i,
-                'TST_NAME' => 'test' . $i,
-                'TST_NUMBER' => 1000 * $i + 123,
-                'TST_CREATION_DATE' => null
-            ];
+        $count = 5;
+        $collection = $this->createCollection($count);
+        $json = $this->createResourceCollection($collection, false);
+        // for ($i = 1; $i < 5; $i++) {
+        //     $attributes = [
+        //         'TST_ID' => 10 + $i,
+        //         'TST_NAME' => 'test' . $i,
+        //         'TST_NUMBER' => 1000 * $i + 123,
+        //         'TST_CREATION_DATE' => null
+        //     ];
 
-            $model = new ModelForTest();
-            $model->setRawAttributes($attributes);
-            $expected->push($model);
+        //     $model = new DummyModel();
+        //     $model->setRawAttributes($attributes);
+        //     $expected->push($model);
 
-            $resource = [
-                'type' => $model->getResourceType(),
-                'id' => strval($model->getKey()),
-                'attributes' => $attributes
-            ];
-            array_push($collection, $resource);
-        }
+        //     $resource = [
+        //         'type' => $model->getResourceType(),
+        //         'id' => strval($model->getKey()),
+        //         'attributes' => $attributes
+        //     ];
+        //     array_push($collection, $resource);
+        // }
 
-        Assert::assertResourceCollectionEqualsCollection($expected, $model->getResourceType(), $collection);
+        Assert::assertResourceCollectionEqualsCollection($collection, $this->resourceType, $json);
     }
 
     /**

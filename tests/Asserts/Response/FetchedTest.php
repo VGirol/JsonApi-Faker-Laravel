@@ -3,8 +3,9 @@ namespace VGirol\JsonApiAssert\Laravel\Tests\Asserts;
 
 use Illuminate\Foundation\Testing\TestResponse;
 use Illuminate\Http\Response;
+use VGirol\JsonApiAssert\Laravel\Factory\HelperFactory;
 use VGirol\JsonApiAssert\Laravel\Tests\TestCase;
-use VGirol\JsonApiAssert\Laravel\Tests\Tools\Models\ModelForTest;
+use VGirol\JsonApiAssert\Laravel\Tests\Tools\Models\DummyModel;
 use VGirol\JsonApiAssert\Messages;
 
 class FetchedTest extends TestCase
@@ -14,18 +15,17 @@ class FetchedTest extends TestCase
      */
     public function responseFetchedSingleResource()
     {
-        $model = new ModelForTest([
+        $model = new DummyModel([
             'TST_ID' => 3,
             'TST_NAME' => 'test',
             'TST_NUMBER' => 123,
             'TST_CREATION_DATE' => '01-01-1970'
         ]);
 
-        $resourceType = $model->getResourceType();
         $status = 200;
         $content = [
             'data' => [
-                'type' => $resourceType,
+                'type' => $this->resourceType,
                 'id' => strval($model->getKey()),
                 'attributes' => $model->toArray()
             ]
@@ -37,31 +37,35 @@ class FetchedTest extends TestCase
         $response = Response::create(json_encode($content), $status, $headers);
         $response = TestResponse::fromBaseResponse($response);
 
-        $response->assertJsonApiFetchedSingleResource($model, $resourceType);
+        $expected = HelperFactory::create('resource-object', $model, $this->resourceType, $this->routeName)->toArray();
+
+        $response->assertJsonApiFetchedSingleResource($expected);
     }
 
     /**
      * @test
      * @dataProvider responseFetchedSingleResourceFailedProvider
      */
-    public function responseFetchedSingleResourceFailed($status, $headers, $content, $model, $resourceType, $failureMsg)
+    public function responseFetchedSingleResourceFailed($status, $headers, $content, $expected, $failureMsg)
     {
         $response = Response::create(json_encode($content), $status, $headers);
         $response = TestResponse::fromBaseResponse($response);
 
         $this->setFailureException($failureMsg);
 
-        $response->assertJsonApiFetchedSingleResource($model, $resourceType);
+        $response->assertJsonApiFetchedSingleResource($expected);
     }
 
     public function responseFetchedSingleResourceFailedProvider()
     {
-        $model = new ModelForTest([
+        $model = new DummyModel([
             'TST_ID' => 10,
             'TST_NAME' => 'name',
             'TST_NUMBER' => 123,
             'TST_CREATION_DATE' => null
         ]);
+
+        $expected = HelperFactory::create('resource-object', $model, $this->resourceType, $this->routeName)->toArray();
 
         return [
             'bad status' => [
@@ -71,13 +75,12 @@ class FetchedTest extends TestCase
                 ],
                 [
                     'data' => [
-                        'type' => $model->getResourceType(),
+                        'type' => $this->resourceType,
                         'id' => strval($model->getKey()),
                         'attributes' => $model->getAttributes()
                     ]
                 ],
-                $model,
-                $model->getResourceType(),
+                $expected,
                 'Expected status code 200 but received 400.'
             ],
             'no headers' => [
@@ -85,13 +88,12 @@ class FetchedTest extends TestCase
                 [],
                 [
                     'data' => [
-                        'type' => $model->getResourceType(),
+                        'type' => $this->resourceType,
                         'id' => strval($model->getKey()),
                         'attributes' => $model->getAttributes()
                     ]
                 ],
-                $model,
-                $model->getResourceType(),
+                $expected,
                 'Header [Content-Type] not present on response.'
             ],
             'no valid structure' => [
@@ -101,14 +103,13 @@ class FetchedTest extends TestCase
                 ],
                 [
                     'data' => [
-                        'type' => $model->getResourceType(),
+                        'type' => $this->resourceType,
                         'id' => strval($model->getKey()),
                         'attributes' => $model->getAttributes(),
                         'anything' => 'not valid'
                     ]
                 ],
-                $model,
-                $model->getResourceType(),
+                $expected,
                 Messages::ONLY_ALLOWED_MEMBERS
             ],
             'no data member' => [
@@ -123,8 +124,7 @@ class FetchedTest extends TestCase
                         ]
                     ]
                 ],
-                $model,
-                $model->getResourceType(),
+                $expected,
                 sprintf(Messages::HAS_MEMBER, 'data')
             ],
             'data attributes member not valid' => [
@@ -134,7 +134,7 @@ class FetchedTest extends TestCase
                 ],
                 [
                     'data' => [
-                        'type' => $model->getResourceType(),
+                        'type' => $this->resourceType,
                         'id' => strval($model->getKey()),
                         'attributes' => [
                             'TST_ID' => $model->getKey(),
@@ -144,8 +144,7 @@ class FetchedTest extends TestCase
                         ]
                     ]
                 ],
-                $model,
-                $model->getResourceType(),
+                $expected,
                 null
             ]
         ];

@@ -6,13 +6,16 @@ use Illuminate\Support\Collection;
 use Orchestra\Testbench\TestCase as BaseTestCase;
 use VGirol\JsonApiAssert\Laravel\HeaderTrait;
 use VGirol\JsonApiAssert\Laravel\JsonApiAssertServiceProvider;
-use VGirol\JsonApiAssert\Laravel\Tests\Tools\Models\ModelForTest;
+use VGirol\JsonApiAssert\Laravel\Tests\Tools\Models\DummyModel;
 use VGirol\JsonApiAssert\SetExceptionsTrait;
 
 abstract class TestCase extends BaseTestCase
 {
     use HeaderTrait;
     use SetExceptionsTrait;
+
+    public $resourceType = 'dummy';
+    public $routeName = 'dummy';
 
     /**
      * Load package service provider
@@ -27,7 +30,13 @@ abstract class TestCase extends BaseTestCase
         ];
     }
 
-    protected function createCollection($count = 5)
+    /**
+     * Undocumented function
+     *
+     * @param integer $count
+     * @return Collection
+     */
+    protected function createCollection($count = 5): Collection
     {
         $collection = new Collection();
         for ($i = 1; $i <= $count; $i++) {
@@ -37,22 +46,36 @@ abstract class TestCase extends BaseTestCase
         return $collection;
     }
 
-    protected function createModel($index = 0)
+    /**
+     * Undocumented function
+     *
+     * @param integer $index
+     * @return DummyModel
+     */
+    protected function createModel($index = 0): DummyModel
     {
         $attributes = [
             'TST_ID' => 10 + $index,
             'TST_NAME' => 'test' . $index,
             'TST_NUMBER' => 1000 * $index + 123,
-            'TST_CREATION_DATE' => null
+            'TST_CREATION_DATE' => (2000 + $index) . '-01-01'
         ];
 
-        $model = new ModelForTest();
+        $model = new DummyModel();
         $model->setRawAttributes($attributes);
 
         return $model;
     }
 
-    protected function createResourceCollection(Collection $collection, $isResourceIdentifier, $withError = false)
+    /**
+     * Undocumented function
+     *
+     * @param Collection $collection
+     * @param bool $isResourceIdentifier
+     * @param string|null $withError
+     * @return void
+     */
+    protected function createResourceCollection(Collection $collection, bool $isResourceIdentifier, ?string $withError = null): array
     {
         $data = [];
         $index = rand(1, $collection->count() - 1);
@@ -62,7 +85,7 @@ abstract class TestCase extends BaseTestCase
                 $this->createResource(
                     $model,
                     $isResourceIdentifier,
-                    ($withError && ($i == $index))
+                    (!is_null($withError) && ($i == $index)) ? $withError : null
                 )
             );
         }
@@ -70,17 +93,33 @@ abstract class TestCase extends BaseTestCase
         return $data;
     }
 
-    protected function createResource($model, $isResourceIdentifier, $withError = false, $additional = null)
+    /**
+     * Undocumented function
+     *
+     * @param DummyModel $model
+     * @param boolean $isResourceIdentifier
+     * @param string|null $withError
+     * @param array|null $additional
+     * @return array
+     */
+    protected function createResource($model, bool $isResourceIdentifier, ?string $withError = null, ?array $additional = null): array
     {
         $resource = [
-            'type' => $model->getResourceType(),
+            'type' => $this->resourceType,
             'id' => strval($model->getKey())
         ];
         if (!$isResourceIdentifier) {
-            $resource['attributes'] = $model->toArray();
+            $resource['attributes'] = $model->attributesToArray();
         }
-        if ($withError) {
-            $resource['id'] = strval($model->getKey() + 10);
+        if (!is_null($withError)) {
+            switch ($withError) {
+                case 'value':
+                    $resource['id'] = strval($model->getKey() + 10);
+                    break;
+                case 'structure':
+                    $resource['id'] = intval($model->getKey());
+                    break;
+            }
         }
         if (!is_null($additional)) {
             $resource = array_merge($resource, $additional);

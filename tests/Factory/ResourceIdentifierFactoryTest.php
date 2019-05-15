@@ -7,8 +7,6 @@ use VGirol\JsonApiAssert\Laravel\Tests\TestCase;
 
 class ResourceIdentifierFactoryTest extends TestCase
 {
-    use CanCreate;
-
     /**
      * @test
      */
@@ -32,14 +30,15 @@ class ResourceIdentifierFactoryTest extends TestCase
     {
         $key = 'key';
         $value = 'value';
-        $type = 'test';
 
-        list($model, $expected) = $this->modelFactory($type, true);
-        $expected['meta'] = [
-            $key => $value
-        ];
+        $model = $this->createModel();
+        $expected = $this->createResource($model, true, null, [
+            'meta' => [
+                $key => $value
+            ]
+        ]);
 
-        $factory = HelperFactory::create('resource-identifier', $model, $type);
+        $factory = HelperFactory::create('resource-identifier', $model, $this->resourceType);
         $factory->addToMeta($key, $value);
 
         $result = $factory->toArray();

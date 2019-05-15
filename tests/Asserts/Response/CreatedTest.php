@@ -3,6 +3,7 @@ namespace VGirol\JsonApiAssert\Laravel\Tests\Asserts\Response;
 
 use Illuminate\Foundation\Testing\TestResponse;
 use Illuminate\Http\Response;
+use VGirol\JsonApiAssert\Laravel\Factory\HelperFactory;
 use VGirol\JsonApiAssert\Laravel\Tests\TestCase;
 use VGirol\JsonApiAssert\Messages;
 
@@ -10,16 +11,18 @@ class CreatedTest extends TestCase
 {
     /**
      * @test
-     * @dataProvider responseCreatedCreated
+     * @dataProvider responseCreatedProvider
      */
     public function responseCreated($withLocationHeader)
     {
+        $strict = false;
         $model = $this->createModel();
         $status = 201;
+        $selfUrl = 'url';
         $content = [
-            'data' => $this->createResource($model, false, false, [
+            'data' => $this->createResource($model, false, null, [
                 'links' => [
-                    'self' => 'url'
+                    'self' => $selfUrl
                 ]
             ])
         ];
@@ -29,14 +32,17 @@ class CreatedTest extends TestCase
         if ($withLocationHeader) {
             $headers['Location'] = ['url'];
         }
+        $expected = HelperFactory::create('resource-object', $model, $this->resourceType, $this->routeName)
+            ->addLink('self', $selfUrl)
+            ->toArray();
 
         $response = Response::create(json_encode($content), $status, $headers);
         $response = TestResponse::fromBaseResponse($response);
 
-        $response->assertJsonApiCreated($model, $model->getResourceType());
+        $response->assertJsonApiCreated($expected, $strict);
     }
 
-    public function responseCreatedCreated()
+    public function responseCreatedProvider()
     {
         return [
             'with Location header' => [
@@ -52,14 +58,14 @@ class CreatedTest extends TestCase
      * @test
      * @dataProvider notValidResponseCreated
      */
-    public function responseCreatedFailed($model, $resourceType, $code, $headers, $content, $failureMsg)
+    public function responseCreatedFailed($code, $headers, $content, $expected, $strict, $failureMsg)
     {
         $response = Response::create(json_encode($content), $code, $headers);
         $response = TestResponse::fromBaseResponse($response);
 
         $this->setFailureException($failureMsg);
 
-        $response->assertJsonApiCreated($model, $resourceType);
+        $response->assertJsonApiCreated($expected, $strict);
     }
 
     public function notValidResponseCreated()
@@ -68,56 +74,55 @@ class CreatedTest extends TestCase
             static::$headerName => [static::$mediaType]
         ];
         $model = $this->createModel();
+        $selfUrl = 'url';
+        $expected = HelperFactory::create('resource-object', $model, $this->resourceType, $this->routeName)
+            ->addLink('self', $selfUrl)
+            ->toArray();
 
         return [
             'wrong status code' => [
-                $model,
-                $model->getResourceType(),
                 200,
                 $headers,
                 [
-                    'data' => $this->createResource($model, false, false, [
+                    'data' => $this->createResource($model, false, null, [
                         'links' => [
-                            'self' => 'url'
+                            'self' => $selfUrl
                         ]
                     ])
                 ],
+                $expected,
+                false,
                 'Expected status code 201 but received 200.'
             ],
             'no content-type header' => [
-                $model,
-                $model->getResourceType(),
                 201,
                 [],
                 [
-                    'data' => $this->createResource($model, false, false, [
+                    'data' => $this->createResource($model, false, null, [
                         'links' => [
-                            'self' => 'url'
+                            'self' => $selfUrl
                         ]
                     ])
                 ],
+                $expected,
+                false,
                 'Header [Content-Type] not present on response.'
             ],
             'no valid structure' => [
-                $model,
-                $model->getResourceType(),
                 201,
                 $headers,
                 [
-                    'data' => [
-                        'type' => $model->getResourceType(),
-                        'id' => $model->getKey(),
-                        'attributes' => $model->toArray(),
+                    'data' => $this->createResource($model, false, 'structure', [
                         'links' => [
-                            'self' => 'url'
+                            'self' => $selfUrl
                         ]
-                    ]
+                    ])
                 ],
+                $expected,
+                false,
                 Messages::RESOURCE_ID_MEMBER_IS_NOT_STRING
             ],
             'no data' => [
-                $model,
-                $model->getResourceType(),
                 201,
                 $headers,
                 [
@@ -125,33 +130,39 @@ class CreatedTest extends TestCase
                         'bad' => 'response'
                     ]
                 ],
+                $expected,
+                false,
                 sprintf(Messages::HAS_MEMBER, 'data')
             ],
             'data not valid' => [
-                $model,
-                $model->getResourceType(),
                 201,
                 $headers,
                 [
-                    'data' => $this->createResource($model, true, false)
+                    'data' => $this->createResource($model, false, 'value', [
+                        'links' => [
+                            'self' => $selfUrl
+                        ]
+                    ])
                 ],
-                sprintf(Messages::HAS_MEMBER, 'attributes')
+                $expected,
+                false,
+                null
             ],
             'location header not valid' => [
-                $model,
-                $model->getResourceType(),
                 201,
                 [
                     static::$headerName => [static::$mediaType],
                     'Location' => 'bad'
                 ],
                 [
-                    'data' => $this->createResource($model, false, false, [
+                    'data' => $this->createResource($model, false, null, [
                         'links' => [
-                            'self' => 'url'
+                            'self' => $selfUrl
                         ]
                     ])
                 ],
+                $expected,
+                false,
                 null
             ]
         ];

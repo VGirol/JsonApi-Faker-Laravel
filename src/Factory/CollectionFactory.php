@@ -3,8 +3,8 @@
 namespace VGirol\JsonApiAssert\Laravel\Factory;
 
 use Illuminate\Support\Collection;
-use VGirol\JsonApiAssert\Factory\HasResourceType;
 use VGirol\JsonApiAssert\Factory\CollectionFactory as BaseFactory;
+use VGirol\JsonApiAssert\Factory\HasResourceType;
 
 class CollectionFactory extends BaseFactory
 {
@@ -28,16 +28,16 @@ class CollectionFactory extends BaseFactory
     /**
      * Undocumented function
      *
-     * @param Collection $collection
-     * @param string $resourceType
-     * @param string $routeName
+     * @param Collection|null $collection
+     * @param string|null $resourceType
+     * @param string|null $routeName
      * @param boolean $isRI
      */
-    public function __construct($collection, string $resourceType, string $routeName, $isRI = false)
+    public function __construct($collection, ?string $resourceType, ?string $routeName, $isRI = false)
     {
+        $this->isResourceIdentifier($isRI);
         $this->setResourceType($resourceType)
             ->setRouteName($routeName)
-            ->isResourceIdentifier($isRI)
             ->setCollection($collection);
     }
 
