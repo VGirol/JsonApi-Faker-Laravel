@@ -96,7 +96,7 @@ class CollectionFactory extends BaseFactory
         return $this->collection->map(
             function ($model) {
                 return $this->resourceFactory(
-                    $this->isResourceIdentifier() ? 'resource-identifier' : 'resource-object',
+                    $this->isResourceIdentifier() ? 'createResourceIdentifier' : 'createResourceObject',
                     $model,
                     $this->resourceType
                 );
@@ -104,17 +104,18 @@ class CollectionFactory extends BaseFactory
         );
     }
 
-    /**
-     * Undocumented function
-     *
-     * @param string $type
-     * @param mixed ...$args
-     * @return void
-     */
-    protected function resourceFactory(string $type, ...$args)
+    protected function resourceFactory($func, ...$args)
     {
-        $arguments = array_merge([$type], $args, [$this->routeName]);
-        return call_user_func_array([HelperFactory::class, 'create'], $arguments);
+        if (!$this->isResourceIdentifier) {
+            $args = array_merge($args, [$this->routeName]);
+        }
+
+        return call_user_func_array([$this->getHelperClassName(), $func], $args);
+    }
+
+    protected function getHelperClassName(): string
+    {
+        return HelperFactory::class;
     }
 
     /**

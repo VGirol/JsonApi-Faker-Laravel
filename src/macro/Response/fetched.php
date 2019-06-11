@@ -19,8 +19,22 @@ TestResponse::macro(
 
 TestResponse::macro(
     'assertJsonApiFetchedRelationships',
-    function ($expected, $resourceType = null, $strict = false) {
+    function ($expected, $strict = false) {
         Assert::assertFetchedRelationshipsResponse($this, $expected, $strict);
+    }
+);
+
+TestResponse::macro(
+    'assertJsonApiPagination',
+    function ($expectedLinks, $expectedMeta) {
+        Assert::assertResponseHasPagination($this, $expectedLinks, $expectedMeta);
+    }
+);
+
+TestResponse::macro(
+    'assertJsonApiNoPagination',
+    function () {
+        Assert::assertResponseHasNoPagination($this);
     }
 );
 
@@ -28,9 +42,12 @@ TestResponse::macro(
 //     Assert::assertPaginationLinks($this, $expected);
 // });
 
-// TestResponse::macro('assertJsonApiNoPaginationLinks', function () {
-//     Assert::assertNoPaginationLinks($this);
-// });
+// TestResponse::macro(
+//     'assertJsonApiNoPaginationLinks',
+//     function () {
+//         Assert::assertNoPaginationLinks($this);
+//     }
+// );
 
 // TestResponse::macro('assertJsonApiRelationshipsLinks', function ($expected, $path = null) {
 //     Assert::assertRelationshipsLinks($this, $expected, $path);

@@ -26,4 +26,9 @@ trait HasModel
 
         return $this;
     }
+
+    public function getKey()
+    {
+        return $this->model->getKey();
+    }
 }

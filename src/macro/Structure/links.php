@@ -4,14 +4,14 @@ use Illuminate\Foundation\Testing\TestResponse;
 use VGirol\JsonApiAssert\Laravel\Assert;
 
 TestResponse::macro(
-    'assertJsonApiTopLevelLinksObject',
+    'assertJsonApiDocumentLinksObject',
     function ($expected) {
         Assert::assertTopLevelLinksObjectEquals($this, $expected);
     }
 );
 
 TestResponse::macro(
-    'assertJsonApiTopLevelLinksObjectContains',
+    'assertJsonApiDocumentLinksObjectContains',
     function ($expected) {
         Assert::assertTopLevelLinksObjectContains($this, $expected);
     }
