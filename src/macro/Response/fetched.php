@@ -67,6 +67,6 @@ TestResponse::macro(
 // }
 // );
 
-// TestResponse::macro('assertIncludedObjectContains', function ($expectedCollection, $expectedResourceType) {
-//     Assert::assertIncludedObjectContains($this, $expectedCollection, $expectedResourceType);
-// });
+TestResponse::macro('assertJsonApiIncludeContains', function ($expected) {
+    Assert::assertResponseIncludeContains($this, $expected);
+});

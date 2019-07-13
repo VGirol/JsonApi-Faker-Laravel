@@ -27,35 +27,12 @@ class ResourceObjectFactory extends BaseFactory
     public function appendRelationships(array $relationships)
     {
         foreach ($relationships as $name => $resourceType) {
-            $this->loadRelationship($name, $resourceType);
+            $names = explode('.', $name);
+            $this->loadRelationship($names[0], $resourceType);
         }
 
         return $this;
     }
-
-    // /**
-    //  * Undocumented function
-    //  *
-    //  * @param string $path
-    //  * @param array $resourceType
-    //  * @return static
-    //  */
-    // public function loadRelationships(string $path, array $resourceType)
-    // {
-    //     $names = explode('.', $path);
-    //     foreach ($names as $index => $name) {
-    //         $this->loadRelationships($name, $resourceType[$index]);
-    //     }
-
-
-    //     $relation = $this->getRelationObject($name);
-
-    //     $relationship = $this->createRelationshipFactory($name);
-    //     $this->fillRelationship($relationship, $relation, $resourceType);
-    //     $this->addRelationship($name, $relationship);
-
-    //     return $this;
-    // }
 
     /**
      * Undocumented function

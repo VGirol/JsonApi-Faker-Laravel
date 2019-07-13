@@ -12,30 +12,36 @@ class Pagination
             }
         }
 
-        $options['pageCount'] = self::getPageCount($options['colCount'], $options['itemPerPage']);
+        $options['pageCount'] = self::getPageCount($options['itemCount'], $options['itemPerPage']);
 
         return $options;
     }
 
     public static function sliceCollection($collection, $options)
     {
-        if ($options['colCount'] == 0) {
+        if ($options['itemCount'] == 0) {
             return $collection;
         }
 
+        $start = ($options['page'] - 1) * $options['itemPerPage'];
+        if ($start > $options['itemCount']) {
+            $start = 0;
+        }
+
         return $collection->slice(
-            ($options['page'] - 1) * $options['itemPerPage'],
+            $start,
             static::getItemCount($options)
-        );
+        )->values();
     }
 
     private static function getDefaultOptions()
     {
         return [
-            'colCount' => null,
+            'itemCount' => null,
             'pageCount' => null,
             'page' => 1,
-            'itemPerPage' => config('json-api-paginate.max_results')
+            'itemPerPage' => config('json-api-paginate.max_results'),
+            'routeParameters' => []
         ];
     }
 
@@ -59,11 +65,11 @@ class Pagination
     private static function getItemCount($options)
     {
         if ($options['pageCount'] <= 1) {
-            return $options['colCount'];
+            return $options['itemCount'];
         }
 
         if ($options['page'] == $options['pageCount']) {
-            return $options['colCount'] - ($options['page'] - 1) * $options['itemPerPage'];
+            return $options['itemCount'] - ($options['page'] - 1) * $options['itemPerPage'];
         }
 
         return $options['itemPerPage'];

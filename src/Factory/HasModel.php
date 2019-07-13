@@ -1,5 +1,6 @@
 <?php
-declare (strict_types = 1);
+
+declare(strict_types=1);
 
 namespace VGirol\JsonApiAssert\Laravel\Factory;
 
@@ -12,7 +13,7 @@ trait HasModel
      *
      * @var Model
      */
-    protected $model;
+    public $model;
 
     /**
      * Undocumented function
