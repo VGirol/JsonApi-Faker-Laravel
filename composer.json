@@ -1,23 +1,31 @@
 {
-    "name": "vgirol/jsonapi-assert-laravel",
+    "name": "vgirol/jsonapi-faker-laravel",
     "description": "RESTfull JSON:Api test assertions for Laravel",
     "type": "library",
-    "homepage": "http://github.com/VGirol/JsonApi-Assert-Laravel",
+    "homepage": "http://github.com/VGirol/JsonApi-Faker-Laravel",
     "license": "MIT",
     "require": {
         "php": "^7.2",
-        "phpunit/phpunit": "^8.0",
-        "laravel/framework": "^5.8",
-        "vgirol/jsonapi-assert": "dev-master"
+        "vgirol/jsonapi-assert": "dev-master",
+        "vgirol/jsonapi-faker": "dev-master",
+        "laravel/framework": "^5.8"
     },
     "require-dev": {
+        "phpunit/phpunit": "^8.0",
         "infection/infection": "^0.13",
-        "orchestra/testbench": "^3.8"
+        "fzaninotto/faker": "^1.8"
     },
     "repositories": [
         {
             "type": "path",
             "url": "../JsonApi-Assert",
+            "options": {
+                "symlink": true
+            }
+        },
+        {
+            "type": "path",
+            "url": "../JsonApi-Faker",
             "options": {
                 "symlink": true
             }
@@ -32,12 +40,12 @@
     "minimum-stability": "dev",
     "autoload": {
         "psr-4": {
-            "VGirol\\JsonApiAssert\\Laravel\\": "src/"
+            "VGirol\\JsonApiFaker\\Laravel\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "VGirol\\JsonApiAssert\\Laravel\\Tests\\": "tests/"
+            "VGirol\\JsonApiFaker\\Laravel\\Tests\\": "tests/"
         }
     },
     "scripts": {
@@ -46,10 +54,9 @@
             "@setup"
         ],
         "test": "./vendor/bin/phpunit tests ",
-        "coverage": "./vendor/bin/phpunit tests --coverage-xml=build/coverage/coverage-xml --log-junit=build/coverage/phpunit.junit.xml",
         "infection": "./vendor/bin/infection --coverage=build/coverage --threads=$(nproc) --configuration=infection.json.dist",
         "travis": [
-            "@coverage",
+            "@test",
             "@infection"
         ],
         "build": [
@@ -57,11 +64,6 @@
         ]
     },
     "extra": {
-        "laravel": {
-            "providers": [
-                "VGirol\\JsonApiAssert\\Laravel\\JsonApiAssertServiceProvider"
-            ]
-        },
         "branch-alias": {
             "dev-master": "1.0-dev"
         }

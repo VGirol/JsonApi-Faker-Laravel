@@ -1,34 +1,40 @@
 <?php
 
-namespace VGirol\JsonApiAssert\Laravel\Factory;
+namespace VGirol\JsonApiFaker\Laravel\Factory;
 
 use Illuminate\Support\Collection;
-use VGirol\JsonApiAssert\Factory\CollectionFactory as BaseFactory;
-use VGirol\JsonApiAssert\Factory\HasResourceType;
+use VGirol\JsonApiFaker\Factory\CollectionFactory as BaseFactory;
+use VGirol\JsonApiFaker\Factory\HasResourceType;
+use VGirol\JsonApiFaker\Laravel\Generator;
 
+/**
+ * @inheritDoc
+ */
 class CollectionFactory extends BaseFactory
 {
     use HasRouteName;
     use HasResourceType;
 
-    /**
-     * Undocumented variable
-     *
-     * @var Collection
-     */
-    protected $collection;
+    const NO_RELATIONSHIPS_ON_RESOURCE_IDENTIFIER = 'No relationships allowed in resource identifier !';
 
     /**
-     * Undocumented variable
+     * A collection of models
+     *
+     * @var Collection|null
+     */
+    public $collection;
+
+    /**
+     * Indicates if this is a resource identifiers collection or not
      *
      * @var boolean
      */
-    protected $isResourceIdentifier;
+    public $isResourceIdentifier;
 
     /**
-     * Undocumented function
+     * Class constructor
      *
-     * @param Collection|null $collection
+     * @param Collection|array|null $collection
      * @param string|null $resourceType
      * @param string|null $routeName
      * @param boolean $isRI
@@ -42,9 +48,10 @@ class CollectionFactory extends BaseFactory
     }
 
     /**
-     * Undocumented function
+     * Set or get the "isResourceIdentifier" flag
      *
      * @param boolean|null $isRI
+     *
      * @return boolean|static
      */
     public function isResourceIdentifier($isRI = null)
@@ -59,31 +66,44 @@ class CollectionFactory extends BaseFactory
     }
 
     /**
-     * Undocumented function
+     * Set the collection
      *
-     * @param Collection|array $collection
+     * @param Collection|array|null $collection
+     *
      * @return static
      */
     public function setCollection($collection)
     {
-        $base = is_array($collection) ? collect($collection) : $collection;
-        $this->collection = $base;
+        $this->collection = is_array($collection) ? collect($collection) : $collection;
 
-        if (is_array($collection)) {
-            $array = $collection;
-        } else {
-            $array = $this->transform();
-            if (!is_null($array)) {
-                $array = $array->toArray();
-            }
-        }
-        parent::setCollection($array);
+        parent::setCollection($this->prepareCollection($collection));
 
         return $this;
     }
 
     /**
-     * Undocumented function
+     * Add a relationship to the resource object
+     *
+     * @param array $relationships
+     *
+     * @return static
+     * @throws \Exception
+     */
+    public function appendRelationships(array $relationships)
+    {
+        if ($this->isResourceIdentifier()) {
+            throw new \Exception(static::NO_RELATIONSHIPS_ON_RESOURCE_IDENTIFIER);
+        }
+
+        $this->each(function ($resFactory) use ($relationships) {
+            $resFactory->appendRelationships($relationships);
+        });
+
+        return $this;
+    }
+
+    /**
+     * Returns a collection of resource identifier or resource object factories
      *
      * @return Collection|null
      */
@@ -96,7 +116,7 @@ class CollectionFactory extends BaseFactory
         return $this->collection->map(
             function ($model) {
                 return $this->resourceFactory(
-                    $this->isResourceIdentifier() ? 'createResourceIdentifier' : 'createResourceObject',
+                    $this->isResourceIdentifier() ? 'resourceIdentifier' : 'resourceObject',
                     $model,
                     $this->resourceType
                 );
@@ -104,36 +124,39 @@ class CollectionFactory extends BaseFactory
         );
     }
 
-    protected function resourceFactory($func, ...$args)
+    /**
+     * Undocumented function
+     *
+     * @param [type] $func
+     * @param [type] ...$args
+     * @return BaseFactory
+     */
+    private function resourceFactory($func, ...$args)
     {
         if (!$this->isResourceIdentifier) {
             $args = array_merge($args, [$this->routeName]);
         }
 
-        return call_user_func_array([$this->getHelperClassName(), $func], $args);
-    }
-
-    protected function getHelperClassName(): string
-    {
-        return HelperFactory::class;
+        return Generator::getInstance()->{$func}(...$args);
     }
 
     /**
      * Undocumented function
      *
-     * @param array $relationships
-     * @return static
+     * @param [type] $collection
+     * @return void
      */
-    public function appendRelationships(array $relationships)
+    private function prepareCollection($collection)
     {
-        if ($this->isResourceIdentifier()) {
-            return $this;
+        if (is_array($collection)) {
+            return $collection;
         }
 
-        $this->each(function ($resource) use ($relationships) {
-            $resource->appendRelationships($relationships);
-        });
+        $array = $this->transform();
+        if (!is_null($array)) {
+            $array = $array->toArray();
+        }
 
-        return $this;
+        return $array;
     }
 }

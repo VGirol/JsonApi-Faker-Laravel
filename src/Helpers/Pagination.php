@@ -1,10 +1,25 @@
 <?php
 
-namespace VGirol\JsonApiAssert\Laravel;
+namespace VGirol\JsonApiFaker\Laravel\Helpers;
+
+use Illuminate\Support\Collection;
 
 class Pagination
 {
-    public static function getOptions($options = [])
+    /**
+     * Get all the options needed for pagination
+     *
+     * Returns an array with these keys :
+     * - itemCount (integer)
+     * - pageCount (integer)
+     * - page (integer)
+     * - itemPerPage (integer)
+     * - routeParameters (array)
+     *
+     * @param array $options
+     * @return array
+     */
+    public static function getOptions($options = []): array
     {
         foreach (static::getDefaultOptions() as $key => $value) {
             if (!isset($options[$key])) {
@@ -17,6 +32,13 @@ class Pagination
         return $options;
     }
 
+    /**
+     * Slice the given collection according to the options passed as second argument
+     *
+     * @param Collection $collection
+     * @param array $options
+     * @return Collection
+     */
     public static function sliceCollection($collection, $options)
     {
         if ($options['itemCount'] == 0) {
@@ -40,7 +62,7 @@ class Pagination
             'itemCount' => null,
             'pageCount' => null,
             'page' => 1,
-            'itemPerPage' => config('json-api-paginate.max_results'),
+            'itemPerPage' => null,
             'routeParameters' => []
         ];
     }

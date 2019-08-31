@@ -1,8 +1,9 @@
 <?php
 
-namespace VGirol\JsonApiAssert\Laravel\Factory;
+namespace VGirol\JsonApiFaker\Laravel\Factory;
 
-use VGirol\JsonApiAssert\Factory\ResourceObjectFactory as BaseFactory;
+use VGirol\JsonApiFaker\Factory\ResourceObjectFactory as BaseFactory;
+use VGirol\JsonApiFaker\Laravel\Generator;
 
 class ResourceObjectFactory extends BaseFactory
 {
@@ -27,8 +28,7 @@ class ResourceObjectFactory extends BaseFactory
     public function appendRelationships(array $relationships)
     {
         foreach ($relationships as $name => $resourceType) {
-            $names = explode('.', $name);
-            $this->loadRelationship($names[0], $resourceType);
+            $this->loadRelationship($name, $resourceType);
         }
 
         return $this;
@@ -68,26 +68,26 @@ class ResourceObjectFactory extends BaseFactory
     /**
      * Undocumented function
      *
+     * @param mixed ...$args
+     * @return RelationshipFactory
+     */
+    protected function createRelationshipFactory(...$args)
+    {
+        return Generator::getInstance()->relationship(...$args);
+    }
+
+    /**
+     * Undocumented function
+     *
      * @param string $name
      * @return Relation
      */
-    protected function getRelationObject(string $name)
+    private function getRelationObject(string $name)
     {
         if (!$this->model->relationLoaded($name)) {
             $this->model->load($name);
         }
 
         return $this->model->getRelation($name);
-    }
-
-    /**
-     * Undocumented function
-     *
-     * @param mixed ...$args
-     * @return RelationshipFactory
-     */
-    protected function createRelationshipFactory(...$args)
-    {
-        return HelperFactory::create('relationship', ...$args);
     }
 }

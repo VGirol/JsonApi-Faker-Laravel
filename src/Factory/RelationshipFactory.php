@@ -1,10 +1,11 @@
 <?php
 
-namespace VGirol\JsonApiAssert\Laravel\Factory;
+namespace VGirol\JsonApiFaker\Laravel\Factory;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
-use VGirol\JsonApiAssert\Factory\RelationshipFactory as BaseFactory;
+use VGirol\JsonApiFaker\Factory\RelationshipFactory as BaseFactory;
+use VGirol\JsonApiFaker\Laravel\Generator;
 
 class RelationshipFactory extends BaseFactory
 {
@@ -13,7 +14,7 @@ class RelationshipFactory extends BaseFactory
      *
      * @var string
      */
-    protected $name;
+    public $name;
 
     /**
      * Undocumented function
@@ -36,10 +37,10 @@ class RelationshipFactory extends BaseFactory
     public function setData($data, string $resourceType = null, string $routeName = null)
     {
         if (is_a($data, Model::class)) {
-            $data = HelperFactory::create('resource-identifier', $data, $resourceType);
+            $data = Generator::getInstance()->resourceIdentifier($data, $resourceType);
         }
         if (is_a($data, Collection::class)) {
-            $data = HelperFactory::create('collection', $data, $resourceType, $routeName, true);
+            $data = Generator::getInstance()->collection($data, $resourceType, $routeName, true);
         }
         $this->data = $data;
 

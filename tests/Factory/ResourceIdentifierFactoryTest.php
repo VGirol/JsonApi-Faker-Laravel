@@ -1,48 +1,67 @@
 <?php
-namespace VGirol\JsonApiAssert\Laravel\Tests\Factory;
+
+namespace VGirol\JsonApiFaker\Laravel\Tests\Factory;
 
 use PHPUnit\Framework\Assert as PHPUnit;
-use VGirol\JsonApiAssert\Laravel\Factory\HelperFactory;
-use VGirol\JsonApiAssert\Laravel\Tests\TestCase;
+use VGirol\JsonApiFaker\Laravel\Factory\ResourceIdentifierFactory;
+use VGirol\JsonApiFaker\Laravel\Tests\TestCase;
 
 class ResourceIdentifierFactoryTest extends TestCase
 {
     /**
      * @test
      */
-    public function resourceIdentifierFactoryEmpty()
+    public function constructor()
     {
-        $expected = null;
+        $resourceType = 'dummy';
+        $factory = new ResourceIdentifierFactory(null, $resourceType);
 
-        $factory = HelperFactory::create('resource-identifier', null, null);
-
-        PHPUnit::assertEquals('VGirol\JsonApiAssert\Laravel\Factory\ResourceIdentifierFactory', get_class($factory));
-
-        $result = $factory->toArray();
-
-        PHPUnit::assertSame($expected, $result);
+        PHPUnit::assertNull($factory->model);
+        PHPUnit::assertNull($factory->id);
+        PHPUnit::assertEquals($resourceType, $factory->resourceType);
     }
 
     /**
      * @test
      */
-    public function resourceIdentifierFactory()
+    public function constructorWithModel()
     {
+        $resourceType = 'dummy';
+        $model = $this->createModel();
+        $factory = new ResourceIdentifierFactory($model, $resourceType);
+
+        PHPUnit::assertSame($model, $factory->model);
+        PHPUnit::assertEquals($model->getKey(), $factory->id);
+        PHPUnit::assertEquals($resourceType, $factory->resourceType);
+    }
+
+    /**
+     * @test
+     */
+    public function toArray()
+    {
+        $resourceType = 'dummy';
         $key = 'key';
         $value = 'value';
 
         $model = $this->createModel();
-        $expected = $this->createResource($model, true, null, [
-            'meta' => [
-                $key => $value
+        $expected = $this->createResource(
+            $model,
+            $resourceType,
+            true,
+            null,
+            [
+                'meta' => [
+                    $key => $value
+                ]
             ]
-        ]);
+        );
 
-        $factory = HelperFactory::create('resource-identifier', $model, $this->resourceType);
+        $factory = new ResourceIdentifierFactory($model, $resourceType);
         $factory->addToMeta($key, $value);
 
         $result = $factory->toArray();
 
-        PHPUnit::assertSame($expected, $result);
+        PHPUnit::assertEquals($expected, $result);
     }
 }

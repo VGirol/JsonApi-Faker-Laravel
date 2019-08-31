@@ -1,22 +1,24 @@
 <?php
-declare (strict_types = 1);
 
-namespace VGirol\JsonApiAssert\Laravel\Factory;
+declare(strict_types=1);
+
+namespace VGirol\JsonApiFaker\Laravel\Factory;
 
 trait HasRouteName
 {
     /**
-     * Undocumented variable
+     * The route name used to create the "self" link
      *
-     * @var string
+     * @var string|null
      */
-    protected $routeName;
+    public $routeName;
 
 
     /**
-     * Undocumented function
+     * Set the route name
      *
      * @param string|null $routeName
+     *
      * @return static
      */
     public function setRouteName(?string $routeName)

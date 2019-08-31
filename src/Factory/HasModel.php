@@ -2,23 +2,24 @@
 
 declare(strict_types=1);
 
-namespace VGirol\JsonApiAssert\Laravel\Factory;
+namespace VGirol\JsonApiFaker\Laravel\Factory;
 
 use Illuminate\Database\Eloquent\Model;
 
 trait HasModel
 {
     /**
-     * Undocumented variable
+     * The model instance
      *
-     * @var Model
+     * @var Model|null
      */
     public $model;
 
     /**
-     * Undocumented function
+     * Set the model
      *
-     * @param Model $model
+     * @param Model|null $model
+     *
      * @return static
      */
     public function setModel($model)
@@ -28,8 +29,18 @@ trait HasModel
         return $this;
     }
 
+    /**
+     * Get the value of the model's primary key.
+     *
+     * @return mixed
+     * @throws \Exception
+     */
     public function getKey()
     {
+        if ($this->model == null) {
+            throw new \Exception('The model is not set.');
+        }
+
         return $this->model->getKey();
     }
 }

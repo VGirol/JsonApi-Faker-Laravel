@@ -1,9 +1,9 @@
 <?php
 
-namespace VGirol\JsonApiAssert\Laravel\Factory;
+namespace VGirol\JsonApiFaker\Laravel\Factory;
 
 use Illuminate\Database\Eloquent\Model;
-use VGirol\JsonApiAssert\Factory\ResourceIdentifierFactory as BaseFactory;
+use VGirol\JsonApiFaker\Factory\ResourceIdentifierFactory as BaseFactory;
 
 class ResourceIdentifierFactory extends BaseFactory
 {
