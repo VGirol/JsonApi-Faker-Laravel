@@ -6,31 +6,15 @@
     "license": "MIT",
     "require": {
         "php": "^7.2",
-        "vgirol/jsonapi-assert": "dev-master",
         "vgirol/jsonapi-faker": "dev-master",
         "laravel/framework": "^5.8"
     },
     "require-dev": {
         "phpunit/phpunit": "^8.0",
         "infection/infection": "^0.13",
-        "fzaninotto/faker": "^1.8"
+        "fzaninotto/faker": "^1.8",
+        "vgirol/jsonapi-assert": "dev-master"
     },
-    "repositories": [
-        {
-            "type": "path",
-            "url": "../JsonApi-Assert",
-            "options": {
-                "symlink": true
-            }
-        },
-        {
-            "type": "path",
-            "url": "../JsonApi-Faker",
-            "options": {
-                "symlink": true
-            }
-        }
-    ],
     "authors": [
         {
             "name": "Vincent Girol",
