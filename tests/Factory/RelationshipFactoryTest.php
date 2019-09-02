@@ -13,17 +13,6 @@ class RelationshipFactoryTest extends TestCase
     /**
      * @test
      */
-    public function constructor()
-    {
-        $name = 'test';
-        $factory = new RelationshipFactory($name);
-
-        PHPUnit::assertEquals($name, $factory->name);
-    }
-
-    /**
-     * @test
-     */
     public function setDataWithSingleResourceIdentifierFactory()
     {
         $name = 'related';
@@ -35,7 +24,7 @@ class RelationshipFactoryTest extends TestCase
 
         PHPUnit::assertEmpty($factory->data);
 
-        $obj = $factory->setData($expected);
+        $obj = $factory->setData($expected, $resourceType);
 
         PHPUnit::assertSame($expected, $factory->data);
         PHPUnit::assertSame($obj, $factory);
@@ -48,11 +37,12 @@ class RelationshipFactoryTest extends TestCase
     {
         $name = 'related';
         $model = $this->createModel();
+        $resourceType = 'dummy';
 
         $factory = new RelationshipFactory($name);
         PHPUnit::assertEmpty($factory->data);
 
-        $factory->setData($model);
+        $factory->setData($model, $resourceType);
 
         $data = $factory->data;
 
@@ -67,11 +57,12 @@ class RelationshipFactoryTest extends TestCase
     {
         $name = 'related';
         $collection = $this->createCollection();
+        $resourceType = 'dummy';
 
         $factory = new RelationshipFactory($name);
         PHPUnit::assertEmpty($factory->data);
 
-        $factory->setData($collection);
+        $factory->setData($collection, $resourceType);
 
         $data = $factory->data;
 

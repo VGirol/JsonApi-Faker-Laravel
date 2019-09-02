@@ -23,7 +23,6 @@ class ResourceObjectFactoryTest extends TestCase
         PHPUnit::assertSame($model, $factory->model);
         PHPUnit::assertEquals($model->getKey(), $factory->id);
         PHPUnit::assertEquals($resourceType, $factory->resourceType);
-        PHPUnit::assertEquals($routeName, $factory->routeName);
         PHPUnit::assertEquals($model->attributesToArray(), $factory->attributes);
     }
 

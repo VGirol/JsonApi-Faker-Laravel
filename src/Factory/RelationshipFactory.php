@@ -6,44 +6,33 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use VGirol\JsonApiFaker\Factory\RelationshipFactory as BaseFactory;
 use VGirol\JsonApiFaker\Laravel\Generator;
+use VGirol\JsonApiFaker\Laravel\Messages;
 
 class RelationshipFactory extends BaseFactory
 {
     /**
-     * Undocumented variable
-     *
-     * @var string
-     */
-    public $name;
-
-    /**
-     * Undocumented function
-     *
-     * @param string $name
-     */
-    public function __construct(string $name)
-    {
-        $this->name = $name;
-    }
-
-    /**
-     * Undocumented function
+     * @inheritDoc
      *
      * @param ResourceIdentifierFactory|CollectionFactory|Model|Collection|null $data
      * @param string $resourceType
-     * @param string $routeName
+     *
      * @return static
      */
-    public function setData($data, string $resourceType = null, string $routeName = null)
+    public function setData($data, string $resourceType = null)
     {
-        if (is_a($data, Model::class)) {
-            $data = Generator::getInstance()->resourceIdentifier($data, $resourceType);
-        }
-        if (is_a($data, Collection::class)) {
-            $data = Generator::getInstance()->collection($data, $resourceType, $routeName, true);
-        }
-        $this->data = $data;
+        if ($data !== null) {
+            if ($resourceType === null) {
+                throw new \Exception(Messages::ERROR_TYPE_NOT_NULL);
+            }
 
-        return $this;
+            if (is_a($data, Model::class)) {
+                $data = Generator::getInstance()->resourceIdentifier($data, $resourceType);
+            }
+            if (is_a($data, Collection::class)) {
+                $data = Generator::getInstance()->riCollection($data, $resourceType);
+            }
+        }
+
+        return parent::setData($data);
     }
 }

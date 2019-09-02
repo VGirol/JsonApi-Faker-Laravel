@@ -45,7 +45,7 @@ class Pagination
             return $collection;
         }
 
-        $start = ($options['page'] - 1) * $options['itemPerPage'];
+        $start = intval(($options['page'] - 1) * $options['itemPerPage']);
         if ($start > $options['itemCount']) {
             $start = 0;
         }

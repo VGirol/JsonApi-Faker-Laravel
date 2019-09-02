@@ -5,20 +5,23 @@ namespace VGirol\JsonApiFaker\Laravel\Factory;
 use Illuminate\Database\Eloquent\Model;
 use VGirol\JsonApiFaker\Factory\ResourceIdentifierFactory as BaseFactory;
 
+/**
+ * A factory for resource identifier object
+ */
 class ResourceIdentifierFactory extends BaseFactory
 {
     use HasModel;
 
     /**
-     * Undocumented function
+     * Class constructor
      *
      * @param Model|null $model
      * @param string|null $resourceType
      */
-    public function __construct($model, ?string $resourceType)
+    public function __construct($model = null, ?string $resourceType = null)
     {
         $this->setModel($model)
-            ->setId(is_null($model) ? null : $model->getKey())
+            ->setId(($model === null) ? null : $model->getKey())
             ->setResourceType($resourceType);
     }
 }

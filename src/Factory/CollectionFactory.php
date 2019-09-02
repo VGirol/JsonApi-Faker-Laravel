@@ -4,19 +4,14 @@ namespace VGirol\JsonApiFaker\Laravel\Factory;
 
 use Illuminate\Support\Collection;
 use VGirol\JsonApiFaker\Factory\CollectionFactory as BaseFactory;
-use VGirol\JsonApiFaker\Factory\HasResourceType;
-use VGirol\JsonApiFaker\Laravel\Generator;
+use VGirol\JsonApiFaker\Laravel\Messages;
 
 /**
- * @inheritDoc
+ * Factory for collection of resource object (@see ResourceObjectFactory)
+ * or resource identifier (@see ResourceIdentifierFactory).
  */
-class CollectionFactory extends BaseFactory
+abstract class CollectionFactory extends BaseFactory
 {
-    use HasRouteName;
-    use HasResourceType;
-
-    const NO_RELATIONSHIPS_ON_RESOURCE_IDENTIFIER = 'No relationships allowed in resource identifier !';
-
     /**
      * A collection of models
      *
@@ -25,79 +20,64 @@ class CollectionFactory extends BaseFactory
     public $collection;
 
     /**
-     * Indicates if this is a resource identifiers collection or not
-     *
-     * @var boolean
-     */
-    public $isResourceIdentifier;
-
-    /**
      * Class constructor
      *
-     * @param Collection|array|null $collection
+     * @param Collection|array<ResourceObjectFactory>|array<ResourceIdentifierFactory>|null $collection
      * @param string|null $resourceType
-     * @param string|null $routeName
-     * @param boolean $isRI
-     */
-    public function __construct($collection, ?string $resourceType, ?string $routeName, $isRI = false)
-    {
-        $this->isResourceIdentifier($isRI);
-        $this->setResourceType($resourceType)
-            ->setRouteName($routeName)
-            ->setCollection($collection);
-    }
-
-    /**
-     * Set or get the "isResourceIdentifier" flag
      *
-     * @param boolean|null $isRI
-     *
-     * @return boolean|static
+     * @throws \Exception
      */
-    public function isResourceIdentifier($isRI = null)
+    public function __construct($collection = null, ?string $resourceType = null)
     {
-        if (is_null($isRI)) {
-            return $this->isResourceIdentifier;
-        }
-
-        $this->isResourceIdentifier = $isRI;
-
-        return $this;
+        $this->setCollection($collection, $resourceType);
     }
 
     /**
      * Set the collection
      *
-     * @param Collection|array|null $collection
-     *
-     * @return static
-     */
-    public function setCollection($collection)
-    {
-        $this->collection = is_array($collection) ? collect($collection) : $collection;
-
-        parent::setCollection($this->prepareCollection($collection));
-
-        return $this;
-    }
-
-    /**
-     * Add a relationship to the resource object
-     *
-     * @param array $relationships
+     * @param Collection|array<ResourceObjectFactory>|array<ResourceIdentifierFactory>|null $provided
+     * @param string|null $resourceType
      *
      * @return static
      * @throws \Exception
      */
-    public function appendRelationships(array $relationships)
+    public function setCollection($provided, $resourceType = null)
     {
-        if ($this->isResourceIdentifier()) {
-            throw new \Exception(static::NO_RELATIONSHIPS_ON_RESOURCE_IDENTIFIER);
+        $collection = null;
+        $array = null;
+        if (is_array($provided)) {
+            $array = $provided;
+            $collection = collect($provided)->map(
+                /**
+                 * @param ResourceObjectFactory|ResourceIdentifierFactory $item
+                 *
+                 * @return \Illuminate\Database\Eloquent\Model
+                 * @throws \Exception
+                 */
+                function ($item) {
+                    if (!is_a($item, ResourceObjectFactory::class) && !is_a($item, ResourceIdentifierFactory::class)) {
+                        throw new \Exception(Messages::ERROR_NO_FACTORY);
+                    }
+                    $model = $item->model;
+                    if ($model === null) {
+                        throw new \Exception(Messages::ERROR_NO_MODEL);
+                    }
+                    return $model;
+                }
+            );
         }
 
-        $this->each(function ($resFactory) use ($relationships) {
-            $resFactory->appendRelationships($relationships);
-        });
+        if (is_a($provided, Collection::class)) {
+            if ($resourceType === null) {
+                throw new \Exception(Messages::ERROR_TYPE_NOT_NULL);
+            }
+
+            $collection = $provided;
+            $array = $this->transform($collection, $resourceType);
+        }
+
+        $this->collection = $collection;
+        parent::setCollection($array);
 
         return $this;
     }
@@ -105,58 +85,10 @@ class CollectionFactory extends BaseFactory
     /**
      * Returns a collection of resource identifier or resource object factories
      *
-     * @return Collection|null
-     */
-    protected function transform(): ?Collection
-    {
-        if (is_null($this->collection)) {
-            return null;
-        }
-
-        return $this->collection->map(
-            function ($model) {
-                return $this->resourceFactory(
-                    $this->isResourceIdentifier() ? 'resourceIdentifier' : 'resourceObject',
-                    $model,
-                    $this->resourceType
-                );
-            }
-        );
-    }
-
-    /**
-     * Undocumented function
+     * @param Collection $collection
+     * @param string $resourceType
      *
-     * @param [type] $func
-     * @param [type] ...$args
-     * @return BaseFactory
+     * @return array<ResourceObjectFactory>|array<ResourceIdentifierFactory>
      */
-    private function resourceFactory($func, ...$args)
-    {
-        if (!$this->isResourceIdentifier) {
-            $args = array_merge($args, [$this->routeName]);
-        }
-
-        return Generator::getInstance()->{$func}(...$args);
-    }
-
-    /**
-     * Undocumented function
-     *
-     * @param [type] $collection
-     * @return void
-     */
-    private function prepareCollection($collection)
-    {
-        if (is_array($collection)) {
-            return $collection;
-        }
-
-        $array = $this->transform();
-        if (!is_null($array)) {
-            $array = $array->toArray();
-        }
-
-        return $array;
-    }
+    abstract protected function transform($collection, $resourceType): array;
 }

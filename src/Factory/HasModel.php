@@ -5,7 +5,11 @@ declare(strict_types=1);
 namespace VGirol\JsonApiFaker\Laravel\Factory;
 
 use Illuminate\Database\Eloquent\Model;
+use VGirol\JsonApiFaker\Laravel\Messages;
 
+/**
+ * Add "model" member to a factory
+ */
 trait HasModel
 {
     /**
@@ -37,8 +41,8 @@ trait HasModel
      */
     public function getKey()
     {
-        if ($this->model == null) {
-            throw new \Exception('The model is not set.');
+        if ($this->model === null) {
+            throw new \Exception(Messages::ERROR_NO_MODEL);
         }
 
         return $this->model->getKey();

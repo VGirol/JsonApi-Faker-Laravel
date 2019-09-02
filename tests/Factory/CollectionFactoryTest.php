@@ -4,6 +4,8 @@ namespace VGirol\JsonApiFaker\Laravel\Tests\Factory;
 
 use PHPUnit\Framework\Assert as PHPUnit;
 use VGirol\JsonApiFaker\Laravel\Factory\CollectionFactory;
+use VGirol\JsonApiFaker\Laravel\Factory\ResourceIdentifierFactory;
+use VGirol\JsonApiFaker\Laravel\Messages;
 use VGirol\JsonApiFaker\Laravel\Tests\TestCase;
 
 class CollectionFactoryTest extends TestCase
@@ -11,57 +13,142 @@ class CollectionFactoryTest extends TestCase
     /**
      * @test
      */
-    public function constructor()
+    public function constructorWithNullValues()
     {
-        $resourceType = 'dummy';
-        $routeName = 'dummyRoute';
+        $resourceType = null;
         $collection = null;
-        $factory = new CollectionFactory($collection, $resourceType, $routeName);
+        $factory = $this->getMockForAbstractClass(CollectionFactory::class, [$collection, $resourceType]);
 
         PHPUnit::assertNull($factory->collection);
-        PHPUnit::assertEquals($resourceType, $factory->resourceType);
-        PHPUnit::assertEquals($routeName, $factory->routeName);
+        PHPUnit::assertNull($factory->array);
     }
 
     /**
      * @test
      */
-    public function isResourceIdentifier()
+    public function setCollectionAsCollectionOfModels()
     {
-        $resourceType = null;
-        $routeName = null;
-        $collection = null;
-        $factory = new CollectionFactory($collection, $resourceType, $routeName);
+        $resourceType = 'dummy';
+        $count = 3;
+        $collection = $this->createCollection($count);
 
-        PHPUnit::assertFalse($factory->isResourceIdentifier());
-
-        $obj = $factory->isResourceIdentifier(true);
+        $factory = new class extends CollectionFactory
+        {
+            protected function transform($collection, $resourceType): array
+            {
+                return $collection->map(
+                    function ($model) use ($resourceType) {
+                        return new ResourceIdentifierFactory($model, $resourceType);
+                    }
+                )->toArray();
+            }
+        };
+        $obj = $factory->setCollection($collection, $resourceType);
 
         PHPUnit::assertSame($obj, $factory);
-        PHPUnit::assertTrue($factory->isResourceIdentifier());
+        PHPUnit::assertEquals($collection, $factory->collection);
+        PHPUnit::assertSame($collection, $factory->collection);
+        PHPUnit::assertIsArray($factory->array);
+
+        $expected = $collection->map(
+            function ($item) use ($resourceType) {
+                return new ResourceIdentifierFactory($item, $resourceType);
+            }
+        )->toArray();
+
+        PHPUnit::assertEquals($expected, $factory->array);
     }
 
     /**
      * @test
      */
-    public function setCollection()
+    public function setCollectionAsArrayOfRiFactory()
     {
-        $resourceType = null;
-        $routeName = null;
+        $resourceType = 'dummy';
         $collection = null;
-        $factory = new CollectionFactory($collection, $resourceType, $routeName);
+        $factory = $this->getMockForAbstractClass(CollectionFactory::class, [$collection, $resourceType]);
 
         PHPUnit::assertNull($factory->collection);
         PHPUnit::assertNull($factory->array);
 
-        $collection = range(0, 5);
-        $expected = collect($collection);
+        $count = 3;
+        $collection = $this->createCollection($count);
 
-        $obj = $factory->setCollection($collection);
+        /** @param array<ResourceIdentifierFactory> $collection */
+        $array = $collection->map(
+            function ($item) use ($resourceType) {
+                return new ResourceIdentifierFactory($item, $resourceType);
+            }
+        )->toArray();
+
+        $obj = $factory->setCollection($array);
 
         PHPUnit::assertSame($obj, $factory);
-        PHPUnit::assertEquals($collection, $factory->array);
-        PHPUnit::assertEquals($expected, $factory->collection);
+        PHPUnit::assertEquals($collection, $factory->collection);
+        PHPUnit::assertEquals($array, $factory->array);
+    }
+
+    /**
+     * @test
+     */
+    public function setCollectionAsArrayFailedNoFactory()
+    {
+        $resourceType = 'dummy';
+        $collection = null;
+        $factory = $this->getMockForAbstractClass(CollectionFactory::class, [$collection, $resourceType]);
+
+        PHPUnit::assertNull($factory->collection);
+        PHPUnit::assertNull($factory->array);
+
+        $count = 3;
+        $collection = $this->createCollection($count);
+
+        $this->expectException(\Exception::class);
+        $this->expectExceptionMessage(Messages::ERROR_NO_FACTORY);
+
+        $factory->setCollection($collection->toArray());
+    }
+
+    /**
+     * @test
+     */
+    public function setCollectionAsArrayFailedNoModel()
+    {
+        $resourceType = 'dummy';
+        $collection = null;
+        $factory = $this->getMockForAbstractClass(CollectionFactory::class, [$collection, $resourceType]);
+
+        PHPUnit::assertNull($factory->collection);
+        PHPUnit::assertNull($factory->array);
+
+        /** @param array<ResourceIdentifierFactory> $array */
+        $array = array_fill(0, 3, new ResourceIdentifierFactory);
+
+        $this->expectException(\Exception::class);
+        $this->expectExceptionMessage(Messages::ERROR_NO_MODEL);
+
+        $factory->setCollection($array);
+    }
+
+    /**
+     * @test
+     */
+    public function setCollectionAsArrayFailedNoResourceType()
+    {
+        $resourceType = null;
+        $collection = null;
+        $factory = $this->getMockForAbstractClass(CollectionFactory::class, [$collection, $resourceType]);
+
+        PHPUnit::assertNull($factory->collection);
+        PHPUnit::assertNull($factory->array);
+
+        $count = 3;
+        $collection = $this->createCollection($count);
+
+        $this->expectException(\Exception::class);
+        $this->expectExceptionMessage(Messages::ERROR_TYPE_NOT_NULL);
+
+        $factory->setCollection($collection, null);
     }
 
     /**
@@ -70,9 +157,8 @@ class CollectionFactoryTest extends TestCase
     public function noCollection()
     {
         $resourceType = null;
-        $routeName = null;
         $collection = null;
-        $factory = new CollectionFactory($collection, $resourceType, $routeName);
+        $factory = $this->getMockForAbstractClass(CollectionFactory::class, [$collection, $resourceType]);
         $result = $factory->toArray();
 
         PHPUnit::assertNull($result);
@@ -81,96 +167,15 @@ class CollectionFactoryTest extends TestCase
     /**
      * @test
      */
-    public function emptyCollection()
+    public function toArrayEmptyCollection()
     {
         $resourceType = 'dummy';
-        $routeName = 'dummyRoute';
         $collection = [];
-        $factory = new CollectionFactory($collection, $resourceType, $routeName);
+        $factory = $this->getMockForAbstractClass(CollectionFactory::class, [$collection, $resourceType]);
         $result = $factory->toArray();
 
         $expected = [];
 
         PHPUnit::assertSame($expected, $result);
-    }
-
-    /**
-     * @test
-     * @dataProvider resourceCollectionProvider
-     */
-    public function resourceCollection($isRI)
-    {
-        $count = 5;
-
-        $resourceType = 'dummy';
-        $routeName = 'dummyRoute';
-        $collection = $this->createCollection($count);
-        $factory = new CollectionFactory($collection, $resourceType, $routeName, $isRI);
-
-        $result = $factory->toArray();
-
-        $expected = $this->createResourceCollection($collection, $resourceType, $isRI, null);
-
-        PHPUnit::assertSame($expected, $result);
-    }
-
-    public function resourceCollectionProvider()
-    {
-        return [
-            'resource identifier' => [
-                true
-            ],
-            'resource object' => [
-                false
-            ]
-        ];
-    }
-
-    /**
-     * @test
-     */
-    public function appendRelationships()
-    {
-        $resourceType = 'dummy';
-        $routeName = 'dummyRoute';
-
-        $count = 5;
-        $collection = $this->createCollection($count);
-
-        $relName = 'related';
-        $relResourceType = 'dummyRelated';
-        $collection->each(function ($model) use ($relName) {
-            $model->setRelation($relName, $this->createCollection(3));
-        });
-
-        $factory = new CollectionFactory($collection, $resourceType, $routeName);
-        $obj = $factory->appendRelationships([$relName => $relResourceType]);
-
-        PHPUnit::assertSame($obj, $factory);
-
-        $factory->each(function ($resFactory) use ($relName) {
-            PHPUnit::assertCount(1, $resFactory->relationships);
-            PHPUnit::assertArrayHasKey($relName, $resFactory->relationships);
-        });
-    }
-
-    /**
-     * @test
-     */
-    public function appendRelationshipsFailed()
-    {
-        $resourceType = 'dummy';
-        $routeName = 'dummyRoute';
-
-        $collection = $this->createCollection();
-
-        $factory = new CollectionFactory($collection, $resourceType, $routeName, true);
-
-        $this->expectException(\Exception::class);
-        $this->expectExceptionMessage(CollectionFactory::NO_RELATIONSHIPS_ON_RESOURCE_IDENTIFIER);
-
-        $relName = 'related';
-        $relResourceType = 'dummyRelated';
-        $factory->appendRelationships([$relName => $relResourceType]);
     }
 }

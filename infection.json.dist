@@ -14,12 +14,10 @@
         }
     },
     "mutators": {
-        "@default": true,
-        "ProtectedVisibility": {
+        "@default": {
             "ignore": [
-                "VGirol\\JsonApiFaker\\Laravel\\Factory\\CollectionFactory::transform",
-                "VGirol\\JsonApiFaker\\Laravel\\Factory\\ResourceObjectFactory::fillRelationship",
-                "VGirol\\JsonApiFaker\\Laravel\\Factory\\ResourceObjectFactory::createRelationshipFactory"
+                "VGirol\\JsonApiFaker\\Laravel\\Testing\\DummyModel",
+                "VGirol\\JsonApiFaker\\Laravel\\Testing\\CanCreateFake"
             ]
         }
     },
