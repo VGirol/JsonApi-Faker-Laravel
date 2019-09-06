@@ -6,6 +6,7 @@ use PHPUnit\Framework\Assert as PHPUnit;
 use VGirol\JsonApiFaker\Laravel\Factory\CollectionFactory;
 use VGirol\JsonApiFaker\Laravel\Factory\RelationshipFactory;
 use VGirol\JsonApiFaker\Laravel\Factory\ResourceIdentifierFactory;
+use VGirol\JsonApiFaker\Laravel\Generator;
 use VGirol\JsonApiFaker\Laravel\Tests\TestCase;
 
 class RelationshipFactoryTest extends TestCase
@@ -15,12 +16,12 @@ class RelationshipFactoryTest extends TestCase
      */
     public function setDataWithSingleResourceIdentifierFactory()
     {
-        $name = 'related';
         $model = $this->createModel();
         $resourceType = 'dummy';
         $expected = new ResourceIdentifierFactory($model, $resourceType);
 
-        $factory = new RelationshipFactory($name);
+        $factory = new RelationshipFactory;
+        $factory->setGenerator(new Generator);
 
         PHPUnit::assertEmpty($factory->data);
 
@@ -33,13 +34,14 @@ class RelationshipFactoryTest extends TestCase
     /**
      * @test
      */
-    public function setDataWithSingleResource()
+    public function setDataWithSingleModel()
     {
-        $name = 'related';
         $model = $this->createModel();
         $resourceType = 'dummy';
 
-        $factory = new RelationshipFactory($name);
+        $factory = new RelationshipFactory;
+        $factory->setGenerator(new Generator);
+
         PHPUnit::assertEmpty($factory->data);
 
         $factory->setData($model, $resourceType);
@@ -55,11 +57,12 @@ class RelationshipFactoryTest extends TestCase
      */
     public function setDataWithCollection()
     {
-        $name = 'related';
         $collection = $this->createCollection();
         $resourceType = 'dummy';
 
-        $factory = new RelationshipFactory($name);
+        $factory = new RelationshipFactory;
+        $factory->setGenerator(new Generator);
+
         PHPUnit::assertEmpty($factory->data);
 
         $factory->setData($collection, $resourceType);

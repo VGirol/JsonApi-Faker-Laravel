@@ -29,6 +29,19 @@ class HasModelTest extends TestCase
     /**
      * @test
      */
+    public function setModelToNull()
+    {
+        $this->expectException(\Exception::class);
+        $this->expectExceptionMessage(Messages::ERROR_MODEL_NOT_NULL);
+
+        $mock = $this->getMockForTrait(HasModel::class);
+
+        $mock->setModel(null);
+    }
+
+    /**
+     * @test
+     */
     public function getKey()
     {
         $model = $this->createModel();
@@ -45,7 +58,7 @@ class HasModelTest extends TestCase
     public function getKeyFailed()
     {
         $this->expectException(\Exception::class);
-        $this->expectExceptionMessage(Messages::ERROR_NO_MODEL);
+        $this->expectExceptionMessage(Messages::ERROR_MODEL_NOT_SET);
 
         $mock = $this->getMockForTrait(HasModel::class);
 

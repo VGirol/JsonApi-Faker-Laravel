@@ -20,19 +20,6 @@ abstract class CollectionFactory extends BaseFactory
     public $collection;
 
     /**
-     * Class constructor
-     *
-     * @param Collection|array<ResourceObjectFactory>|array<ResourceIdentifierFactory>|null $collection
-     * @param string|null $resourceType
-     *
-     * @throws \Exception
-     */
-    public function __construct($collection = null, ?string $resourceType = null)
-    {
-        $this->setCollection($collection, $resourceType);
-    }
-
-    /**
      * Set the collection
      *
      * @param Collection|array<ResourceObjectFactory>|array<ResourceIdentifierFactory>|null $provided
@@ -45,6 +32,16 @@ abstract class CollectionFactory extends BaseFactory
     {
         $collection = null;
         $array = null;
+
+        if (is_a($provided, Collection::class)) {
+            if ($resourceType === null) {
+                throw new \Exception(Messages::ERROR_TYPE_NOT_NULL);
+            }
+
+            $collection = $provided;
+            $array = $this->transform($collection, $resourceType);
+        }
+
         if (is_array($provided)) {
             $array = $provided;
             $collection = collect($provided)->map(
@@ -56,24 +53,14 @@ abstract class CollectionFactory extends BaseFactory
                  */
                 function ($item) {
                     if (!is_a($item, ResourceObjectFactory::class) && !is_a($item, ResourceIdentifierFactory::class)) {
-                        throw new \Exception(Messages::ERROR_NO_FACTORY);
+                        throw new \Exception(Messages::ERROR_NOT_FACTORY_INSTANCE);
                     }
-                    $model = $item->model;
-                    if ($model === null) {
-                        throw new \Exception(Messages::ERROR_NO_MODEL);
+                    if ($item->model == null) {
+                        throw new \Exception(Messages::ERROR_MODEL_NOT_SET);
                     }
-                    return $model;
+                    return $item->model;
                 }
             );
-        }
-
-        if (is_a($provided, Collection::class)) {
-            if ($resourceType === null) {
-                throw new \Exception(Messages::ERROR_TYPE_NOT_NULL);
-            }
-
-            $collection = $provided;
-            $array = $this->transform($collection, $resourceType);
         }
 
         $this->collection = $collection;

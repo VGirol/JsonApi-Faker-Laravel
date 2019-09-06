@@ -15,22 +15,6 @@ use VGirol\JsonApiFaker\Laravel\Factory\RoCollectionFactory;
  */
 class Generator extends BaseGenerator
 {
-    private static $instance;
-
-    /**
-     * Undocumented function
-     *
-     * @return static
-     */
-    public static function getInstance()
-    {
-        if (static::$instance == null) {
-            static::$instance = new static;
-        }
-
-        return static::$instance;
-    }
-
     /**
      * @inheritDoc
      */
@@ -38,7 +22,8 @@ class Generator extends BaseGenerator
     {
         parent::__construct();
 
-        $this->setFactory('ri-collection', RiCollectionFactory::class)
+        $this->setFactory('collection', null)
+            ->setFactory('ri-collection', RiCollectionFactory::class)
             ->setFactory('ro-collection', RoCollectionFactory::class)
             ->setFactory('relationship', RelationshipFactory::class)
             ->setFactory('resource-identifier', ResourceIdentifierFactory::class)
@@ -55,7 +40,7 @@ class Generator extends BaseGenerator
      */
     public function riCollection($collection, ?string $resourceType)
     {
-        return $this->create('ri-collection', $collection, $resourceType);
+        return $this->create('ri-collection')->setCollection($collection, $resourceType);
     }
 
     /**
@@ -68,7 +53,7 @@ class Generator extends BaseGenerator
      */
     public function roCollection($collection, ?string $resourceType)
     {
-        return $this->create('ro-collection', $collection, $resourceType);
+        return $this->create('ro-collection')->setCollection($collection, $resourceType);
     }
 
 

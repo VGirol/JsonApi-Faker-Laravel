@@ -61,7 +61,7 @@ trait CanCreateFake
         if (!$isResourceIdentifier) {
             $resource[Members::ATTRIBUTES] = $model->attributesToArray();
         }
-        if (!is_null($withError)) {
+        if ($withError !== null) {
             switch ($withError) {
                 case 'value':
                     $error = 10;
@@ -72,7 +72,7 @@ trait CanCreateFake
                     break;
             }
         }
-        if (!is_null($additional)) {
+        if ($additional !== null) {
             $resource = array_merge($resource, $additional);
         }
 
@@ -104,7 +104,7 @@ trait CanCreateFake
                     $model,
                     $resourceType,
                     $isResourceIdentifier,
-                    (!is_null($withError) && ($i == $index)) ? $withError : null
+                    (($withError !== null) && ($i == $index)) ? $withError : null
                 )
             );
         }

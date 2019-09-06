@@ -15,19 +15,24 @@ trait HasModel
     /**
      * The model instance
      *
-     * @var Model|null
+     * @var Model
      */
     public $model;
 
     /**
      * Set the model
      *
-     * @param Model|null $model
+     * @param Model $model
      *
      * @return static
+     * @throws \Exception
      */
     public function setModel($model)
     {
+        if ($model == null) {
+            throw new \Exception(Messages::ERROR_MODEL_NOT_NULL);
+        }
+
         $this->model = $model;
 
         return $this;
@@ -41,8 +46,8 @@ trait HasModel
      */
     public function getKey()
     {
-        if ($this->model === null) {
-            throw new \Exception(Messages::ERROR_NO_MODEL);
+        if ($this->model == null) {
+            throw new \Exception(Messages::ERROR_MODEL_NOT_SET);
         }
 
         return $this->model->getKey();

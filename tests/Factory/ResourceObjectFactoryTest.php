@@ -4,6 +4,8 @@ namespace VGirol\JsonApiFaker\Laravel\Tests\Factory;
 
 use PHPUnit\Framework\Assert as PHPUnit;
 use VGirol\JsonApiFaker\Laravel\Factory\ResourceObjectFactory;
+use VGirol\JsonApiFaker\Laravel\Generator;
+use VGirol\JsonApiFaker\Laravel\Messages;
 use VGirol\JsonApiFaker\Laravel\Testing\DummyModel;
 use VGirol\JsonApiFaker\Laravel\Tests\TestCase;
 
@@ -15,10 +17,9 @@ class ResourceObjectFactoryTest extends TestCase
     public function constructorWithModel()
     {
         $resourceType = 'dummy';
-        $routeName = 'dummyRoute';
 
         $model = $this->createModel();
-        $factory = new ResourceObjectFactory($model, $resourceType, $routeName);
+        $factory = new ResourceObjectFactory($model, $resourceType);
 
         PHPUnit::assertSame($model, $factory->model);
         PHPUnit::assertEquals($model->getKey(), $factory->id);
@@ -29,15 +30,37 @@ class ResourceObjectFactoryTest extends TestCase
     /**
      * @test
      */
-    public function resourceObjectFactory()
+    public function setValues()
     {
         $resourceType = 'dummy';
-        $routeName = 'dummyRoute';
+
+        $model = $this->createModel();
+        $factory = new ResourceObjectFactory();
+
+        PHPUnit::assertNull($factory->model);
+        PHPUnit::assertNull($factory->id);
+        PHPUnit::assertNull($factory->resourceType);
+        PHPUnit::assertNull($factory->attributes);
+
+        $factory->setValues($model, $resourceType);
+
+        PHPUnit::assertSame($model, $factory->model);
+        PHPUnit::assertEquals($model->getKey(), $factory->id);
+        PHPUnit::assertEquals($resourceType, $factory->resourceType);
+        PHPUnit::assertEquals($model->attributesToArray(), $factory->attributes);
+    }
+
+    /**
+     * @test
+     */
+    public function toArray()
+    {
+        $resourceType = 'dummy';
 
         $model = $this->createModel();
         $expected = $this->createResource($model, $resourceType, false, null);
 
-        $factory = new ResourceObjectFactory($model, $resourceType, $routeName);
+        $factory = new ResourceObjectFactory($model, $resourceType);
 
         $result = $factory->toArray();
 
@@ -50,7 +73,6 @@ class ResourceObjectFactoryTest extends TestCase
     public function loadRelationship()
     {
         $resourceType = 'dummy';
-        $routeName = 'dummyRoute';
 
         $model = $this->createModel();
 
@@ -75,10 +97,16 @@ class ResourceObjectFactoryTest extends TestCase
             ]
         );
 
-        $factory = new ResourceObjectFactory($model, $resourceType, $routeName);
+        $factory = new ResourceObjectFactory($model, $resourceType);
+        $obj = $factory->setGenerator(new Generator);
+
+        PHPUnit::assertSame($obj, $factory);
+        PHPUnit::assertNull($factory->relationships);
+
         $obj = $factory->loadRelationship($relName, $relResourceType);
 
         PHPUnit::assertSame($obj, $factory);
+        PHPUnit::assertNotNull($factory->relationships);
 
         $result = $factory->toArray();
 
@@ -91,7 +119,6 @@ class ResourceObjectFactoryTest extends TestCase
     public function loadRelationshipWithEagerLoad()
     {
         $resourceType = 'dummy';
-        $routeName = 'dummyRoute';
 
         $mock = $this->getMockBuilder(DummyModel::class)
             ->setMethods(['load'])
@@ -127,7 +154,11 @@ class ResourceObjectFactoryTest extends TestCase
                 return $mock;
             });
 
-        $factory = new ResourceObjectFactory($mock, $resourceType, $routeName);
+        $factory = new ResourceObjectFactory($mock, $resourceType);
+        $obj = $factory->setGenerator(new Generator);
+
+        PHPUnit::assertSame($obj, $factory);
+
         $obj = $factory->loadRelationship($relName, $relResourceType);
 
         PHPUnit::assertSame($obj, $factory);
@@ -140,10 +171,26 @@ class ResourceObjectFactoryTest extends TestCase
     /**
      * @test
      */
+    public function loadRelationshipFailedNoModel()
+    {
+        $relName = 'related';
+        $relResourceType = 'dummyRelated';
+
+        $factory = new ResourceObjectFactory();
+        $factory->setGenerator(new Generator);
+
+        $this->expectException(\Exception::class);
+        $this->expectExceptionMessage(Messages::ERROR_MODEL_NOT_SET);
+
+        $factory->loadRelationship($relName, $relResourceType);
+    }
+
+    /**
+     * @test
+     */
     public function appendRelationships()
     {
         $resourceType = 'dummy';
-        $routeName = 'dummyRoute';
 
         $model = $this->createModel();
 
@@ -168,7 +215,11 @@ class ResourceObjectFactoryTest extends TestCase
             ]
         );
 
-        $factory = new ResourceObjectFactory($model, $resourceType, $routeName);
+        $factory = new ResourceObjectFactory($model, $resourceType);
+        $obj = $factory->setGenerator(new Generator);
+
+        PHPUnit::assertSame($obj, $factory);
+
         $obj = $factory->appendRelationships([$relName => $relResourceType]);
 
         PHPUnit::assertSame($obj, $factory);

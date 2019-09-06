@@ -2,10 +2,8 @@
 
 namespace VGirol\JsonApiFaker\Laravel\Factory;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use VGirol\JsonApiFaker\Factory\ResourceObjectFactory as BaseFactory;
-use VGirol\JsonApiFaker\Laravel\Generator;
 use VGirol\JsonApiFaker\Laravel\Messages;
 
 /**
@@ -13,22 +11,19 @@ use VGirol\JsonApiFaker\Laravel\Messages;
  */
 class ResourceObjectFactory extends BaseFactory
 {
-    use HasModel;
+    use IsResource {
+        setValues as setValuesTrait;
+    }
 
     /**
-     * Class constructor
-     *
-     * @param Model|null $model
-     * @param string|null $resourceType
+     * @inheritDoc
      */
-    public function __construct($model, ?string $resourceType)
+    public function setValues($model, string $resourceType)
     {
-        $this->setModel($model)
-            ->setResourceType($resourceType);
+        $this->setValuesTrait($model, $resourceType);
 
-        if ($model !== null) {
-            $this->setId($model->getKey())
-                ->setAttributes($model->attributesToArray());
+        if ($model != null) {
+            $this->setAttributes($model->attributesToArray());
         }
     }
 
@@ -60,7 +55,7 @@ class ResourceObjectFactory extends BaseFactory
     {
         $relation = $this->getRelationObject($name);
 
-        $relationship = $this->createRelationshipFactory($name);
+        $relationship = $this->createRelationshipFactory();
         $this->fillRelationship($relationship, $relation, $resourceType);
         $this->addRelationship($name, $relationship);
 
@@ -90,7 +85,9 @@ class ResourceObjectFactory extends BaseFactory
      */
     protected function createRelationshipFactory(...$args)
     {
-        return Generator::getInstance()->relationship(...$args);
+        return $this->generator
+            ->relationship(...$args)
+            ->setGenerator($this->generator);
     }
 
     /**
@@ -104,7 +101,7 @@ class ResourceObjectFactory extends BaseFactory
     private function getRelationObject(string $name)
     {
         if ($this->model === null) {
-            throw new \Exception(Messages::ERROR_NO_MODEL);
+            throw new \Exception(Messages::ERROR_MODEL_NOT_SET);
         }
 
         if (!$this->model->relationLoaded($name)) {

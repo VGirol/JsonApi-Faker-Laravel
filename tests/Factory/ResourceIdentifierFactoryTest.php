@@ -11,33 +11,6 @@ class ResourceIdentifierFactoryTest extends TestCase
     /**
      * @test
      */
-    public function constructor()
-    {
-        $resourceType = 'dummy';
-        $factory = new ResourceIdentifierFactory(null, $resourceType);
-
-        PHPUnit::assertNull($factory->model);
-        PHPUnit::assertNull($factory->id);
-        PHPUnit::assertEquals($resourceType, $factory->resourceType);
-    }
-
-    /**
-     * @test
-     */
-    public function constructorWithModel()
-    {
-        $resourceType = 'dummy';
-        $model = $this->createModel();
-        $factory = new ResourceIdentifierFactory($model, $resourceType);
-
-        PHPUnit::assertSame($model, $factory->model);
-        PHPUnit::assertEquals($model->getKey(), $factory->id);
-        PHPUnit::assertEquals($resourceType, $factory->resourceType);
-    }
-
-    /**
-     * @test
-     */
     public function toArray()
     {
         $resourceType = 'dummy';

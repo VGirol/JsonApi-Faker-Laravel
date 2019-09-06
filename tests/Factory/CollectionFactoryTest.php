@@ -2,27 +2,16 @@
 
 namespace VGirol\JsonApiFaker\Laravel\Tests\Factory;
 
+use Illuminate\Support\Collection;
 use PHPUnit\Framework\Assert as PHPUnit;
 use VGirol\JsonApiFaker\Laravel\Factory\CollectionFactory;
 use VGirol\JsonApiFaker\Laravel\Factory\ResourceIdentifierFactory;
+use VGirol\JsonApiFaker\Laravel\Generator;
 use VGirol\JsonApiFaker\Laravel\Messages;
 use VGirol\JsonApiFaker\Laravel\Tests\TestCase;
 
 class CollectionFactoryTest extends TestCase
 {
-    /**
-     * @test
-     */
-    public function constructorWithNullValues()
-    {
-        $resourceType = null;
-        $collection = null;
-        $factory = $this->getMockForAbstractClass(CollectionFactory::class, [$collection, $resourceType]);
-
-        PHPUnit::assertNull($factory->collection);
-        PHPUnit::assertNull($factory->array);
-    }
-
     /**
      * @test
      */
@@ -37,12 +26,13 @@ class CollectionFactoryTest extends TestCase
             protected function transform($collection, $resourceType): array
             {
                 return $collection->map(
-                    function ($model) use ($resourceType) {
-                        return new ResourceIdentifierFactory($model, $resourceType);
+                    function ($item) use ($resourceType) {
+                        return new ResourceIdentifierFactory($item, $resourceType);
                     }
                 )->toArray();
             }
         };
+        $factory->setGenerator(new Generator);
         $obj = $factory->setCollection($collection, $resourceType);
 
         PHPUnit::assertSame($obj, $factory);
@@ -62,11 +52,31 @@ class CollectionFactoryTest extends TestCase
     /**
      * @test
      */
+    public function setCollectionAsCollectionOfModelsFailedNoResourceType()
+    {
+        $factory = $this->getMockForAbstractClass(CollectionFactory::class);
+        $factory->setGenerator(new Generator);
+
+        PHPUnit::assertNull($factory->collection);
+        PHPUnit::assertNull($factory->array);
+
+        $count = 3;
+        $collection = $this->createCollection($count);
+
+        $this->expectException(\Exception::class);
+        $this->expectExceptionMessage(Messages::ERROR_TYPE_NOT_NULL);
+
+        $factory->setCollection($collection, null);
+    }
+
+    /**
+     * @test
+     */
     public function setCollectionAsArrayOfRiFactory()
     {
         $resourceType = 'dummy';
-        $collection = null;
-        $factory = $this->getMockForAbstractClass(CollectionFactory::class, [$collection, $resourceType]);
+        $factory = $this->getMockForAbstractClass(CollectionFactory::class);
+        $factory->setGenerator(new Generator);
 
         PHPUnit::assertNull($factory->collection);
         PHPUnit::assertNull($factory->array);
@@ -93,9 +103,8 @@ class CollectionFactoryTest extends TestCase
      */
     public function setCollectionAsArrayFailedNoFactory()
     {
-        $resourceType = 'dummy';
-        $collection = null;
-        $factory = $this->getMockForAbstractClass(CollectionFactory::class, [$collection, $resourceType]);
+        $factory = $this->getMockForAbstractClass(CollectionFactory::class);
+        $factory->setGenerator(new Generator);
 
         PHPUnit::assertNull($factory->collection);
         PHPUnit::assertNull($factory->array);
@@ -104,7 +113,7 @@ class CollectionFactoryTest extends TestCase
         $collection = $this->createCollection($count);
 
         $this->expectException(\Exception::class);
-        $this->expectExceptionMessage(Messages::ERROR_NO_FACTORY);
+        $this->expectExceptionMessage(Messages::ERROR_NOT_FACTORY_INSTANCE);
 
         $factory->setCollection($collection->toArray());
     }
@@ -114,51 +123,32 @@ class CollectionFactoryTest extends TestCase
      */
     public function setCollectionAsArrayFailedNoModel()
     {
-        $resourceType = 'dummy';
-        $collection = null;
-        $factory = $this->getMockForAbstractClass(CollectionFactory::class, [$collection, $resourceType]);
-
-        PHPUnit::assertNull($factory->collection);
-        PHPUnit::assertNull($factory->array);
-
-        /** @param array<ResourceIdentifierFactory> $array */
-        $array = array_fill(0, 3, new ResourceIdentifierFactory);
-
-        $this->expectException(\Exception::class);
-        $this->expectExceptionMessage(Messages::ERROR_NO_MODEL);
-
-        $factory->setCollection($array);
-    }
-
-    /**
-     * @test
-     */
-    public function setCollectionAsArrayFailedNoResourceType()
-    {
-        $resourceType = null;
-        $collection = null;
-        $factory = $this->getMockForAbstractClass(CollectionFactory::class, [$collection, $resourceType]);
+        $factory = $this->getMockForAbstractClass(CollectionFactory::class);
+        $factory->setGenerator(new Generator);
 
         PHPUnit::assertNull($factory->collection);
         PHPUnit::assertNull($factory->array);
 
         $count = 3;
-        $collection = $this->createCollection($count);
+        $collection = new Collection();
+        for ($i = 1; $i <= $count; $i++) {
+            $collection->push(new ResourceIdentifierFactory);
+        }
 
         $this->expectException(\Exception::class);
-        $this->expectExceptionMessage(Messages::ERROR_TYPE_NOT_NULL);
+        $this->expectExceptionMessage(Messages::ERROR_MODEL_NOT_SET);
 
-        $factory->setCollection($collection, null);
+        $factory->setCollection($collection->toArray());
     }
 
     /**
      * @test
      */
-    public function noCollection()
+    public function toArrayNoCollection()
     {
-        $resourceType = null;
-        $collection = null;
-        $factory = $this->getMockForAbstractClass(CollectionFactory::class, [$collection, $resourceType]);
+        $factory = $this->getMockForAbstractClass(CollectionFactory::class);
+        $factory->setGenerator(new Generator);
+
         $result = $factory->toArray();
 
         PHPUnit::assertNull($result);
@@ -171,7 +161,10 @@ class CollectionFactoryTest extends TestCase
     {
         $resourceType = 'dummy';
         $collection = [];
-        $factory = $this->getMockForAbstractClass(CollectionFactory::class, [$collection, $resourceType]);
+        $factory = $this->getMockForAbstractClass(CollectionFactory::class);
+        $factory->setGenerator(new Generator);
+        $factory->setCollection($collection, $resourceType);
+
         $result = $factory->toArray();
 
         $expected = [];

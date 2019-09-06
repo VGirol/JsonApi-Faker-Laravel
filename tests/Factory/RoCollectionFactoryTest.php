@@ -2,11 +2,14 @@
 
 namespace VGirol\JsonApiFaker\Laravel\Tests\Factory;
 
+use Illuminate\Support\Collection;
 use PHPUnit\Framework\Assert as PHPUnit;
-use VGirol\JsonApiFaker\Laravel\Factory\CollectionFactory;
 use VGirol\JsonApiFaker\Laravel\Factory\ResourceObjectFactory;
 use VGirol\JsonApiFaker\Laravel\Factory\RoCollectionFactory;
+use VGirol\JsonApiFaker\Laravel\Generator;
+use VGirol\JsonApiFaker\Laravel\Messages;
 use VGirol\JsonApiFaker\Laravel\Tests\TestCase;
+use VGirol\JsonApiFaker\Messages as VGirolMessages;
 
 class RoCollectionFactoryTest extends TestCase
 {
@@ -19,7 +22,9 @@ class RoCollectionFactoryTest extends TestCase
         $count = 3;
         $collection = $this->createCollection($count);
 
-        $factory = new RoCollectionFactory();
+        $generator = new Generator;
+        $factory = new RoCollectionFactory;
+        $factory->setGenerator($generator);
         $obj = $factory->setCollection($collection, $resourceType);
 
         PHPUnit::assertSame($obj, $factory);
@@ -28,8 +33,11 @@ class RoCollectionFactoryTest extends TestCase
         PHPUnit::assertIsArray($factory->array);
 
         $expected = $collection->map(
-            function ($item) use ($resourceType) {
-                return new ResourceObjectFactory($item, $resourceType);
+            function ($item) use ($resourceType, $generator) {
+                $factory = new ResourceObjectFactory($item, $resourceType);
+                $factory->setGenerator($generator);
+
+                return $factory;
             }
         )->toArray();
 
@@ -39,10 +47,35 @@ class RoCollectionFactoryTest extends TestCase
     /**
      * @test
      */
+    public function setCollectionFailedNoModels()
+    {
+        $resourceType = 'dummy';
+        $collection = new Collection(
+            array_fill(
+                0,
+                5,
+                new class
+                {
+                    // empty
+                }
+            )
+        );
+
+        $generator = new Generator;
+        $factory = new RoCollectionFactory;
+        $factory->setGenerator($generator);
+
+        $this->expectException(\Exception::class);
+        $this->expectExceptionMessage(Messages::ERROR_NOT_MODEL_INSTANCE);
+        $factory->setCollection($collection, $resourceType);
+    }
+
+    /**
+     * @test
+     */
     public function appendRelationships()
     {
         $resourceType = 'dummy';
-        $routeName = 'dummyRoute';
 
         $count = 5;
         $collection = $this->createCollection($count);
@@ -53,7 +86,9 @@ class RoCollectionFactoryTest extends TestCase
             $model->setRelation($relName, $this->createCollection(3));
         });
 
-        $factory = new RoCollectionFactory($collection, $resourceType, $routeName);
+        $factory = new RoCollectionFactory;
+        $factory->setGenerator(new Generator);
+        $factory->setCollection($collection, $resourceType);
         $obj = $factory->appendRelationships([$relName => $relResourceType]);
 
         PHPUnit::assertSame($obj, $factory);
@@ -62,5 +97,22 @@ class RoCollectionFactoryTest extends TestCase
             PHPUnit::assertCount(1, $resFactory->relationships);
             PHPUnit::assertArrayHasKey($relName, $resFactory->relationships);
         });
+    }
+
+    /**
+     * @test
+     */
+    public function appendRelationshipsFailed()
+    {
+        $relName = 'related';
+        $relResourceType = 'dummyRelated';
+
+        $factory = new RoCollectionFactory;
+        $factory->setGenerator(new Generator);
+
+        $this->expectException(\Exception::class);
+        $this->expectExceptionMessage(VGirolMessages::ERROR_COLLECTION_NOT_SET);
+
+        $factory->appendRelationships([$relName => $relResourceType]);
     }
 }
