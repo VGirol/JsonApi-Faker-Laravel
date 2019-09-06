@@ -5,11 +5,6 @@ before_script:
 - composer self-update
 - composer install --prefer-source --no-interaction
 - mkdir -p build/coverage
-- wget https://github.com/infection/infection/releases/download/0.12.0/infection.phar
-- wget https://github.com/infection/infection/releases/download/0.12.0/infection.phar.asc
-- gpg --keyserver hkps.pool.sks-keyservers.net --recv-keys 493B4AA0
-- gpg --with-fingerprint --verify infection.phar.asc infection.phar
-- chmod +x infection.phar
 script:
 - composer travis
 after_script:
@@ -22,4 +17,5 @@ notifications:
   on_failure: always
 env:
   global:
-  - secure: LorFavZAWuUC3z1ow+z16rl12eNt6KqJovsKKq57gbMmVo8PzKqrFOXYWp44kIBLVxaDqI1a1wNzDmyLcQ0AUbGBczxNv9QN9ctgewLb0blyIJjr91v4/VlLR7tB0ru8Ts6GytZBPwSmo3z5FHiNfNkoBg4mztdF2p3XtutzeotF1Yk9gTaVjwiIuqdbRWPsfFXI111EzrQdX2ecWZ0qiCePKnQlM0wFQ2HlCQ2U+jiYY2vVtkr2geCmKUM0fK3BFZqD2xncdnNom6+ggP2nQYsdZe1oE6ubYJMLWUAfpwCDnmnC4mkPwBe/m6ryi/iXtfK3Wm6xFfviobW94TDjJ/4IJ3svAZl8uE0N/fU+IaameqXu9YnUzqkD/TU7a1TRZy9E/cmwaGTRNy0BRAlUFNZFik/CcKVUo+TRI2PGrR4j8OvATiGk7S+i/8WenPvEyWGUVKpT9WQ8Y2Ii+iKfft2CPsSyt6xGHN0lP84yxpXVc4DuVziiUgu1XZujYi+NxCrZziX0t6zhAbhU5oE4VXRQkNMbL6Wc8EKlmcdE+1AVbGl65eC7hp8g9/UdseyzNJYE2qpAYCidFLAcPu4ZZ7zGeY78ivw1cH8jqtGB4CtdmeTyt4ZXwBP2PPFS3DchCW6hB+3Kc8i0Ja/9jUT3uWUSIFa7h7RXzB4MVEs5Z3w=
+  # secure key for infection badge (see https://infection.github.io/guide/mutation-badge.html)
+  secure: LorFavZAWuUC3z1ow+z16rl12eNt6KqJovsKKq57gbMmVo8PzKqrFOXYWp44kIBLVxaDqI1a1wNzDmyLcQ0AUbGBczxNv9QN9ctgewLb0blyIJjr91v4/VlLR7tB0ru8Ts6GytZBPwSmo3z5FHiNfNkoBg4mztdF2p3XtutzeotF1Yk9gTaVjwiIuqdbRWPsfFXI111EzrQdX2ecWZ0qiCePKnQlM0wFQ2HlCQ2U+jiYY2vVtkr2geCmKUM0fK3BFZqD2xncdnNom6+ggP2nQYsdZe1oE6ubYJMLWUAfpwCDnmnC4mkPwBe/m6ryi/iXtfK3Wm6xFfviobW94TDjJ/4IJ3svAZl8uE0N/fU+IaameqXu9YnUzqkD/TU7a1TRZy9E/cmwaGTRNy0BRAlUFNZFik/CcKVUo+TRI2PGrR4j8OvATiGk7S+i/8WenPvEyWGUVKpT9WQ8Y2Ii+iKfft2CPsSyt6xGHN0lP84yxpXVc4DuVziiUgu1XZujYi+NxCrZziX0t6zhAbhU5oE4VXRQkNMbL6Wc8EKlmcdE+1AVbGl65eC7hp8g9/UdseyzNJYE2qpAYCidFLAcPu4ZZ7zGeY78ivw1cH8jqtGB4CtdmeTyt4ZXwBP2PPFS3DchCW6hB+3Kc8i0Ja/9jUT3uWUSIFa7h7RXzB4MVEs5Z3w=

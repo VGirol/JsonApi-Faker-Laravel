@@ -2,6 +2,7 @@
 
 namespace VGirol\JsonApiFaker\Laravel\Testing;
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use VGirol\JsonApiAssert\Members;
 
