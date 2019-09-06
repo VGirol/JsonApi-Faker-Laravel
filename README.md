@@ -48,7 +48,7 @@ Then create a model and a factory.
 
 ```php
 $model = new DummyModel();
-$factory = $faker->resourceObject($model, 'resourceType', 'routeName');
+$factory = $faker->resourceObject($model, 'resourceType');
 ```
 
 Next you can fill the factory ...
@@ -74,7 +74,7 @@ use VGirol\JsonApiFaker\Generator as JsonApiFaker;
 
 $model = new DummyModel();
 $json = new JsonApiFaker()
-    ->resourceObject($model, 'resourceType', 'routeName')
+    ->resourceObject($model, 'resourceType')
     ->setMeta([
             'key1' => 'meta1'
         ])
