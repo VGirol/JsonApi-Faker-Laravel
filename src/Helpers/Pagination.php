@@ -69,7 +69,7 @@ class Pagination
 
     private static function getPageCount($colCount, $itemPerPage)
     {
-        if (is_null($itemPerPage) || ($itemPerPage == 0)) {
+        if (($itemPerPage === null) || ($itemPerPage == 0)) {
             return 1;
         }
 

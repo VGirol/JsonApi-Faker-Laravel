@@ -2,8 +2,9 @@
 
 namespace VGirol\JsonApiFaker\Laravel\Factory;
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
-use VGirol\JsonApiFaker\Laravel\Generator;
+use VGirol\JsonApiFaker\Laravel\Messages;
 
 /**
  * Factory for collection of resource object (@see ResourceObjectFactory)
@@ -49,7 +50,11 @@ class RoCollectionFactory extends CollectionFactory
              * @return ResourceObjectFactory
              */
             function ($model) use ($resourceType) {
-                return Generator::getInstance()->resourceObject($model, $resourceType);
+                if (!is_a($model, Model::class)) {
+                    throw new \Exception(Messages::ERROR_NOT_MODEL_INSTANCE);
+                }
+
+                return $this->generator->resourceObject($model, $resourceType);
             }
         )->toArray();
     }
