@@ -3,6 +3,7 @@
 namespace VGirol\JsonApiFaker\Laravel\Tests\Factory;
 
 use PHPUnit\Framework\Assert as PHPUnit;
+use VGirol\JsonApiFaker\Exception\JsonApiFakerException;
 use VGirol\JsonApiFaker\Laravel\Factory\ResourceObjectFactory;
 use VGirol\JsonApiFaker\Laravel\Generator;
 use VGirol\JsonApiFaker\Laravel\Messages;
@@ -179,7 +180,7 @@ class ResourceObjectFactoryTest extends TestCase
         $factory = new ResourceObjectFactory();
         $factory->setGenerator(new Generator);
 
-        $this->expectException(\Exception::class);
+        $this->expectException(JsonApiFakerException::class);
         $this->expectExceptionMessage(Messages::ERROR_MODEL_NOT_SET);
 
         $factory->loadRelationship($relName, $relResourceType);

@@ -3,6 +3,7 @@
 namespace VGirol\JsonApiFaker\Laravel\Tests\Factory;
 
 use PHPUnit\Framework\Assert as PHPUnit;
+use VGirol\JsonApiFaker\Exception\JsonApiFakerException;
 use VGirol\JsonApiFaker\Factory\HasIdentification;
 use VGirol\JsonApiFaker\Laravel\Factory\IsResource;
 use VGirol\JsonApiFaker\Laravel\Messages;
@@ -59,7 +60,7 @@ class IsResourceTest extends TestCase
      */
     public function setValuesFailedModelIsNull()
     {
-        $this->expectException(\Exception::class);
+        $this->expectException(JsonApiFakerException::class);
         $this->expectExceptionMessage(Messages::ERROR_MODEL_NOT_NULL);
 
         $mock = new class

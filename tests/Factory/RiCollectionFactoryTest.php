@@ -4,6 +4,7 @@ namespace VGirol\JsonApiFaker\Laravel\Tests\Factory;
 
 use Illuminate\Support\Collection;
 use PHPUnit\Framework\Assert as PHPUnit;
+use VGirol\JsonApiFaker\Exception\JsonApiFakerException;
 use VGirol\JsonApiFaker\Laravel\Factory\ResourceIdentifierFactory;
 use VGirol\JsonApiFaker\Laravel\Factory\RiCollectionFactory;
 use VGirol\JsonApiFaker\Laravel\Generator;
@@ -64,7 +65,7 @@ class RiCollectionFactoryTest extends TestCase
         $factory = new RiCollectionFactory;
         $factory->setGenerator($generator);
 
-        $this->expectException(\Exception::class);
+        $this->expectException(JsonApiFakerException::class);
         $this->expectExceptionMessage(Messages::ERROR_NOT_MODEL_INSTANCE);
         $factory->setCollection($collection, $resourceType);
     }
