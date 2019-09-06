@@ -4,6 +4,7 @@ namespace VGirol\JsonApiFaker\Laravel\Tests\Factory;
 
 use Illuminate\Support\Collection;
 use PHPUnit\Framework\Assert as PHPUnit;
+use VGirol\JsonApiFaker\Exception\JsonApiFakerException;
 use VGirol\JsonApiFaker\Laravel\Factory\CollectionFactory;
 use VGirol\JsonApiFaker\Laravel\Factory\ResourceIdentifierFactory;
 use VGirol\JsonApiFaker\Laravel\Generator;
@@ -63,7 +64,7 @@ class CollectionFactoryTest extends TestCase
         $count = 3;
         $collection = $this->createCollection($count);
 
-        $this->expectException(\Exception::class);
+        $this->expectException(JsonApiFakerException::class);
         $this->expectExceptionMessage(Messages::ERROR_TYPE_NOT_NULL);
 
         $factory->setCollection($collection, null);
@@ -112,7 +113,7 @@ class CollectionFactoryTest extends TestCase
         $count = 3;
         $collection = $this->createCollection($count);
 
-        $this->expectException(\Exception::class);
+        $this->expectException(JsonApiFakerException::class);
         $this->expectExceptionMessage(Messages::ERROR_NOT_FACTORY_INSTANCE);
 
         $factory->setCollection($collection->toArray());
@@ -135,7 +136,7 @@ class CollectionFactoryTest extends TestCase
             $collection->push(new ResourceIdentifierFactory);
         }
 
-        $this->expectException(\Exception::class);
+        $this->expectException(JsonApiFakerException::class);
         $this->expectExceptionMessage(Messages::ERROR_MODEL_NOT_SET);
 
         $factory->setCollection($collection->toArray());

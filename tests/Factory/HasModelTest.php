@@ -3,6 +3,7 @@
 namespace VGirol\JsonApiFaker\Laravel\Tests\Factory;
 
 use PHPUnit\Framework\Assert as PHPUnit;
+use VGirol\JsonApiFaker\Exception\JsonApiFakerException;
 use VGirol\JsonApiFaker\Laravel\Factory\HasModel;
 use VGirol\JsonApiFaker\Laravel\Messages;
 use VGirol\JsonApiFaker\Laravel\Tests\TestCase;
@@ -31,7 +32,7 @@ class HasModelTest extends TestCase
      */
     public function setModelToNull()
     {
-        $this->expectException(\Exception::class);
+        $this->expectException(JsonApiFakerException::class);
         $this->expectExceptionMessage(Messages::ERROR_MODEL_NOT_NULL);
 
         $mock = $this->getMockForTrait(HasModel::class);
@@ -57,7 +58,7 @@ class HasModelTest extends TestCase
      */
     public function getKeyFailed()
     {
-        $this->expectException(\Exception::class);
+        $this->expectException(JsonApiFakerException::class);
         $this->expectExceptionMessage(Messages::ERROR_MODEL_NOT_SET);
 
         $mock = $this->getMockForTrait(HasModel::class);

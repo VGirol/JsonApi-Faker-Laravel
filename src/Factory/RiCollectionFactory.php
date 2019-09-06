@@ -4,6 +4,7 @@ namespace VGirol\JsonApiFaker\Laravel\Factory;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
+use VGirol\JsonApiFaker\Exception\JsonApiFakerException;
 use VGirol\JsonApiFaker\Laravel\Messages;
 
 /**
@@ -29,7 +30,7 @@ class RiCollectionFactory extends CollectionFactory
              */
             function ($model) use ($resourceType) {
                 if (!is_a($model, Model::class)) {
-                    throw new \Exception(Messages::ERROR_NOT_MODEL_INSTANCE);
+                    throw new JsonApiFakerException(Messages::ERROR_NOT_MODEL_INSTANCE);
                 }
 
                 return $this->generator->resourceIdentifier($model, $resourceType);

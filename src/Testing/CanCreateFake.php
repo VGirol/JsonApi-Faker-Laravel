@@ -62,17 +62,19 @@ trait CanCreateFake
         if (!$isResourceIdentifier) {
             $resource[Members::ATTRIBUTES] = $model->attributesToArray();
         }
-        if ($withError !== null) {
-            switch ($withError) {
-                case 'value':
-                    $error = 10;
-                    $resource[Members::ID] = strval($model->getKey() + $error);
-                    break;
-                case 'structure':
-                    $resource[Members::ID] = intval($model->getKey());
-                    break;
-            }
+
+        switch ($withError) {
+            case 'value':
+                $error = 10;
+                $resource[Members::ID] = strval($model->getKey() + $error);
+                break;
+            case 'structure':
+                $resource[Members::ID] = intval($model->getKey());
+                break;
+            default:
+                break;
         }
+
         if ($additional !== null) {
             $resource = array_merge($resource, $additional);
         }

@@ -3,6 +3,7 @@
 namespace VGirol\JsonApiFaker\Laravel\Factory;
 
 use Illuminate\Support\Collection;
+use VGirol\JsonApiFaker\Exception\JsonApiFakerException;
 use VGirol\JsonApiFaker\Factory\CollectionFactory as BaseFactory;
 use VGirol\JsonApiFaker\Laravel\Messages;
 
@@ -26,7 +27,7 @@ abstract class CollectionFactory extends BaseFactory
      * @param string|null $resourceType
      *
      * @return static
-     * @throws \Exception
+     * @throws JsonApiFakerException
      */
     public function setCollection($provided, $resourceType = null)
     {
@@ -35,7 +36,7 @@ abstract class CollectionFactory extends BaseFactory
 
         if (is_a($provided, Collection::class)) {
             if ($resourceType === null) {
-                throw new \Exception(Messages::ERROR_TYPE_NOT_NULL);
+                throw new JsonApiFakerException(Messages::ERROR_TYPE_NOT_NULL);
             }
 
             $collection = $provided;
@@ -49,14 +50,14 @@ abstract class CollectionFactory extends BaseFactory
                  * @param ResourceObjectFactory|ResourceIdentifierFactory $item
                  *
                  * @return \Illuminate\Database\Eloquent\Model
-                 * @throws \Exception
+                 * @throws JsonApiFakerException
                  */
                 function ($item) {
                     if (!is_a($item, ResourceObjectFactory::class) && !is_a($item, ResourceIdentifierFactory::class)) {
-                        throw new \Exception(Messages::ERROR_NOT_FACTORY_INSTANCE);
+                        throw new JsonApiFakerException(Messages::ERROR_NOT_FACTORY_INSTANCE);
                     }
                     if ($item->model == null) {
-                        throw new \Exception(Messages::ERROR_MODEL_NOT_SET);
+                        throw new JsonApiFakerException(Messages::ERROR_MODEL_NOT_SET);
                     }
                     return $item->model;
                 }

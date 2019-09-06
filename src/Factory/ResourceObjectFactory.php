@@ -3,6 +3,7 @@
 namespace VGirol\JsonApiFaker\Laravel\Factory;
 
 use Illuminate\Database\Eloquent\Relations\Relation;
+use VGirol\JsonApiFaker\Exception\JsonApiFakerException;
 use VGirol\JsonApiFaker\Factory\ResourceObjectFactory as BaseFactory;
 use VGirol\JsonApiFaker\Laravel\Messages;
 
@@ -96,12 +97,12 @@ class ResourceObjectFactory extends BaseFactory
      * @param string $name
      *
      * @return Relation
-     * @throws \Exception
+     * @throws JsonApiFakerException
      */
     private function getRelationObject(string $name)
     {
         if ($this->model === null) {
-            throw new \Exception(Messages::ERROR_MODEL_NOT_SET);
+            throw new JsonApiFakerException(Messages::ERROR_MODEL_NOT_SET);
         }
 
         if (!$this->model->relationLoaded($name)) {
