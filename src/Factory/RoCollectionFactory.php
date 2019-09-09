@@ -8,17 +8,18 @@ use VGirol\JsonApiFaker\Exception\JsonApiFakerException;
 use VGirol\JsonApiFaker\Laravel\Messages;
 
 /**
- * Factory for collection of resource object (@see ResourceObjectFactory)
+ * Factory for collection of resource object (@see ResourceObjectFactory).
  */
 class RoCollectionFactory extends CollectionFactory
 {
     /**
-     * Add a relationship to the resource object
+     * Add a relationship to the resource object.
      *
      * @param array<string,string> $relationships
      *
-     * @return static
      * @throws JsonApiFakerException
+     *
+     * @return static
      */
     public function appendRelationships(array $relationships)
     {
@@ -35,10 +36,10 @@ class RoCollectionFactory extends CollectionFactory
     }
 
     /**
-     * Returns a collection of resource identifier or resource object factories
+     * Returns a collection of resource identifier or resource object factories.
      *
      * @param Collection $collection
-     * @param string $resourceType
+     * @param string     $resourceType
      *
      * @return array<ResourceObjectFactory>|array<ResourceIdentifierFactory>
      */

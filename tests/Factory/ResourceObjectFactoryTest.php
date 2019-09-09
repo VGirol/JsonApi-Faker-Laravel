@@ -92,14 +92,14 @@ class ResourceObjectFactoryTest extends TestCase
             [
                 'relationships' => [
                     $relName => [
-                        'data' => $this->createResourceCollection($related, $relResourceType, true, null)
-                    ]
-                ]
+                        'data' => $this->createResourceCollection($related, $relResourceType, true, null),
+                    ],
+                ],
             ]
         );
 
         $factory = new ResourceObjectFactory($model, $resourceType);
-        $obj = $factory->setGenerator(new Generator);
+        $obj = $factory->setGenerator(new Generator());
 
         PHPUnit::assertSame($obj, $factory);
         PHPUnit::assertNull($factory->relationships);
@@ -140,9 +140,9 @@ class ResourceObjectFactoryTest extends TestCase
             [
                 'relationships' => [
                     $relName => [
-                        'data' => $this->createResourceCollection($related, $relResourceType, true, null)
-                    ]
-                ]
+                        'data' => $this->createResourceCollection($related, $relResourceType, true, null),
+                    ],
+                ],
             ]
         );
 
@@ -156,7 +156,7 @@ class ResourceObjectFactoryTest extends TestCase
             });
 
         $factory = new ResourceObjectFactory($mock, $resourceType);
-        $obj = $factory->setGenerator(new Generator);
+        $obj = $factory->setGenerator(new Generator());
 
         PHPUnit::assertSame($obj, $factory);
 
@@ -178,7 +178,7 @@ class ResourceObjectFactoryTest extends TestCase
         $relResourceType = 'dummyRelated';
 
         $factory = new ResourceObjectFactory();
-        $factory->setGenerator(new Generator);
+        $factory->setGenerator(new Generator());
 
         $this->expectException(JsonApiFakerException::class);
         $this->expectExceptionMessage(Messages::ERROR_MODEL_NOT_SET);
@@ -210,14 +210,14 @@ class ResourceObjectFactoryTest extends TestCase
             [
                 'relationships' => [
                     $relName => [
-                        'data' => $this->createResourceCollection($related, $relResourceType, true, null)
-                    ]
-                ]
+                        'data' => $this->createResourceCollection($related, $relResourceType, true, null),
+                    ],
+                ],
             ]
         );
 
         $factory = new ResourceObjectFactory($model, $resourceType);
-        $obj = $factory->setGenerator(new Generator);
+        $obj = $factory->setGenerator(new Generator());
 
         PHPUnit::assertSame($obj, $factory);
 

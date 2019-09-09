@@ -7,7 +7,7 @@ use Illuminate\Support\Collection;
 class Pagination
 {
     /**
-     * Get all the options needed for pagination
+     * Get all the options needed for pagination.
      *
      * Returns an array with these keys :
      * - itemCount (integer)
@@ -17,6 +17,7 @@ class Pagination
      * - routeParameters (array)
      *
      * @param array $options
+     *
      * @return array
      */
     public static function getOptions($options = []): array
@@ -33,10 +34,11 @@ class Pagination
     }
 
     /**
-     * Slice the given collection according to the options passed as second argument
+     * Slice the given collection according to the options passed as second argument.
      *
      * @param Collection $collection
-     * @param array $options
+     * @param array      $options
+     *
      * @return Collection
      */
     public static function sliceCollection($collection, $options)
@@ -59,11 +61,11 @@ class Pagination
     private static function getDefaultOptions()
     {
         return [
-            'itemCount' => null,
-            'pageCount' => null,
-            'page' => 1,
-            'itemPerPage' => null,
-            'routeParameters' => []
+            'itemCount'       => null,
+            'pageCount'       => null,
+            'page'            => 1,
+            'itemPerPage'     => null,
+            'routeParameters' => [],
         ];
     }
 

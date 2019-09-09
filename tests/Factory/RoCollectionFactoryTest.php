@@ -23,8 +23,8 @@ class RoCollectionFactoryTest extends TestCase
         $count = 3;
         $collection = $this->createCollection($count);
 
-        $generator = new Generator;
-        $factory = new RoCollectionFactory;
+        $generator = new Generator();
+        $factory = new RoCollectionFactory();
         $factory->setGenerator($generator);
         $obj = $factory->setCollection($collection, $resourceType);
 
@@ -55,15 +55,14 @@ class RoCollectionFactoryTest extends TestCase
             array_fill(
                 0,
                 5,
-                new class
-                {
+                new class() {
                     // empty
                 }
             )
         );
 
-        $generator = new Generator;
-        $factory = new RoCollectionFactory;
+        $generator = new Generator();
+        $factory = new RoCollectionFactory();
         $factory->setGenerator($generator);
 
         $this->expectException(JsonApiFakerException::class);
@@ -87,8 +86,8 @@ class RoCollectionFactoryTest extends TestCase
             $model->setRelation($relName, $this->createCollection(3));
         });
 
-        $factory = new RoCollectionFactory;
-        $factory->setGenerator(new Generator);
+        $factory = new RoCollectionFactory();
+        $factory->setGenerator(new Generator());
         $factory->setCollection($collection, $resourceType);
         $obj = $factory->appendRelationships([$relName => $relResourceType]);
 
@@ -108,8 +107,8 @@ class RoCollectionFactoryTest extends TestCase
         $relName = 'related';
         $relResourceType = 'dummyRelated';
 
-        $factory = new RoCollectionFactory;
-        $factory->setGenerator(new Generator);
+        $factory = new RoCollectionFactory();
+        $factory->setGenerator(new Generator());
 
         $this->expectException(JsonApiFakerException::class);
         $this->expectExceptionMessage(VGirolMessages::ERROR_COLLECTION_NOT_SET);

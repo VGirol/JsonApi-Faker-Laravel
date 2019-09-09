@@ -11,12 +11,12 @@ use VGirol\JsonApiFaker\Laravel\Factory\RiCollectionFactory;
 use VGirol\JsonApiFaker\Laravel\Factory\RoCollectionFactory;
 
 /**
- * @inheritDoc
+ * {@inheritdoc}
  */
 class Generator extends BaseGenerator
 {
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function __construct()
     {
@@ -31,9 +31,9 @@ class Generator extends BaseGenerator
     }
 
     /**
-     * Create a resource identifier collection factory
+     * Create a resource identifier collection factory.
      *
-     * @param Collection $collection
+     * @param Collection  $collection
      * @param string|null $resourceType
      *
      * @return RiCollectionFactory
@@ -44,9 +44,9 @@ class Generator extends BaseGenerator
     }
 
     /**
-     * Create a resource object collection factory
+     * Create a resource object collection factory.
      *
-     * @param Collection $collection
+     * @param Collection  $collection
      * @param string|null $resourceType
      *
      * @return RoCollectionFactory

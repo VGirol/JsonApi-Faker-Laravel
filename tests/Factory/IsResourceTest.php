@@ -19,8 +19,7 @@ class IsResourceTest extends TestCase
         $resourceType = 'dummy';
         $model = $this->createModel();
 
-        $mock = new class ($model, $resourceType)
-        {
+        $mock = new class($model, $resourceType) {
             use IsResource;
             use HasIdentification;
         };
@@ -35,8 +34,7 @@ class IsResourceTest extends TestCase
      */
     public function setValues()
     {
-        $mock = new class
-        {
+        $mock = new class() {
             use IsResource;
             use HasIdentification;
         };
@@ -63,8 +61,7 @@ class IsResourceTest extends TestCase
         $this->expectException(JsonApiFakerException::class);
         $this->expectExceptionMessage(Messages::ERROR_MODEL_NOT_NULL);
 
-        $mock = new class
-        {
+        $mock = new class() {
             use IsResource;
             use HasIdentification;
         };
