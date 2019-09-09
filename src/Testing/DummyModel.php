@@ -19,21 +19,21 @@ class DummyModel extends Model
         'TST_ID',
         'TST_NAME',
         'TST_CONTENT',
-        'TST_CREATION_DATE'
+        'TST_CREATION_DATE',
     ];
 
     /**
-     * Undocumented function
+     * Undocumented function.
      *
      * @return static
      */
     public static function fake()
     {
-        return (new static)->fakeAttributes();
+        return (new static())->fakeAttributes();
     }
 
     /**
-     * Undocumented function
+     * Undocumented function.
      *
      * @return static
      */
@@ -42,10 +42,10 @@ class DummyModel extends Model
         $faker = \Faker\Factory::create();
 
         $attributes = [
-            'TST_ID' => $faker->numberBetween(0, 100),
-            'TST_NAME' => $faker->numerify('test###'),
-            'TST_CONTENT' => $faker->sentence,
-            'TST_CREATION_DATE' => $faker->date()
+            'TST_ID'            => $faker->numberBetween(0, 100),
+            'TST_NAME'          => $faker->numerify('test###'),
+            'TST_CONTENT'       => $faker->sentence,
+            'TST_CREATION_DATE' => $faker->date(),
         ];
 
         $this->setRawAttributes($attributes);

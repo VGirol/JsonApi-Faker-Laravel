@@ -9,10 +9,10 @@ use VGirol\JsonApiFaker\Factory\RelationshipFactory as BaseFactory;
 class RelationshipFactory extends BaseFactory
 {
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      *
      * @param ResourceIdentifierFactory|CollectionFactory|Model|Collection|null $data
-     * @param string|null $resourceType
+     * @param string|null                                                       $resourceType
      *
      * @return static
      */

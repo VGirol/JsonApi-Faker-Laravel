@@ -8,7 +8,7 @@ use VGirol\JsonApiFaker\Factory\ResourceObjectFactory as BaseFactory;
 use VGirol\JsonApiFaker\Laravel\Messages;
 
 /**
- * A factory for resource object
+ * A factory for resource object.
  */
 class ResourceObjectFactory extends BaseFactory
 {
@@ -17,7 +17,7 @@ class ResourceObjectFactory extends BaseFactory
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function setValues($model, string $resourceType)
     {
@@ -29,7 +29,7 @@ class ResourceObjectFactory extends BaseFactory
     }
 
     /**
-     * Add relationship factories
+     * Add relationship factories.
      *
      * @param array<string,string> $relationships
      *
@@ -45,7 +45,7 @@ class ResourceObjectFactory extends BaseFactory
     }
 
     /**
-     * Add a relationship factory
+     * Add a relationship factory.
      *
      * @param string $name
      * @param string $resourceType
@@ -64,11 +64,11 @@ class ResourceObjectFactory extends BaseFactory
     }
 
     /**
-     * Fill a relationship factory with a \Illuminate\Database\Eloquent\Relations\Relation instance
+     * Fill a relationship factory with a \Illuminate\Database\Eloquent\Relations\Relation instance.
      *
      * @param RelationshipFactory $relationship
-     * @param Relation $relation
-     * @param string $resourceType
+     * @param Relation            $relation
+     * @param string              $resourceType
      *
      * @return void
      */
@@ -78,7 +78,7 @@ class ResourceObjectFactory extends BaseFactory
     }
 
     /**
-     * Create an instance of RelationshipFactory
+     * Create an instance of RelationshipFactory.
      *
      * @param mixed ...$args
      *
@@ -92,12 +92,13 @@ class ResourceObjectFactory extends BaseFactory
     }
 
     /**
-     * Return the object's relationship
+     * Return the object's relationship.
      *
      * @param string $name
      *
-     * @return Relation
      * @throws JsonApiFakerException
+     *
+     * @return Relation
      */
     private function getRelationObject(string $name)
     {

@@ -13,10 +13,10 @@ use VGirol\JsonApiFaker\Laravel\Messages;
 class RiCollectionFactory extends CollectionFactory
 {
     /**
-     * Returns a collection of resource identifier or resource object factories
+     * Returns a collection of resource identifier or resource object factories.
      *
      * @param Collection $collection
-     * @param string $resourceType
+     * @param string     $resourceType
      *
      * @return array<ResourceObjectFactory>|array<ResourceIdentifierFactory>
      */

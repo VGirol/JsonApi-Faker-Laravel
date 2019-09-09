@@ -5,16 +5,16 @@ namespace VGirol\JsonApiFaker\Laravel\Factory;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * An abstract factory for resources (resource object or resource identifer)
+ * An abstract factory for resources (resource object or resource identifer).
  */
 trait IsResource
 {
     use HasModel;
 
     /**
-     * Class constructor
+     * Class constructor.
      *
-     * @param Model|null $model
+     * @param Model|null  $model
      * @param string|null $resourceType
      *
      * @return void
@@ -27,9 +27,9 @@ trait IsResource
     }
 
     /**
-     * Set the model and the resource type
+     * Set the model and the resource type.
      *
-     * @param Model $model
+     * @param Model  $model
      * @param string $resourceType
      *
      * @return static

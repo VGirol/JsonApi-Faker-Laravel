@@ -22,8 +22,7 @@ class CollectionFactoryTest extends TestCase
         $count = 3;
         $collection = $this->createCollection($count);
 
-        $factory = new class extends CollectionFactory
-        {
+        $factory = new class() extends CollectionFactory {
             protected function transform($collection, $resourceType): array
             {
                 return $collection->map(
@@ -33,7 +32,7 @@ class CollectionFactoryTest extends TestCase
                 )->toArray();
             }
         };
-        $factory->setGenerator(new Generator);
+        $factory->setGenerator(new Generator());
         $obj = $factory->setCollection($collection, $resourceType);
 
         PHPUnit::assertSame($obj, $factory);
@@ -56,7 +55,7 @@ class CollectionFactoryTest extends TestCase
     public function setCollectionAsCollectionOfModelsFailedNoResourceType()
     {
         $factory = $this->getMockForAbstractClass(CollectionFactory::class);
-        $factory->setGenerator(new Generator);
+        $factory->setGenerator(new Generator());
 
         PHPUnit::assertNull($factory->collection);
         PHPUnit::assertNull($factory->array);
@@ -77,7 +76,7 @@ class CollectionFactoryTest extends TestCase
     {
         $resourceType = 'dummy';
         $factory = $this->getMockForAbstractClass(CollectionFactory::class);
-        $factory->setGenerator(new Generator);
+        $factory->setGenerator(new Generator());
 
         PHPUnit::assertNull($factory->collection);
         PHPUnit::assertNull($factory->array);
@@ -105,7 +104,7 @@ class CollectionFactoryTest extends TestCase
     public function setCollectionAsArrayFailedNoFactory()
     {
         $factory = $this->getMockForAbstractClass(CollectionFactory::class);
-        $factory->setGenerator(new Generator);
+        $factory->setGenerator(new Generator());
 
         PHPUnit::assertNull($factory->collection);
         PHPUnit::assertNull($factory->array);
@@ -125,7 +124,7 @@ class CollectionFactoryTest extends TestCase
     public function setCollectionAsArrayFailedNoModel()
     {
         $factory = $this->getMockForAbstractClass(CollectionFactory::class);
-        $factory->setGenerator(new Generator);
+        $factory->setGenerator(new Generator());
 
         PHPUnit::assertNull($factory->collection);
         PHPUnit::assertNull($factory->array);
@@ -133,7 +132,7 @@ class CollectionFactoryTest extends TestCase
         $count = 3;
         $collection = new Collection();
         for ($i = 1; $i <= $count; $i++) {
-            $collection->push(new ResourceIdentifierFactory);
+            $collection->push(new ResourceIdentifierFactory());
         }
 
         $this->expectException(JsonApiFakerException::class);
@@ -148,7 +147,7 @@ class CollectionFactoryTest extends TestCase
     public function toArrayNoCollection()
     {
         $factory = $this->getMockForAbstractClass(CollectionFactory::class);
-        $factory->setGenerator(new Generator);
+        $factory->setGenerator(new Generator());
 
         $result = $factory->toArray();
 
@@ -163,7 +162,7 @@ class CollectionFactoryTest extends TestCase
         $resourceType = 'dummy';
         $collection = [];
         $factory = $this->getMockForAbstractClass(CollectionFactory::class);
-        $factory->setGenerator(new Generator);
+        $factory->setGenerator(new Generator());
         $factory->setCollection($collection, $resourceType);
 
         $result = $factory->toArray();

@@ -9,24 +9,25 @@ use VGirol\JsonApiFaker\Exception\JsonApiFakerException;
 use VGirol\JsonApiFaker\Laravel\Messages;
 
 /**
- * Add "model" member to a factory
+ * Add "model" member to a factory.
  */
 trait HasModel
 {
     /**
-     * The model instance
+     * The model instance.
      *
      * @var Model
      */
     public $model;
 
     /**
-     * Set the model
+     * Set the model.
      *
      * @param Model $model
      *
-     * @return static
      * @throws JsonApiFakerException
+     *
+     * @return static
      */
     public function setModel($model)
     {
@@ -42,8 +43,9 @@ trait HasModel
     /**
      * Get the value of the model's primary key.
      *
-     * @return mixed
      * @throws JsonApiFakerException
+     *
+     * @return mixed
      */
     public function getKey()
     {

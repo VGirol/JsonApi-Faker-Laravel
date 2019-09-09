@@ -16,11 +16,11 @@ class PaginationTest extends TestCase
         $options = Pagination::getOptions();
 
         $expected = [
-            'itemCount' => null,
-            'pageCount' => 1,
-            'page' => 1,
-            'itemPerPage' => null,
-            'routeParameters' => []
+            'itemCount'       => null,
+            'pageCount'       => 1,
+            'page'            => 1,
+            'itemPerPage'     => null,
+            'routeParameters' => [],
         ];
 
         PHPUnit::assertIsArray($options);
@@ -44,32 +44,32 @@ class PaginationTest extends TestCase
         return [
             'Pre filled values' => [
                 [
-                    'itemCount' => 14,
+                    'itemCount'   => 14,
                     'itemPerPage' => 5,
-                    'page' => 2
+                    'page'        => 2,
                 ],
                 [
-                    'itemCount' => 14,
-                    'pageCount' => 3,
-                    'page' => 2,
-                    'itemPerPage' => 5,
-                    'routeParameters' => []
-                ]
+                    'itemCount'       => 14,
+                    'pageCount'       => 3,
+                    'page'            => 2,
+                    'itemPerPage'     => 5,
+                    'routeParameters' => [],
+                ],
             ],
             'No items per page' => [
                 [
-                    'itemCount' => 14,
+                    'itemCount'   => 14,
                     'itemPerPage' => null,
-                    'page' => 2
+                    'page'        => 2,
                 ],
                 [
-                    'itemCount' => 14,
-                    'pageCount' => 1,
-                    'page' => 2,
-                    'itemPerPage' => null,
-                    'routeParameters' => []
-                ]
-            ]
+                    'itemCount'       => 14,
+                    'pageCount'       => 1,
+                    'page'            => 2,
+                    'itemPerPage'     => null,
+                    'routeParameters' => [],
+                ],
+            ],
         ];
     }
 
@@ -80,9 +80,9 @@ class PaginationTest extends TestCase
     public function sliceCollection($itemCount, $itemPerPage, $page)
     {
         $options = Pagination::getOptions([
-            'itemCount' => $itemCount,
+            'itemCount'   => $itemCount,
             'itemPerPage' => $itemPerPage,
-            'page' => $page
+            'page'        => $page,
         ]);
 
         $collection = collect(range(1, $itemCount));
@@ -102,18 +102,18 @@ class PaginationTest extends TestCase
             'No particularity' => [
                 14,
                 5,
-                2
+                2,
             ],
             'Only one page' => [
                 3,
                 5,
-                1
+                1,
             ],
             'Last page' => [
                 5,
                 3,
-                2
-            ]
+                2,
+            ],
         ];
     }
 
@@ -124,7 +124,7 @@ class PaginationTest extends TestCase
     {
         $maxResult = 5;
         $options = Pagination::getOptions([
-            'itemPerPage' => $maxResult
+            'itemPerPage' => $maxResult,
         ]);
         $collection = collect([]);
 
@@ -143,8 +143,8 @@ class PaginationTest extends TestCase
         $page = 7;
         $options = Pagination::getOptions([
             'itemPerPage' => $maxResult,
-            'itemCount' => $itemCount,
-            'page' => $page
+            'itemCount'   => $itemCount,
+            'page'        => $page,
         ]);
 
         $collection = collect(range(1, $itemCount));
