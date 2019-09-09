@@ -11,7 +11,7 @@ trait CanCreateFake
     protected $modelClass = DummyModel::class;
 
     /**
-     * Undocumented function
+     * Undocumented function.
      *
      * @return DummyModel
      */
@@ -21,9 +21,9 @@ trait CanCreateFake
     }
 
     /**
-     * Undocumented function
+     * Undocumented function.
      *
-     * @param integer $count
+     * @param int $count
      *
      * @return Collection
      */
@@ -38,13 +38,13 @@ trait CanCreateFake
     }
 
     /**
-     * Undocumented function
+     * Undocumented function.
      *
-     * @param Model $model
-     * @param string $resourceType
-     * @param boolean $isResourceIdentifier
+     * @param Model       $model
+     * @param string      $resourceType
+     * @param bool        $isResourceIdentifier
      * @param string|null $withError
-     * @param array|null $additional
+     * @param array|null  $additional
      *
      * @return array
      */
@@ -57,7 +57,7 @@ trait CanCreateFake
     ): array {
         $resource = [
             Members::TYPE => $resourceType,
-            Members::ID => strval($model->getKey())
+            Members::ID   => strval($model->getKey()),
         ];
         if (!$isResourceIdentifier) {
             $resource[Members::ATTRIBUTES] = $model->attributesToArray();
@@ -83,11 +83,11 @@ trait CanCreateFake
     }
 
     /**
-     * Undocumented function
+     * Undocumented function.
      *
-     * @param Collection $collection
-     * @param string $resourceType
-     * @param bool $isResourceIdentifier
+     * @param Collection  $collection
+     * @param string      $resourceType
+     * @param bool        $isResourceIdentifier
      * @param string|null $withError
      *
      * @return array

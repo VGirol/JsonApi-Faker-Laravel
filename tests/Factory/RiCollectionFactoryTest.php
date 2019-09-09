@@ -22,8 +22,8 @@ class RiCollectionFactoryTest extends TestCase
         $count = 3;
         $collection = $this->createCollection($count);
 
-        $generator = new Generator;
-        $factory = new RiCollectionFactory;
+        $generator = new Generator();
+        $factory = new RiCollectionFactory();
         $factory->setGenerator($generator);
         $obj = $factory->setCollection($collection, $resourceType);
 
@@ -54,15 +54,14 @@ class RiCollectionFactoryTest extends TestCase
             array_fill(
                 0,
                 5,
-                new class
-                {
+                new class() {
                     // empty
                 }
             )
         );
 
-        $generator = new Generator;
-        $factory = new RiCollectionFactory;
+        $generator = new Generator();
+        $factory = new RiCollectionFactory();
         $factory->setGenerator($generator);
 
         $this->expectException(JsonApiFakerException::class);

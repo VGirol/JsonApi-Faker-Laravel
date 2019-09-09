@@ -20,8 +20,8 @@ class RelationshipFactoryTest extends TestCase
         $resourceType = 'dummy';
         $expected = new ResourceIdentifierFactory($model, $resourceType);
 
-        $factory = new RelationshipFactory;
-        $factory->setGenerator(new Generator);
+        $factory = new RelationshipFactory();
+        $factory->setGenerator(new Generator());
 
         PHPUnit::assertEmpty($factory->data);
 
@@ -39,8 +39,8 @@ class RelationshipFactoryTest extends TestCase
         $model = $this->createModel();
         $resourceType = 'dummy';
 
-        $factory = new RelationshipFactory;
-        $factory->setGenerator(new Generator);
+        $factory = new RelationshipFactory();
+        $factory->setGenerator(new Generator());
 
         PHPUnit::assertEmpty($factory->data);
 
@@ -60,8 +60,8 @@ class RelationshipFactoryTest extends TestCase
         $collection = $this->createCollection();
         $resourceType = 'dummy';
 
-        $factory = new RelationshipFactory;
-        $factory->setGenerator(new Generator);
+        $factory = new RelationshipFactory();
+        $factory->setGenerator(new Generator());
 
         PHPUnit::assertEmpty($factory->data);
 

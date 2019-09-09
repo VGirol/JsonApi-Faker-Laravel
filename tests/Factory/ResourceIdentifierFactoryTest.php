@@ -25,8 +25,8 @@ class ResourceIdentifierFactoryTest extends TestCase
             null,
             [
                 'meta' => [
-                    $key => $value
-                ]
+                    $key => $value,
+                ],
             ]
         );
 

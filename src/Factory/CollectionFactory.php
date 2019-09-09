@@ -14,20 +14,21 @@ use VGirol\JsonApiFaker\Laravel\Messages;
 abstract class CollectionFactory extends BaseFactory
 {
     /**
-     * A collection of models
+     * A collection of models.
      *
      * @var Collection|null
      */
     public $collection;
 
     /**
-     * Set the collection
+     * Set the collection.
      *
      * @param Collection|array<ResourceObjectFactory>|array<ResourceIdentifierFactory>|null $provided
-     * @param string|null $resourceType
+     * @param string|null                                                                   $resourceType
+     *
+     * @throws JsonApiFakerException
      *
      * @return static
-     * @throws JsonApiFakerException
      */
     public function setCollection($provided, $resourceType = null)
     {
@@ -49,8 +50,9 @@ abstract class CollectionFactory extends BaseFactory
                 /**
                  * @param ResourceObjectFactory|ResourceIdentifierFactory $item
                  *
-                 * @return \Illuminate\Database\Eloquent\Model
                  * @throws JsonApiFakerException
+                 *
+                 * @return \Illuminate\Database\Eloquent\Model
                  */
                 function ($item) {
                     if (!is_a($item, ResourceObjectFactory::class) && !is_a($item, ResourceIdentifierFactory::class)) {
@@ -59,6 +61,7 @@ abstract class CollectionFactory extends BaseFactory
                     if ($item->model == null) {
                         throw new JsonApiFakerException(Messages::ERROR_MODEL_NOT_SET);
                     }
+
                     return $item->model;
                 }
             );
@@ -71,10 +74,10 @@ abstract class CollectionFactory extends BaseFactory
     }
 
     /**
-     * Returns a collection of resource identifier or resource object factories
+     * Returns a collection of resource identifier or resource object factories.
      *
      * @param Collection $collection
-     * @param string $resourceType
+     * @param string     $resourceType
      *
      * @return array<ResourceObjectFactory>|array<ResourceIdentifierFactory>
      */
