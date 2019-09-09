@@ -1,6 +1,6 @@
 {
     "name": "vgirol/jsonapi-faker-laravel",
-    "description": "RESTfull JSON:Api test assertions for Laravel",
+    "description": "This package provides a factory to generate fake data using Laravel and the JSON:API specification.",
     "type": "library",
     "homepage": "http://github.com/VGirol/JsonApi-Faker-Laravel",
     "license": "MIT",
