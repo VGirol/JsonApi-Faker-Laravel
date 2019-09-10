@@ -13,7 +13,7 @@
         processIsolation="false"
         stopOnFailure="false">
     <testsuites>
-        <testsuite name=":vendor Test Suite">
+        <testsuite name="VGirol Test Suite">
             <directory suffix="Test.php">./tests</directory>
         </testsuite>
     </testsuites>
