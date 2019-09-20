@@ -54,27 +54,30 @@ class ResourceObjectFactory extends BaseFactory
      */
     public function loadRelationship(string $name, string $resourceType)
     {
-        $relation = $this->getRelationObject($name);
-
         $relationship = $this->createRelationshipFactory();
-        $this->fillRelationship($relationship, $relation, $resourceType);
-        $this->addRelationship($name, $relationship);
 
-        return $this;
+        return $this->fillRelationship($relationship, $name, $resourceType)
+            ->addRelationship($name, $relationship);
     }
 
     /**
-     * Fill a relationship factory with a \Illuminate\Database\Eloquent\Relations\Relation instance.
+     * Fill a relationship factory.
+     *
+     * Creates a \Illuminate\Database\Eloquent\Relations\Relation instance
+     * and fill the relationshipFactory with it.
      *
      * @param RelationshipFactory $relationship
-     * @param Relation            $relation
+     * @param string              $name
      * @param string              $resourceType
      *
-     * @return void
+     * @return static
      */
-    protected function fillRelationship($relationship, $relation, string $resourceType): void
+    protected function fillRelationship($relationship, string $name, string $resourceType)
     {
+        $relation = $this->getRelationObject($name);
         $relationship->setData($relation, $resourceType);
+
+        return $this;
     }
 
     /**

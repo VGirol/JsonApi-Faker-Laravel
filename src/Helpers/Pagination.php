@@ -58,7 +58,7 @@ class Pagination
         )->values();
     }
 
-    private static function getDefaultOptions()
+    protected static function getDefaultOptions()
     {
         return [
             'itemCount'       => null,
