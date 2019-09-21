@@ -2,6 +2,7 @@
 # .phan/
 .vscode/
 build/
+docs/
 # scripts/
 vendor/
 .phpunit.result.cache
