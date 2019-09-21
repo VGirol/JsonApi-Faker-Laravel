@@ -1,10 +1,11 @@
 !.gitignore
 # .phan/
+.vscode/
 build/
 # scripts/
 vendor/
 .phpunit.result.cache
 .php_cs.cache
 composer.lock
-phpcs.xml
-#phpunit.xml
+# phpcs.xml
+# phpunit.xml
