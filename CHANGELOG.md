@@ -7,3 +7,9 @@ Updates should follow the [Keep a CHANGELOG](http://keepachangelog.com/) princip
 ## 1.0.0 - 2019-08-31
 
 - Initial release
+
+## 1.0.1 - 2019-09-28
+
+### Added
+
+- collection method of Generator is no more forbidden.
