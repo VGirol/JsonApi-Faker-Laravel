@@ -22,8 +22,7 @@ class Generator extends BaseGenerator
     {
         parent::__construct();
 
-        $this->setFactory('collection', null)
-            ->setFactory('ri-collection', RiCollectionFactory::class)
+        $this->setFactory('ri-collection', RiCollectionFactory::class)
             ->setFactory('ro-collection', RoCollectionFactory::class)
             ->setFactory('relationship', RelationshipFactory::class)
             ->setFactory('resource-identifier', ResourceIdentifierFactory::class)
