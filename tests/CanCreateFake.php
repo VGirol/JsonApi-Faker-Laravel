@@ -1,10 +1,10 @@
 <?php
 
-namespace VGirol\JsonApiFaker\Laravel\Testing;
+namespace VGirol\JsonApiFaker\Laravel\Tests;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
-use VGirol\JsonApiAssert\Members;
+use VGirol\JsonApiConstant\Members;
 
 trait CanCreateFake
 {

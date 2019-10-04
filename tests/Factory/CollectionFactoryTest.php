@@ -22,7 +22,8 @@ class CollectionFactoryTest extends TestCase
         $count = 3;
         $collection = $this->createCollection($count);
 
-        $factory = new class() extends CollectionFactory {
+        $factory = new class () extends CollectionFactory
+        {
             protected function transform($collection, $resourceType): array
             {
                 return $collection->map(
@@ -32,13 +33,12 @@ class CollectionFactoryTest extends TestCase
                 )->toArray();
             }
         };
-        $factory->setGenerator(new Generator());
+        $factory->setGenerator(new Generator);
         $obj = $factory->setCollection($collection, $resourceType);
 
         PHPUnit::assertSame($obj, $factory);
-        PHPUnit::assertEquals($collection, $factory->collection);
-        PHPUnit::assertSame($collection, $factory->collection);
-        PHPUnit::assertIsArray($factory->array);
+        PHPUnit::assertSame($collection, $factory->getIlluminateCollection());
+        PHPUnit::assertIsArray($factory->getCollection());
 
         $expected = $collection->map(
             function ($item) use ($resourceType) {
@@ -46,7 +46,7 @@ class CollectionFactoryTest extends TestCase
             }
         )->toArray();
 
-        PHPUnit::assertEquals($expected, $factory->array);
+        PHPUnit::assertEquals($expected, $factory->getCollection());
     }
 
     /**
@@ -57,8 +57,8 @@ class CollectionFactoryTest extends TestCase
         $factory = $this->getMockForAbstractClass(CollectionFactory::class);
         $factory->setGenerator(new Generator());
 
-        PHPUnit::assertNull($factory->collection);
-        PHPUnit::assertNull($factory->array);
+        PHPUnit::assertNull($factory->getIlluminateCollection());
+        PHPUnit::assertNull($factory->getCollection());
 
         $count = 3;
         $collection = $this->createCollection($count);
@@ -78,8 +78,8 @@ class CollectionFactoryTest extends TestCase
         $factory = $this->getMockForAbstractClass(CollectionFactory::class);
         $factory->setGenerator(new Generator());
 
-        PHPUnit::assertNull($factory->collection);
-        PHPUnit::assertNull($factory->array);
+        PHPUnit::assertNull($factory->getIlluminateCollection());
+        PHPUnit::assertNull($factory->getCollection());
 
         $count = 3;
         $collection = $this->createCollection($count);
@@ -94,8 +94,8 @@ class CollectionFactoryTest extends TestCase
         $obj = $factory->setCollection($array);
 
         PHPUnit::assertSame($obj, $factory);
-        PHPUnit::assertEquals($collection, $factory->collection);
-        PHPUnit::assertEquals($array, $factory->array);
+        PHPUnit::assertEquals($collection, $factory->getIlluminateCollection());
+        PHPUnit::assertEquals($array, $factory->getCollection());
     }
 
     /**
@@ -106,8 +106,8 @@ class CollectionFactoryTest extends TestCase
         $factory = $this->getMockForAbstractClass(CollectionFactory::class);
         $factory->setGenerator(new Generator());
 
-        PHPUnit::assertNull($factory->collection);
-        PHPUnit::assertNull($factory->array);
+        PHPUnit::assertNull($factory->getIlluminateCollection());
+        PHPUnit::assertNull($factory->getCollection());
 
         $count = 3;
         $collection = $this->createCollection($count);
@@ -126,8 +126,8 @@ class CollectionFactoryTest extends TestCase
         $factory = $this->getMockForAbstractClass(CollectionFactory::class);
         $factory->setGenerator(new Generator());
 
-        PHPUnit::assertNull($factory->collection);
-        PHPUnit::assertNull($factory->array);
+        PHPUnit::assertNull($factory->getIlluminateCollection());
+        PHPUnit::assertNull($factory->getCollection());
 
         $count = 3;
         $collection = new Collection();

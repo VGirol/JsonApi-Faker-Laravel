@@ -3,21 +3,23 @@
 namespace VGirol\JsonApiFaker\Laravel\Factory;
 
 use Illuminate\Database\Eloquent\Relations\Relation;
+use VGirol\JsonApiFaker\Contract\RelationshipContract;
 use VGirol\JsonApiFaker\Exception\JsonApiFakerException;
 use VGirol\JsonApiFaker\Factory\ResourceObjectFactory as BaseFactory;
+use VGirol\JsonApiFaker\Laravel\Contract\ResourceObjectContract;
 use VGirol\JsonApiFaker\Laravel\Messages;
 
 /**
  * A factory for resource object.
  */
-class ResourceObjectFactory extends BaseFactory
+class ResourceObjectFactory extends BaseFactory implements ResourceObjectContract
 {
     use IsResource {
         setValues as setValuesTrait;
     }
 
     /**
-     * {@inheritdoc}
+     * @throws JsonApiFakerException
      */
     public function setValues($model, string $resourceType)
     {
@@ -26,12 +28,14 @@ class ResourceObjectFactory extends BaseFactory
         if ($model != null) {
             $this->setAttributes($model->attributesToArray());
         }
+
+        return $this;
     }
 
     /**
      * Add relationship factories.
      *
-     * @param array<string,string> $relationships
+     * @param array $relationships
      *
      * @return static
      */
@@ -51,6 +55,7 @@ class ResourceObjectFactory extends BaseFactory
      * @param string $resourceType
      *
      * @return static
+     * @throws JsonApiFakerException
      */
     public function loadRelationship(string $name, string $resourceType)
     {
@@ -71,6 +76,7 @@ class ResourceObjectFactory extends BaseFactory
      * @param string              $resourceType
      *
      * @return static
+     * @throws JsonApiFakerException
      */
     protected function fillRelationship($relationship, string $name, string $resourceType)
     {
@@ -85,13 +91,12 @@ class ResourceObjectFactory extends BaseFactory
      *
      * @param mixed ...$args
      *
-     * @return RelationshipFactory
+     * @return RelationshipContract
      */
     protected function createRelationshipFactory(...$args)
     {
         return $this->generator
-            ->relationship(...$args)
-            ->setGenerator($this->generator);
+            ->relationship(...$args);
     }
 
     /**
@@ -99,9 +104,8 @@ class ResourceObjectFactory extends BaseFactory
      *
      * @param string $name
      *
-     * @throws JsonApiFakerException
-     *
      * @return Relation
+     * @throws JsonApiFakerException
      */
     private function getRelationObject(string $name)
     {

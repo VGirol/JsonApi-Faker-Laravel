@@ -23,11 +23,11 @@ class RelationshipFactoryTest extends TestCase
         $factory = new RelationshipFactory();
         $factory->setGenerator(new Generator());
 
-        PHPUnit::assertEmpty($factory->data);
+        PHPUnit::assertEmpty($factory->getData());
 
         $obj = $factory->setData($expected, $resourceType);
 
-        PHPUnit::assertSame($expected, $factory->data);
+        PHPUnit::assertSame($expected, $factory->getData());
         PHPUnit::assertSame($obj, $factory);
     }
 
@@ -42,14 +42,14 @@ class RelationshipFactoryTest extends TestCase
         $factory = new RelationshipFactory();
         $factory->setGenerator(new Generator());
 
-        PHPUnit::assertEmpty($factory->data);
+        PHPUnit::assertEmpty($factory->getData());
 
         $factory->setData($model, $resourceType);
 
-        $data = $factory->data;
+        $data = $factory->getData();
 
         PHPUnit::assertInstanceOf(ResourceIdentifierFactory::class, $data);
-        PHPUnit::assertSame($model, $data->model);
+        PHPUnit::assertSame($model, $data->getModel());
     }
 
     /**
@@ -63,18 +63,18 @@ class RelationshipFactoryTest extends TestCase
         $factory = new RelationshipFactory();
         $factory->setGenerator(new Generator());
 
-        PHPUnit::assertEmpty($factory->data);
+        PHPUnit::assertEmpty($factory->getData());
 
         $factory->setData($collection, $resourceType);
 
-        $data = $factory->data;
+        $data = $factory->getData();
 
         PHPUnit::assertInstanceOf(CollectionFactory::class, $data);
         $data->each(function ($rif) use ($collection) {
             PHPUnit::assertInstanceOf(ResourceIdentifierFactory::class, $rif);
             $model = $collection->first(
                 function ($item) use ($rif) {
-                    return $item === $rif->model;
+                    return $item === $rif->getModel();
                 },
                 null
             );

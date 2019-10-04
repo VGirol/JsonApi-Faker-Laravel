@@ -3,6 +3,7 @@
 namespace VGirol\JsonApiFaker\Laravel\Factory;
 
 use Illuminate\Database\Eloquent\Model;
+use VGirol\JsonApiFaker\Exception\JsonApiFakerException;
 
 /**
  * An abstract factory for resources (resource object or resource identifer).
@@ -18,10 +19,11 @@ trait IsResource
      * @param string|null $resourceType
      *
      * @return void
+     * @throws JsonApiFakerException
      */
     public function __construct($model = null, ?string $resourceType = null)
     {
-        if ($model != null) {
+        if (($model !== null) && ($resourceType !== null)) {
             $this->setValues($model, $resourceType);
         }
     }
@@ -33,6 +35,7 @@ trait IsResource
      * @param string $resourceType
      *
      * @return static
+     * @throws JsonApiFakerException
      */
     public function setValues($model, string $resourceType)
     {

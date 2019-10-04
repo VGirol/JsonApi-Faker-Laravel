@@ -13,12 +13,12 @@ use VGirol\JsonApiFaker\Laravel\Messages;
 class RiCollectionFactory extends CollectionFactory
 {
     /**
-     * Returns a collection of resource identifier or resource object factories.
+     * Returns an array of ResourceIdentifierContract.
      *
      * @param Collection $collection
      * @param string     $resourceType
      *
-     * @return array<ResourceObjectFactory>|array<ResourceIdentifierFactory>
+     * @return array
      */
     protected function transform($collection, $resourceType): array
     {
@@ -26,7 +26,8 @@ class RiCollectionFactory extends CollectionFactory
             /**
              * @param \Illuminate\Database\Eloquent\Model $model
              *
-             * @return ResourceIdentifierFactory
+             * @return \VGirol\JsonApiFaker\Laravel\Contract\ResourceIdentifierContract
+             * @throws JsonApiFakerException
              */
             function ($model) use ($resourceType) {
                 if (!is_a($model, Model::class)) {

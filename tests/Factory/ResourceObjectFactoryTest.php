@@ -7,7 +7,7 @@ use VGirol\JsonApiFaker\Exception\JsonApiFakerException;
 use VGirol\JsonApiFaker\Laravel\Factory\ResourceObjectFactory;
 use VGirol\JsonApiFaker\Laravel\Generator;
 use VGirol\JsonApiFaker\Laravel\Messages;
-use VGirol\JsonApiFaker\Laravel\Testing\DummyModel;
+use VGirol\JsonApiFaker\Laravel\Tests\DummyModel;
 use VGirol\JsonApiFaker\Laravel\Tests\TestCase;
 
 class ResourceObjectFactoryTest extends TestCase
@@ -22,10 +22,10 @@ class ResourceObjectFactoryTest extends TestCase
         $model = $this->createModel();
         $factory = new ResourceObjectFactory($model, $resourceType);
 
-        PHPUnit::assertSame($model, $factory->model);
-        PHPUnit::assertEquals($model->getKey(), $factory->id);
-        PHPUnit::assertEquals($resourceType, $factory->resourceType);
-        PHPUnit::assertEquals($model->attributesToArray(), $factory->attributes);
+        PHPUnit::assertSame($model, $factory->getModel());
+        PHPUnit::assertEquals($model->getKey(), $factory->getId());
+        PHPUnit::assertEquals($resourceType, $factory->getResourceType());
+        PHPUnit::assertEquals($model->attributesToArray(), $factory->getAttributes());
     }
 
     /**
@@ -38,17 +38,18 @@ class ResourceObjectFactoryTest extends TestCase
         $model = $this->createModel();
         $factory = new ResourceObjectFactory();
 
-        PHPUnit::assertNull($factory->model);
-        PHPUnit::assertNull($factory->id);
-        PHPUnit::assertNull($factory->resourceType);
-        PHPUnit::assertNull($factory->attributes);
+        PHPUnit::assertNull($factory->getModel());
+        PHPUnit::assertNull($factory->getId());
+        PHPUnit::assertNull($factory->getResourceType());
+        PHPUnit::assertNull($factory->getAttributes());
 
-        $factory->setValues($model, $resourceType);
+        $obj = $factory->setValues($model, $resourceType);
 
-        PHPUnit::assertSame($model, $factory->model);
-        PHPUnit::assertEquals($model->getKey(), $factory->id);
-        PHPUnit::assertEquals($resourceType, $factory->resourceType);
-        PHPUnit::assertEquals($model->attributesToArray(), $factory->attributes);
+        PHPUnit::assertSame($obj, $factory);
+        PHPUnit::assertSame($model, $factory->getModel());
+        PHPUnit::assertEquals($model->getKey(), $factory->getId());
+        PHPUnit::assertEquals($resourceType, $factory->getResourceType());
+        PHPUnit::assertEquals($model->attributesToArray(), $factory->getAttributes());
     }
 
     /**
@@ -102,12 +103,12 @@ class ResourceObjectFactoryTest extends TestCase
         $obj = $factory->setGenerator(new Generator());
 
         PHPUnit::assertSame($obj, $factory);
-        PHPUnit::assertNull($factory->relationships);
+        PHPUnit::assertNull($factory->getRelationships());
 
         $obj = $factory->loadRelationship($relName, $relResourceType);
 
         PHPUnit::assertSame($obj, $factory);
-        PHPUnit::assertNotNull($factory->relationships);
+        PHPUnit::assertNotNull($factory->getRelationships());
 
         $result = $factory->toArray();
 

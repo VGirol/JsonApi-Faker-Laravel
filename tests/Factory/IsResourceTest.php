@@ -19,14 +19,15 @@ class IsResourceTest extends TestCase
         $resourceType = 'dummy';
         $model = $this->createModel();
 
-        $mock = new class($model, $resourceType) {
+        $mock = new class ($model, $resourceType)
+        {
             use IsResource;
             use HasIdentification;
         };
 
-        PHPUnit::assertSame($model, $mock->model);
-        PHPUnit::assertEquals($model->getKey(), $mock->id);
-        PHPUnit::assertEquals($resourceType, $mock->resourceType);
+        PHPUnit::assertSame($model, $mock->getModel());
+        PHPUnit::assertEquals($model->getKey(), $mock->getId());
+        PHPUnit::assertEquals($resourceType, $mock->getResourceType());
     }
 
     /**
@@ -34,23 +35,24 @@ class IsResourceTest extends TestCase
      */
     public function setValues()
     {
-        $mock = new class() {
+        $mock = new class ()
+        {
             use IsResource;
             use HasIdentification;
         };
 
-        PHPUnit::assertNull($mock->model);
-        PHPUnit::assertNull($mock->resourceType);
-        PHPUnit::assertNull($mock->id);
+        PHPUnit::assertNull($mock->getModel());
+        PHPUnit::assertNull($mock->getResourceType());
+        PHPUnit::assertNull($mock->getId());
 
         $model = $this->createModel();
         $resourceType = 'dummy';
 
         $mock->setValues($model, $resourceType);
 
-        PHPUnit::assertEquals($model, $mock->model);
-        PHPUnit::assertEquals($resourceType, $mock->resourceType);
-        PHPUnit::assertEquals($model->getKey(), $mock->id);
+        PHPUnit::assertEquals($model, $mock->getModel());
+        PHPUnit::assertEquals($resourceType, $mock->getResourceType());
+        PHPUnit::assertEquals($model->getKey(), $mock->getId());
     }
 
     /**
@@ -61,7 +63,8 @@ class IsResourceTest extends TestCase
         $this->expectException(JsonApiFakerException::class);
         $this->expectExceptionMessage(Messages::ERROR_MODEL_NOT_NULL);
 
-        $mock = new class() {
+        $mock = new class ()
+        {
             use IsResource;
             use HasIdentification;
         };

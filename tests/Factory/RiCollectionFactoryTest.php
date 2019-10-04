@@ -28,9 +28,9 @@ class RiCollectionFactoryTest extends TestCase
         $obj = $factory->setCollection($collection, $resourceType);
 
         PHPUnit::assertSame($obj, $factory);
-        PHPUnit::assertEquals($collection, $factory->collection);
-        PHPUnit::assertSame($collection, $factory->collection);
-        PHPUnit::assertIsArray($factory->array);
+        PHPUnit::assertEquals($collection, $factory->getIlluminateCollection());
+        PHPUnit::assertSame($collection, $factory->getIlluminateCollection());
+        PHPUnit::assertIsArray($factory->getCollection());
 
         $expected = $collection->map(
             function ($item) use ($resourceType, $generator) {
@@ -41,7 +41,7 @@ class RiCollectionFactoryTest extends TestCase
             }
         )->toArray();
 
-        PHPUnit::assertEquals($expected, $factory->array);
+        PHPUnit::assertEquals($expected, $factory->getCollection());
     }
 
     /**
@@ -54,7 +54,8 @@ class RiCollectionFactoryTest extends TestCase
             array_fill(
                 0,
                 5,
-                new class() {
+                new class ()
+                {
                     // empty
                 }
             )

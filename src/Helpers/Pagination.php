@@ -4,6 +4,9 @@ namespace VGirol\JsonApiFaker\Laravel\Helpers;
 
 use Illuminate\Support\Collection;
 
+/**
+ * This class provides a lot of tools to fake pagination
+ */
 class Pagination
 {
     /**
@@ -58,7 +61,12 @@ class Pagination
         )->values();
     }
 
-    protected static function getDefaultOptions()
+    /**
+     * Gets the default options for pagination
+     *
+     * @return array
+     */
+    protected static function getDefaultOptions(): array
     {
         return [
             'itemCount'       => null,
@@ -69,9 +77,17 @@ class Pagination
         ];
     }
 
-    private static function getPageCount($colCount, $itemPerPage)
+    /**
+     * Get the page count
+     *
+     * @param int|null $colCount
+     * @param int|null $itemPerPage
+     *
+     * @return int
+     */
+    private static function getPageCount(?int $colCount, ?int $itemPerPage): int
     {
-        if (($itemPerPage === null) || ($itemPerPage == 0)) {
+        if (($colCount === null) || ($itemPerPage === null) || ($itemPerPage == 0)) {
             return 1;
         }
 
@@ -86,7 +102,14 @@ class Pagination
         return $pageCount;
     }
 
-    private static function getItemCount($options)
+    /**
+     * Calculate the item count
+     *
+     * @param array $options
+     *
+     * @return int
+     */
+    private static function getItemCount($options): int
     {
         if ($options['pageCount'] <= 1) {
             return $options['itemCount'];
