@@ -55,8 +55,7 @@ class RoCollectionFactoryTest extends TestCase
             array_fill(
                 0,
                 5,
-                new class ()
-                {
+                new class() {
                     // empty
                 }
             )

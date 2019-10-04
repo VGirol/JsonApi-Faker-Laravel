@@ -9,5 +9,4 @@ namespace VGirol\JsonApiFaker\Laravel\Contract;
  */
 interface RiCollectionContract extends CollectionContract
 {
- 
 }

@@ -11,5 +11,4 @@ use VGirol\JsonApiFaker\Contract\ResourceIdentifierContract as BaseContract;
  */
 interface ResourceIdentifierContract extends BaseContract, IsResourceContract
 {
- 
 }

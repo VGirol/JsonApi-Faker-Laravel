@@ -51,8 +51,7 @@ class HasModelTest extends TestCase
         $mock = $this->getMockForTrait(HasModel::class);
 
         $mock->setModel(
-            new class
-            {
+            new class {
             }
         );
     }
