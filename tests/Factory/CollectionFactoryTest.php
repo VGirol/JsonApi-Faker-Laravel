@@ -22,8 +22,7 @@ class CollectionFactoryTest extends TestCase
         $count = 3;
         $collection = $this->createCollection($count);
 
-        $factory = new class () extends CollectionFactory
-        {
+        $factory = new class() extends CollectionFactory {
             protected function transform($collection, $resourceType): array
             {
                 return $collection->map(
