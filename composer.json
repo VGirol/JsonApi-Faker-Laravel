@@ -20,6 +20,7 @@
     ],
     "require": {
         "php": "^7.2",
+        "vgirol/jsonapi-constant": "dev-master",
         "vgirol/jsonapi-faker": "dev-master",
         "illuminate/database": "~5.8.0|^6.0",
         "illuminate/support": "~5.8.0|^6.0"
@@ -31,6 +32,13 @@
         "vgirol/jsonapi-assert": "dev-master"
     },
     "repositories": [
+        {
+            "type": "path",
+            "url": "../JsonApi-Constant",
+            "options": {
+                "symlink": true
+            }
+        },
         {
             "type": "path",
             "url": "../JsonApi-Assert",

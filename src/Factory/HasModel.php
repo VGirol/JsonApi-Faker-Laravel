@@ -18,21 +18,23 @@ trait HasModel
      *
      * @var Model
      */
-    public $model;
+    protected $model;
 
     /**
      * Set the model.
      *
      * @param Model $model
      *
-     * @throws JsonApiFakerException
-     *
      * @return static
+     * @throws JsonApiFakerException
      */
     public function setModel($model)
     {
         if ($model == null) {
             throw new JsonApiFakerException(Messages::ERROR_MODEL_NOT_NULL);
+        }
+        if (is_a($model, Model::class) === false) {
+            throw new JsonApiFakerException(Messages::ERROR_MODEL_NOT_OBJECT);
         }
 
         $this->model = $model;
@@ -41,11 +43,20 @@ trait HasModel
     }
 
     /**
+     * Get the model.
+     *
+     * @return Model
+     */
+    public function getModel()
+    {
+        return $this->model;
+    }
+
+    /**
      * Get the value of the model's primary key.
      *
-     * @throws JsonApiFakerException
-     *
      * @return mixed
+     * @throws JsonApiFakerException
      */
     public function getKey()
     {

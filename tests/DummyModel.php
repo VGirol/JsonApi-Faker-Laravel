@@ -1,6 +1,6 @@
 <?php
 
-namespace VGirol\JsonApiFaker\Laravel\Testing;
+namespace VGirol\JsonApiFaker\Laravel\Tests;
 
 use Illuminate\Database\Eloquent\Model;
 

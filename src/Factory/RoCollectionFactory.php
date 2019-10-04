@@ -15,17 +15,16 @@ class RoCollectionFactory extends CollectionFactory
     /**
      * Add a relationship to the resource object.
      *
-     * @param array<string,string> $relationships
-     *
-     * @throws JsonApiFakerException
+     * @param array $relationships
      *
      * @return static
+     * @throws JsonApiFakerException
      */
     public function appendRelationships(array $relationships)
     {
         return $this->each(
             /**
-             * @param ResourceObjectFactory $resFactory
+             * @param \VGirol\JsonApiFaker\Laravel\Contract\ResourceObjectContract $resFactory
              *
              * @return void
              */
@@ -36,20 +35,21 @@ class RoCollectionFactory extends CollectionFactory
     }
 
     /**
-     * Returns a collection of resource identifier or resource object factories.
+     * Returns a collection of ResourceObjectContract.
      *
      * @param Collection $collection
      * @param string     $resourceType
      *
-     * @return array<ResourceObjectFactory>|array<ResourceIdentifierFactory>
+     * @return array
      */
     protected function transform($collection, $resourceType): array
     {
         return $collection->map(
             /**
-             * @param \Illuminate\Database\Eloquent\Model $model
+             * @param Model $model
              *
-             * @return ResourceObjectFactory
+             * @return \VGirol\JsonApiFaker\Laravel\Contract\ResourceObjectContract
+             * @throws JsonApiFakerException
              */
             function ($model) use ($resourceType) {
                 if (!is_a($model, Model::class)) {

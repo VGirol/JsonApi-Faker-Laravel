@@ -3,7 +3,14 @@
 namespace VGirol\JsonApiFaker\Laravel;
 
 use Illuminate\Support\Collection;
+use VGirol\JsonApiFaker\Contract\RelationshipContract;
+use VGirol\JsonApiFaker\Exception\JsonApiFakerException;
 use VGirol\JsonApiFaker\Generator as BaseGenerator;
+use VGirol\JsonApiFaker\Laravel\Contract\GeneratorContract;
+use VGirol\JsonApiFaker\Laravel\Contract\ResourceIdentifierContract;
+use VGirol\JsonApiFaker\Laravel\Contract\ResourceObjectContract;
+use VGirol\JsonApiFaker\Laravel\Contract\RiCollectionContract;
+use VGirol\JsonApiFaker\Laravel\Contract\RoCollectionContract;
 use VGirol\JsonApiFaker\Laravel\Factory\RelationshipFactory;
 use VGirol\JsonApiFaker\Laravel\Factory\ResourceIdentifierFactory;
 use VGirol\JsonApiFaker\Laravel\Factory\ResourceObjectFactory;
@@ -11,13 +18,10 @@ use VGirol\JsonApiFaker\Laravel\Factory\RiCollectionFactory;
 use VGirol\JsonApiFaker\Laravel\Factory\RoCollectionFactory;
 
 /**
- * {@inheritdoc}
+ * This class extends the \VGirol\JsonApiFaker\Generator class.
  */
-class Generator extends BaseGenerator
+class Generator extends BaseGenerator implements GeneratorContract
 {
-    /**
-     * {@inheritdoc}
-     */
     public function __construct()
     {
         parent::__construct();
@@ -35,7 +39,8 @@ class Generator extends BaseGenerator
      * @param Collection  $collection
      * @param string|null $resourceType
      *
-     * @return RiCollectionFactory
+     * @return RiCollectionContract
+     * @throws JsonApiFakerException
      */
     public function riCollection($collection, ?string $resourceType)
     {
@@ -48,10 +53,38 @@ class Generator extends BaseGenerator
      * @param Collection  $collection
      * @param string|null $resourceType
      *
-     * @return RoCollectionFactory
+     * @return RoCollectionContract
+     * @throws JsonApiFakerException
      */
     public function roCollection($collection, ?string $resourceType)
     {
         return $this->create('ro-collection')->setCollection($collection, $resourceType);
+    }
+
+    /**
+     * @return ResourceIdentifierContract
+     * @throws JsonApiFakerException
+     */
+    public function resourceIdentifier(...$args)
+    {
+        return parent::resourceIdentifier(...$args);
+    }
+
+    /**
+     * @return ResourceObjectContract
+     * @throws JsonApiFakerException
+     */
+    public function resourceObject(...$args)
+    {
+        return parent::resourceObject(...$args);
+    }
+
+    /**
+     * @return RelationshipContract
+     * @throws JsonApiFakerException
+     */
+    public function relationship(...$args)
+    {
+        return parent::relationship(...$args);
     }
 }

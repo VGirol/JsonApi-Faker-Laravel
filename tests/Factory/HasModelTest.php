@@ -21,7 +21,7 @@ class HasModelTest extends TestCase
         $this->checkSetMethod(
             $this->getMockForTrait(HasModel::class),
             'setModel',
-            'model',
+            'getModel',
             $this->createModel(),
             $this->createModel()
         );
@@ -38,6 +38,23 @@ class HasModelTest extends TestCase
         $mock = $this->getMockForTrait(HasModel::class);
 
         $mock->setModel(null);
+    }
+
+    /**
+     * @test
+     */
+    public function setModelWithInstanceOfBadClass()
+    {
+        $this->expectException(JsonApiFakerException::class);
+        $this->expectExceptionMessage(Messages::ERROR_MODEL_NOT_OBJECT);
+
+        $mock = $this->getMockForTrait(HasModel::class);
+
+        $mock->setModel(
+            new class
+            {
+            }
+        );
     }
 
     /**
