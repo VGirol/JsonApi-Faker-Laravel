@@ -20,6 +20,7 @@
     ],
     "require": {
         "php": "^7.2",
+        "vgirol/jsonapi-constant": "dev-master",
         "vgirol/jsonapi-faker": "dev-master",
         "laravel/framework": ">=5.8"
     },
