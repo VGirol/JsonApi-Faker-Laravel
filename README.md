@@ -120,7 +120,7 @@ The MIT License (MIT). Please see [License File](LICENSE.md) for more informatio
 [ico-travis]: https://img.shields.io/travis/VGirol/JsonApi-Faker-Laravel/master.svg?style=flat-square
 [ico-scrutinizer]: https://img.shields.io/scrutinizer/coverage/g/VGirol/JsonApi-Faker-Laravel.svg?style=flat-square
 [ico-code-quality]: https://img.shields.io/scrutinizer/g/VGirol/JsonApi-Faker-Laravel.svg?style=flat-square
-[ico-mutation]: https://badge.stryker-mutator.io/github.com/VGirol/JsonApi-Faker-Laravel/master
+[ico-mutation]: https://img.shields.io/endpoint?style=flat-square&url=https%3A%2F%2Fbadge-api.stryker-mutator.io%2Fgithub.com%2FVGirol%2FJsonApi-Faker-Laravel%2Fmaster
 [ico-downloads]: https://img.shields.io/packagist/dt/VGirol/JsonApi-Faker-Laravel.svg?style=flat-square
 
 [link-packagist]: https://packagist.org/packages/VGirol/JsonApi-Faker-Laravel
@@ -129,5 +129,5 @@ The MIT License (MIT). Please see [License File](LICENSE.md) for more informatio
 [link-code-quality]: https://scrutinizer-ci.com/g/VGirol/JsonApi-Faker-Laravel
 [link-downloads]: https://packagist.org/packages/VGirol/JsonApi-Faker-Laravel
 [link-author]: https://github.com/VGirol
-[link-mutation]: https://infection.github.io
+[link-mutation]: https://dashboard.stryker-mutator.io/reports/github.com/VGirol/JsonApi-Faker-Laravel/master
 [link-contributors]: ../../contributors
