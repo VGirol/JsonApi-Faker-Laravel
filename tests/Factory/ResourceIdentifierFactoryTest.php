@@ -3,6 +3,7 @@
 namespace VGirol\JsonApiFaker\Laravel\Tests\Factory;
 
 use PHPUnit\Framework\Assert as PHPUnit;
+use VGirol\JsonApiConstant\Members;
 use VGirol\JsonApiFaker\Laravel\Factory\ResourceIdentifierFactory;
 use VGirol\JsonApiFaker\Laravel\Tests\TestCase;
 
@@ -24,7 +25,7 @@ class ResourceIdentifierFactoryTest extends TestCase
             true,
             null,
             [
-                'meta' => [
+                Members::META => [
                     $key => $value,
                 ],
             ]

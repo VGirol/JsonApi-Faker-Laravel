@@ -3,6 +3,7 @@
 namespace VGirol\JsonApiFaker\Laravel\Tests\Factory;
 
 use PHPUnit\Framework\Assert as PHPUnit;
+use VGirol\JsonApiConstant\Members;
 use VGirol\JsonApiFaker\Exception\JsonApiFakerException;
 use VGirol\JsonApiFaker\Laravel\Factory\ResourceObjectFactory;
 use VGirol\JsonApiFaker\Laravel\Generator;
@@ -78,7 +79,7 @@ class ResourceObjectFactoryTest extends TestCase
 
         $model = $this->createModel();
 
-        $relName = 'related';
+        $relName = 'dummyRelationship';
         $count = 5;
         $relResourceType = 'dummyRelated';
         $related = $this->createCollection($count);
@@ -91,9 +92,9 @@ class ResourceObjectFactoryTest extends TestCase
             false,
             null,
             [
-                'relationships' => [
+                Members::RELATIONSHIPS => [
                     $relName => [
-                        'data' => $this->createResourceCollection($related, $relResourceType, true, null),
+                        Members::DATA => $this->createResourceCollection($related, $relResourceType, true, null),
                     ],
                 ],
             ]
@@ -128,7 +129,7 @@ class ResourceObjectFactoryTest extends TestCase
 
         $mock->fakeAttributes();
 
-        $relName = 'related';
+        $relName = 'dummyRelationship';
         $count = 5;
         $relResourceType = 'dummyRelated';
         $related = $this->createCollection($count);
@@ -139,9 +140,9 @@ class ResourceObjectFactoryTest extends TestCase
             false,
             null,
             [
-                'relationships' => [
+                Members::RELATIONSHIPS => [
                     $relName => [
-                        'data' => $this->createResourceCollection($related, $relResourceType, true, null),
+                        Members::DATA => $this->createResourceCollection($related, $relResourceType, true, null),
                     ],
                 ],
             ]
@@ -175,7 +176,7 @@ class ResourceObjectFactoryTest extends TestCase
      */
     public function loadRelationshipFailedNoModel()
     {
-        $relName = 'related';
+        $relName = 'dummyRelationship';
         $relResourceType = 'dummyRelated';
 
         $factory = new ResourceObjectFactory();
@@ -196,7 +197,7 @@ class ResourceObjectFactoryTest extends TestCase
 
         $model = $this->createModel();
 
-        $relName = 'related';
+        $relName = 'dummyRelationship';
         $relResourceType = 'dummyRelated';
         $count = 5;
         $related = $this->createCollection($count);
@@ -209,9 +210,9 @@ class ResourceObjectFactoryTest extends TestCase
             false,
             null,
             [
-                'relationships' => [
+                Members::RELATIONSHIPS => [
                     $relName => [
-                        'data' => $this->createResourceCollection($related, $relResourceType, true, null),
+                        Members::DATA => $this->createResourceCollection($related, $relResourceType, true, null),
                     ],
                 ],
             ]
