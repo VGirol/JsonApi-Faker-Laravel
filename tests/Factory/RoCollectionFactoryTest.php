@@ -80,7 +80,7 @@ class RoCollectionFactoryTest extends TestCase
         $count = 5;
         $collection = $this->createCollection($count);
 
-        $relName = 'related';
+        $relName = 'dummyRelationship';
         $relResourceType = 'dummyRelated';
         $collection->each(function ($model) use ($relName) {
             $model->setRelation($relName, $this->createCollection(3));
@@ -104,7 +104,7 @@ class RoCollectionFactoryTest extends TestCase
      */
     public function appendRelationshipsFailed()
     {
-        $relName = 'related';
+        $relName = 'dummyRelationship';
         $relResourceType = 'dummyRelated';
 
         $factory = new RoCollectionFactory();
