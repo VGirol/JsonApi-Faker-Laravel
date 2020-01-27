@@ -28,7 +28,8 @@
         "phpunit/phpunit": "^8.0",
         "infection/infection": "^0.14|^0.15",
         "fzaninotto/faker": "^1.8",
-        "vgirol/jsonapi-assert": "dev-master"
+        "vgirol/jsonapi-assert": "dev-master",
+        "vgirol/jsonapi-structure": "@dev"
     },
     "minimum-stability": "stable",
     "autoload": {
