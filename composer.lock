@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e52c422da684195b5ad91e4cda85ab86",
+    "content-hash": "457680309adbeaf1b6c555cd176f33db",
     "packages": [
         {
             "name": "doctrine/inflector",
@@ -2678,7 +2678,7 @@
             "dist": {
                 "type": "path",
                 "url": "../JsonApi-Faker",
-                "reference": "38cacc4b27a638f7e940dff64d19b515eb15709a"
+                "reference": "653f9a104c48c3b0a6c70f499983c832fc3d37fa"
             },
             "require": {
                 "fzaninotto/faker": "^1.8",
@@ -2689,7 +2689,7 @@
                 "infection/infection": "^0.14|^0.15",
                 "phpunit/phpunit": "~8.5.2|^9.0",
                 "vgirol/jsonapi-assert": "dev-master",
-                "vgirol/jsonapi-structure": "@dev"
+                "vgirol/jsonapi-structure": "dev-master"
             },
             "type": "library",
             "extra": {
