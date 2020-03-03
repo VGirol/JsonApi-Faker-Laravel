@@ -19,3 +19,9 @@ Updates should follow the [Keep a CHANGELOG](http://keepachangelog.com/) princip
 ### Added
 
 - Refactoring and code linting.
+
+## 1.0.3 - 2020-03-04
+
+### Added
+
+- Add support for Laravel 7
