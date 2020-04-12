@@ -25,3 +25,9 @@ Updates should follow the [Keep a CHANGELOG](http://keepachangelog.com/) princip
 ### Added
 
 - Add support for Laravel 7
+
+## 1.0.4 - 2020-04-12
+
+### Added
+
+- Minor fixes
