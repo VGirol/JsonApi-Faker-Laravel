@@ -86,7 +86,7 @@ $json = new JsonApiFaker()
 
 ## Documentation
 
-The API documentation is available in XHTML format at the url [http://jsonapi-faker-laravel.girol.fr/docs/index.xhtml](http://jsonapi-faker-laravel.girol.fr/docs/index.xhtml).
+The API documentation is available in XHTML format at the url [http://jsonapi-faker-laravel.girol.fr/docs/ref/index.html](http://jsonapi-faker-laravel.girol.fr/docs/ref/index.html).
 
 ## Change log
 
