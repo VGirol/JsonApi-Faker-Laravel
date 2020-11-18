@@ -31,3 +31,9 @@ Updates should follow the [Keep a CHANGELOG](http://keepachangelog.com/) princip
 ### Added
 
 - Minor fixes
+
+## 1.0.5 - 2020-11-18
+
+### Added
+
+- Added support for Laravel 8
