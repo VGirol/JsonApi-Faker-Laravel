@@ -45,3 +45,9 @@ Updates should follow the [Keep a CHANGELOG](http://keepachangelog.com/) princip
 - Remove support for php 7.2
 - Bump phpunit version
 - Update travis config
+
+## 1.1.1 - 2020-11-19
+
+### Added
+
+- Fix typo
