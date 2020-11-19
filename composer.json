@@ -20,11 +20,11 @@
     ],
     "require": {
         "php": "^7.3",
-        "vgirol/jsonapi-faker": "~1.0.0|dev-master",
-        "laravel/framework": "^5.8|^6.0|^7.0|^8.0"
+        "vgirol/jsonapi-faker": "dev-master",
+        "laravel/framework": "^5.8"
     },
     "require-dev": {
-        "phpunit/phpunit": "^8.0|^9.0",
+        "phpunit/phpunit": "^9.0",
         "infection/infection": "~0.14",
         "fakerphp/faker": "^1.9.1",
         "vgirol/jsonapi-assert": "dev-master",
